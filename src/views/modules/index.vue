@@ -3,16 +3,16 @@
 		<bui-header
                 title="头部"
                 :leftItem="leftItem"
-                @centerClick="jump"
+                @centerClick="showDemo"
                 >
         </bui-header>
-        <bui-searchbar-left @change="search"></bui-searchbar-left>
+        <bui-searchbar-left @onSearch="search"></bui-searchbar-left>
 		<!-- <bui-image src="/image/applogo.png" style="width: 80px;height:80px;"></bui-image> -->
-
-
+		
+		<icon name="icon-arrow"></icon>
         <!--内容区域-->
         <bui-content class="span1">
-             <bui-button class="ex-btn index-btn" @click="showDemo" value="示例"></bui-button>
+             <bui-button class="ex-btn index-btn" @click="jump" value="跳转"></bui-button>
         </bui-content>
 
 
@@ -24,6 +24,8 @@
 <script>
 import buiweex from "../../js/buiweex.js";
 import buiSearchbarLeft from '../../components/bui-searchbar-left.vue';
+import icon from '../../components/icon.vue';
+var stream = weex.requireModule('stream');
 	export default {
 		data () {
 			return {
@@ -40,11 +42,18 @@ import buiSearchbarLeft from '../../components/bui-searchbar-left.vue';
 				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js",{"name":"qinzhou"});
 			},
 			search (val){
-				buiweex.alert(val);
+				stream.fetch({
+		          method: 'GET',
+		          type: 'json',
+		          url: 'https://api.github.com/repos/' + 'alibaba/weex'
+		        }, function (res) {
+		        	buiweex.alert(res.data.stargazers_count)
+		        })
 			}
 		},
 		components : {
-			buiSearchbarLeft
+			buiSearchbarLeft,
+			icon
 		}
 	}
 </script>

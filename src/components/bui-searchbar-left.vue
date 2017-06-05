@@ -78,6 +78,7 @@
             //搜索
             "search": function () {
                 console.log(this.value);
+                this.$emit("onSearch",this.value);
             },
 
         }
