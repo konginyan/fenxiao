@@ -1,8 +1,9 @@
 <template>
-	<div class="index-wrap">
-		<text>video</text>
-		<bui-image src="/image/applogo.png" style="width: 80px;height:80px;"></bui-image>
-		<bui-button value="返回" @click="back"></bui-button>
+	<div class="course-wrap">
+		<bui-content padded="true">
+	        <text>course</text>
+	    </bui-content>
+		
 	</div>
 </template>
 
@@ -15,10 +16,9 @@ var globalEvent = weex.requireModule('globalEvent');
 			return {}
 		},
 		mounted(){
-			// buiweex.alert(buiweex.getPageParams().name);
-
 			
 
+		
 		},
 		methods:{
 			back(){

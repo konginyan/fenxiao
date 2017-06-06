@@ -1,10 +1,9 @@
 <template>
-    <text @click="_click($event)" class="iconfont" :style="{color: color, fontSize: size }" :ref="name">{{getFontName}}</text>
+    <text @click="_click($event)" :style="{color: color, fontSize: size, 'font-family': 'iconfonts' }" :ref="name">{{getFontName}}</text>
 </template>
 
 <script>
     var he = require("he");
-    var animation = weex.requireModule("animation");
     module.exports = {
         props: {
             name: {
@@ -29,7 +28,8 @@
             return {
 
                 iconItems:{
-                    "icon-arrow": "&#xe613;",
+                    "icon-arrow": '&#xe613;',
+                    'icon-scan' : '&#xe600;'
                 }
             }
         },
@@ -44,11 +44,9 @@
         created: function () {
             var domModule = weex.requireModule("dom");
             domModule.addRule('fontFace',{
-                'fontFamily': 'iconfont',
-                'src': "url(\'https://at.alicdn.com/t/font_k9rtdrsrx9ftj4i.ttf\')"
+                'fontFamily': 'iconfonts',
+                'src': "url(\'https://at.alicdn.com/t/font_5kli64cf6n9g4x6r.ttf\')"
             });
         }
     }
 </script>
-
-<style src="../css/iconfont.css"></style>

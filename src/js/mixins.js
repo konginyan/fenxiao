@@ -9,11 +9,10 @@ var mixins = {
         'bui-content-scroll': require('../components/bui-content-scroll.vue'),
         'bui-icon': require('../components/bui-icon.vue'),
         'bui-button': require('../components/bui-button.vue'),
-        'bui-image': require('../components/bui-image.vue')
+        'bui-image': require('../components/bui-image.vue'),
+        'icon' :  require('../components/icon.vue')
     },
-    methods: {
 
-    }
 }
 
 export default mixins;

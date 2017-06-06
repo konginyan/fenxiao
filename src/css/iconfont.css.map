@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AACA,SAAS;EACP,WAAW,EAAE,QAAQ",
+"mappings": "AAAA,SAAS;EACP,WAAW,EAAE,QAAQ;;AAIvB,UAAU;EACR,WAAW,EAAE,SAAS",
 "sources": ["iconfont.scss"],
 "names": [],
 "file": "iconfont.css"

@@ -1,4 +1,4 @@
-import App from '../views/modules/index.vue'
+import App from '../views/modules/layout.vue'
 import mixins from '../js/mixins.js'
 
 Vue.mixin(mixins);
