@@ -10,8 +10,8 @@
                <icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
        </bui-header> -->
         <!--选项卡内容-->
-        <bui-tabbar :tabItems="tabItems"
-                    top="0" @tabItemOnClick="tabItemOnClick"></bui-tabbar>
+        <tabbar :tabItems="tabItems"
+                    top="0" @tabItemOnClick="tabItemOnClick"></tabbar>
         
     </div>
 </template>
@@ -38,9 +38,18 @@
                     {
                         index: 1,
                         title: '岗位课程',
-                        icon: 'icon-home',
+                        icon: 'icon-mycourse',
                         selected: false,
                         src: '/course.weex.js',
+                        visibility: 'hidden',
+
+                    },
+                    {
+                        index: 2,
+                        title: '学习记录',
+                        icon: 'icon-record',
+                        selected: false,
+                        src: '/learning-record.weex.js',
                         visibility: 'hidden',
                     },
                 ]
@@ -48,7 +57,7 @@
             }
         },
         components: {
-            'bui-tabbar': require('../../components/bui-tabbar.vue')
+            'tabbar': require('../../components/tabbar.vue')
         },
         created: function () {
            for (var i = 0; i < this.tabItems.length; i++) {
@@ -68,11 +77,10 @@
                 
             },
             tabItemOnClick: function (e) {
-                buiweex.toast("tab" + e.index);
+                // buiweex.toast("tab" + e.index);
                 //设置标题栏
                 this.currentTab = this.tabItems[e.index].title;
-                // let src = this.tabItems[e.index].src;
-                // buiweex.push(src);
+
             }
             
         }

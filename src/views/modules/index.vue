@@ -8,34 +8,72 @@
                 >
                 <icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
         </bui-header>
-       
-		<bui-content>
+       	<bui-content-scroll>
+			<bui-content>
+				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
+	                    @change="changeHandler" infinite="false" >
+	                <div class="bui-slider-pages" v-for="item in itemList" >
+	                    <bui-image @click="linkBanner(item.itemId)" class="img slider-img" :src="item.pictureUrl"></bui-image>
+	                </div>
+	                <indicator class="bui-slider-indicator"></indicator>
+	            </slider>
 
-			 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
-                    @change="changeHandler" infinite="false">
-                <div class="bui-slider-pages" v-for="item in itemList">
-                    <bui-image class="img slider-img" :src="item.pictureUrl"></bui-image>
-                </div>
-                <indicator class="bui-slider-indicator"></indicator>
-            </slider>
+	            <div class="course-menu">
+	            	<div class="course-item">
+	            		<bui-image class="course-img" src="/image/icon-micro.png"></bui-image>
+	            		<text class="course-title">微课</text>
+	            	</div>
+	            	<div class="course-item">
+	            		<bui-image class="course-img" src="/image/icon-live.png"></bui-image>
+	            		<text class="course-title">直播课堂</text>
+	            	</div>
+	            	<div class="course-item">
+	            		<bui-image class="course-img" src="/image/icon-train.png"></bui-image>
+	            		<text class="course-title">培训班</text>
+	            	</div>
+	            </div>
 
-            <div class="course-menu">
-            	<div class="course-item">
-            		<bui-image class="course-img" src="/image/icon-micro.png"></bui-image>
-            		<text class="course-title">微课</text>
-            	</div>
-            	<div class="course-item">
-            		<bui-image class="course-img" src="/image/icon-live.png"></bui-image>
-            		<text class="course-title">直播课堂</text>
-            	</div>
-            	<div class="course-item">
-            		<bui-image class="course-img" src="/image/icon-train.png"></bui-image>
-            		<text class="course-title">培训班</text>
-            	</div>
-            </div>
+	            <div class="trailer-wrap">
+	            	<bui-image src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
+	            	<div class="trailer-inner">
+	            		<bui-image src="/image/trailer-img.png" class="trailer-img"></bui-image>
+	            		<div class="trailer-content">
+	            			<text class="trailer-title">设计源于生活—小黎哥的设计之路</text>
+	            			<text class="trailer-date">05-02 17:30</text>
+	            		</div>
+	            	</div>
+	            </div>
+				
+				<div class="select-wrap">
+					<div class="h-line"></div>
+					<div class="select-content">
+						<text class="select-title">精选课程</text>
+						<text class="select-title-en">SELECTED COURSES</text>
+					</div>
+					<div class="h-line"></div>
+				</div>
 
-		</bui-content>
-       
+				<div class="course-list">
+					<div class="course-list-item">
+						<bui-image class="course-item-img" src="/image/trailer-img.png"></bui-image>
+						<div class="course-content">
+							<text class="course-item-title">2017年政企事业部需求分析师交流分享会</text>
+							<text class="course-item-text">51人学过</text>
+							<rate @change="rateChange" ></rate>
+						</div>
+					</div>
+					<div class="course-list-item">
+						<bui-image class="course-item-img" src="/image/trailer-img.png"></bui-image>
+						<div class="course-content">
+							<text class="course-item-title">2017年政企事业部需求分析师交流分享会</text>
+							<text class="course-item-text">51人学过</text>
+							<rate @change="rateChange"></rate>
+						</div>
+					</div>
+				</div>
+
+			</bui-content>
+        </bui-content-scroll>
 
 		
 
@@ -45,6 +83,7 @@
 
 <script>
 import buiweex from "../../js/buiweex.js";
+import rate from '../components/rate.vue';
 var globalEvent = weex.requireModule('globalEvent');
 var stream = weex.requireModule('stream');
 
@@ -83,7 +122,7 @@ var stream = weex.requireModule('stream');
 				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js",{"name":"qinzhou"});
 			},
 			scan () {
-				buiweex.push(buiweex.getContextPath() + "/video.weex.js");
+				// buiweex.push(buiweex.getContextPath() + "/video.weex.js");
 			},
 			"scrollHandler": function (e) {
                 this.scrollHnadlerCallCount = this.scrollHnadlerCallCount + 1;
@@ -91,6 +130,12 @@ var stream = weex.requireModule('stream');
             },
             "changeHandler": function (e) {
                 this.scrollHnadlerCallCount = 0;
+            },
+            linkBanner (id){
+            	buiweex.toast(id);
+            },
+            rateChange (val){
+            	buiweex.toast('cc'+val);
             }
 			
 		},
@@ -100,7 +145,7 @@ var stream = weex.requireModule('stream');
 	        });
 	    },
 		components : {
-			
+			rate
 		}
 	}
 
@@ -110,6 +155,7 @@ var stream = weex.requireModule('stream');
 
 <style src="../../css/customer/index.css" />
 <style src="../../css/slider.css"></style>
+<style src="../../css/customer/course-list.css" />
 <style >
 
 

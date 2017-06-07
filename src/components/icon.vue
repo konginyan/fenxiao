@@ -29,7 +29,11 @@
 
                 iconItems:{
                     "icon-arrow": '&#xe613;',
-                    'icon-scan' : '&#xe600;'
+                    'icon-scan' : '&#xe600;',
+                    'icon-mycourse' : '&#xe667;',
+                    'icon-record' : '&#xe837;',
+                    'icon-home' : '&#xe601;',
+                    'icon-star' : '&#xe63b;'
                 }
             }
         },
@@ -45,7 +49,7 @@
             var domModule = weex.requireModule("dom");
             domModule.addRule('fontFace',{
                 'fontFamily': 'iconfonts',
-                'src': "url(\'https://at.alicdn.com/t/font_5kli64cf6n9g4x6r.ttf\')"
+                'src': "url(\'https://at.alicdn.com/t/font_zscx4q0272ervn29.ttf\')"
             });
         }
     }

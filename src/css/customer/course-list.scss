@@ -1,0 +1,32 @@
+.course-list{
+	padding-left: 24px;
+	padding-right: 24px;
+}
+
+.course-list-item{
+	flex-direction: row;
+	justify-content: space-around;
+	padding-top: 24px;
+	padding-bottom: 24px;
+	border-style : solid;
+	border-top-width : 2px;
+	border-top-color : #dedede;
+}
+
+.course-item-img{
+	width: 295px;
+	height: 164px;
+}
+.course-content{
+	flex : 1;
+	margin-left: 28px;
+}
+.course-item-title{
+	font-size: 28px;
+	line : 2;
+}
+.course-item-text{
+	margin-top: 20px;
+	font-size: 22px;
+	color: #999;
+}
