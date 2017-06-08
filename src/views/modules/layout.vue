@@ -79,7 +79,7 @@
             tabItemOnClick: function (e) {
                 // buiweex.toast("tab" + e.index);
                 //设置标题栏
-                this.currentTab = this.tabItems[e.index].title;
+                // this.currentTab = this.tabItems[e.index].title;
 
             }
             

@@ -11,8 +11,7 @@ var mixins = {
         'bui-button': require('../components/bui-button.vue'),
         'bui-image': require('../components/bui-image.vue'),
         'icon' :  require('../components/icon.vue')
-    },
-
+    }
 }
 
 export default mixins;

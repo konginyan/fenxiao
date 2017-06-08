@@ -1,15 +1,15 @@
 <template>
-	<div class="index-wrap">
+	<div>
 		<bui-header
                 title="分晓"
                 :leftItem="leftItem"
                 @centerClick="showDemo"
-               
                 >
                 <icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
         </bui-header>
-       	<bui-content-scroll>
-			<bui-content>
+
+       	<bui-content-scroll class="span1">
+			<div>
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 	                    @change="changeHandler" infinite="false" >
 	                <div class="bui-slider-pages" v-for="item in itemList" >
@@ -19,8 +19,8 @@
 	            </slider>
 
 	            <div class="course-menu">
-	            	<div class="course-item">
-	            		<bui-image class="course-img" src="/image/icon-micro.png"></bui-image>
+	            	<div class="course-item" @click="microClass">
+	            		<bui-image @click="microClass" class="course-img" src="/image/icon-micro.png" ></bui-image>
 	            		<text class="course-title">微课</text>
 	            	</div>
 	            	<div class="course-item">
@@ -59,7 +59,7 @@
 						<div class="course-content">
 							<text class="course-item-title">2017年政企事业部需求分析师交流分享会</text>
 							<text class="course-item-text">51人学过</text>
-							<rate @change="rateChange" ></rate>
+							<rate @change="rateChange" :value="3" :disabled="true"></rate>
 						</div>
 					</div>
 					<div class="course-list-item">
@@ -67,12 +67,12 @@
 						<div class="course-content">
 							<text class="course-item-title">2017年政企事业部需求分析师交流分享会</text>
 							<text class="course-item-text">51人学过</text>
-							<rate @change="rateChange"></rate>
+							<rate @change="rateChange" :value="2" :disabled="true"></rate>
 						</div>
 					</div>
 				</div>
 
-			</bui-content>
+			</div>
         </bui-content-scroll>
 
 		
@@ -119,7 +119,7 @@ var stream = weex.requireModule('stream');
 	            buiweex.pop();
 	        },
 			showDemo (){
-				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js",{"name":"qinzhou"});
+				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
 			},
 			scan () {
 				// buiweex.push(buiweex.getContextPath() + "/video.weex.js");
@@ -135,7 +135,11 @@ var stream = weex.requireModule('stream');
             	buiweex.toast(id);
             },
             rateChange (val){
-            	buiweex.toast('cc'+val);
+            	buiweex.toast(val);
+            },
+            microClass (){
+            	buiweex.toast(111)
+            	buiweex.push(buiweex.getContextPath() + "/micro-class.weex.js");
             }
 			
 		},
@@ -157,6 +161,8 @@ var stream = weex.requireModule('stream');
 <style src="../../css/slider.css"></style>
 <style src="../../css/customer/course-list.css" />
 <style >
-
+	.span1{
+		flex: 1;
+	}
 
 </style>

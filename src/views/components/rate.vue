@@ -1,16 +1,21 @@
 <template>
 	<div class="rate">
 		<div v-for="item in max" >
-			<icon @click="selectValue(item)" name="icon-star" :class="[item<=currentValue ? 'active': '', 'star']"></icon>
-			{{currentValue}}
+			<icon v-if="item<=value" @click="selectValue(item)" name="icon-star" class="star" :style="{'color':color}"></icon>
+			<icon  v-if="item>value" @click="selectValue(item)" name="icon-star" class="star" :style="{'color':'#dedede'}"></icon>
 		</div>
 	</div>
 </template>
 
 <script>
-	import buiweex from "../../js/buiweex.js";
+	// import buiweex from "../../js/buiweex.js";
 
 	export default {
+		data () {
+			return {
+				
+			}
+		},
 		props : {
 			value: {
 		        type: Number,
@@ -24,33 +29,28 @@
 	            type: Boolean,
 	            default: false
 	        },
+	        color : {
+	        	type : String,
+	        	default : '#FFC600'
+	        }
 		},
-		data : function() {
-			return {
-				currentValue: 0,
-			}
-		},
+		
 		methods : {
 			selectValue(value) {
-
 				if (this.disabled) {
+
 					return;
 				}
-
-				this.currentValue = value;
-
+				this.value = value;
+				this.$emit('change', value);
 			}
 		},
 		computed :{
 
 
 			
-		},
-		watch : {
-			currentValue (val){
-				this.$emit('change', val);
-			} 
 		}
+		
 	}
 </script>
 
@@ -63,7 +63,7 @@
 	margin-right: 5px;
 }
 .active{
-	color : yellow;
+	color : #FFC600;
 }
 
 

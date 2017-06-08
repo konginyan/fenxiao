@@ -33,7 +33,8 @@
                     'icon-mycourse' : '&#xe667;',
                     'icon-record' : '&#xe837;',
                     'icon-home' : '&#xe601;',
-                    'icon-star' : '&#xe63b;'
+                    'icon-star' : '&#xe63b;',
+                    'icon-filter' : '&#xe69c;'
                 }
             }
         },
@@ -49,7 +50,7 @@
             var domModule = weex.requireModule("dom");
             domModule.addRule('fontFace',{
                 'fontFamily': 'iconfonts',
-                'src': "url(\'https://at.alicdn.com/t/font_zscx4q0272ervn29.ttf\')"
+                'src': "url(\'https://at.alicdn.com/t/font_ekxbjohab01i3sor.ttf\')"
             });
         }
     }
