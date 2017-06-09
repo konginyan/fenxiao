@@ -1,7 +1,9 @@
 <template>
-	<div class="filter-dialog-wrap" @click="onMask" >
+	<div class="filter-dialog-wrap"  @click="onMask">
 		<div class="filter-dialog-mask">
-			<div class="filter-dialog" :style="dialogStyle">
+			
+		</div>
+		<div class="filter-dialog" :style="dialogStyle">
 				<div class="filter-dialog-body">
 					<slot name="body"></slot>
 				</div>
@@ -9,7 +11,6 @@
 					<slot name="foot"></slot>
 				</div>
 			</div>
-		</div>
 		
 	</div>
 </template>
@@ -51,7 +52,7 @@ import buiweex from "../../js/buiweex.js";
 
 <style>
 	.filter-dialog-wrap{
-		position : fixed;
+		position : absolute;
 		left: 0;
 		right: 0;
 		bottom: 0;
@@ -59,7 +60,7 @@ import buiweex from "../../js/buiweex.js";
 		background-color: rgba(0,0,0,.5);
 	}
 	.filter-dialog{
-		position: fixed;
+		position: absolute;
 		left: 20px;
 		right: 20px; 
 		background-color: #fff;

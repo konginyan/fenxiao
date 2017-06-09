@@ -245,6 +245,17 @@ import buiweex from '../../js/buiweex.js'
 	  background-color: $color_default_active;
 	}
 
+	.btn-normal {
+	  background-color: $color_white;
+	}
+	.btn-normal-plain {
+	  background-color: $color_white;
+	  color: $color_default;
+	}
+	.btn-normal:active {
+	  background-color: $color_default_active;
+	}
+
 
 
 </style>
