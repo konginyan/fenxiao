@@ -138,7 +138,6 @@ var stream = weex.requireModule('stream');
             	buiweex.toast(val);
             },
             microClass (){
-            	buiweex.toast(111)
             	buiweex.push(buiweex.getContextPath() + "/micro-class.weex.js");
             }
 			

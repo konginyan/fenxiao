@@ -1,7 +1,7 @@
 <template>
-	<div class="filter-dialog-wrap" v-if="isShow">
+	<div class="filter-dialog-wrap" @click="onMask" >
 		<div class="filter-dialog-mask">
-			<div class="filter-dialog">
+			<div class="filter-dialog" :style="dialogStyle">
 				<div class="filter-dialog-body">
 					<slot name="body"></slot>
 				</div>
@@ -15,16 +15,35 @@
 </template>
 
 <script>
+import buiweex from "../../js/buiweex.js";
 	export default {
 		props : {
-			isShow : {
-				type : Boolean,
-				default : true
+			
+			top : {
+				type : String,
+				default : '150px'
+			},
+			radius : {
+				type : String,
+				default : '10px'
 			}
 		},
 		data () {
 			return {
-				
+
+			}
+		},
+		computed : {
+			dialogStyle (){
+				return {
+					'top' : this.top,
+					'border-radius' : this.radius
+				}
+			}
+		},
+		methods : {
+			onMask (){
+				this.$emit('onMask');
 			}
 		}
 	}
@@ -38,6 +57,12 @@
 		bottom: 0;
 		top: 0;
 		background-color: rgba(0,0,0,.5);
+	}
+	.filter-dialog{
+		position: fixed;
+		left: 20px;
+		right: 20px; 
+		background-color: #fff;
 	}
 
 </style>
