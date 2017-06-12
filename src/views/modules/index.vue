@@ -12,8 +12,8 @@
 			<div>
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 	                    @change="changeHandler" infinite="false" >
-	                <div class="bui-slider-pages" v-for="item in itemList" >
-	                    <bui-image @click="linkBanner(item.itemId)" class="img slider-img" :src="item.pictureUrl"></bui-image>
+	                <div class="bui-slider-pages" v-for="item in recommendList" >
+	                    	<bui-image @click="linkBanner(item)" class="img slider-img" :src="item.picture"></bui-image>
 	                </div>
 	                <indicator class="bui-slider-indicator"></indicator>
 	            </slider>
@@ -54,20 +54,12 @@
 				</div>
 
 				<div class="course-list">
-					<div class="course-list-item">
-						<bui-image class="course-item-img" src="/image/trailer-img.png"></bui-image>
+					<div class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
+						<bui-image class="course-item-img" :src="item.picture" @click="hottestLink(item.courseId)"></bui-image>
 						<div class="course-content">
-							<text class="course-item-title">2017年政企事业部需求分析师交流分享会</text>
-							<text class="course-item-text">51人学过</text>
-							<rate @change="rateChange" :value="3" :disabled="true"></rate>
-						</div>
-					</div>
-					<div class="course-list-item">
-						<bui-image class="course-item-img" src="/image/trailer-img.png"></bui-image>
-						<div class="course-content">
-							<text class="course-item-title">2017年政企事业部需求分析师交流分享会</text>
-							<text class="course-item-text">51人学过</text>
-							<rate @change="rateChange" :value="2" :disabled="true"></rate>
+							<text class="course-item-title">{{item.name}}</text>
+							<text class="course-item-text">{{item.learnCount}}人学过</text>
+							<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
 						</div>
 					</div>
 				</div>
@@ -85,7 +77,7 @@
 import buiweex from "../../js/buiweex.js";
 import rate from '../components/rate.vue';
 var globalEvent = weex.requireModule('globalEvent');
-var stream = weex.requireModule('stream');
+import ajax from '../../js/ajax.js';
 
 
 	export default {
@@ -94,24 +86,9 @@ var stream = weex.requireModule('stream');
 				leftItem: {
                     icons: 'icon-back',
                 },
-                itemList: [
-                    {
-                        itemId: '520421163634',
-                        pictureUrl: 'https://gd2.alicdn.com/bao/uploaded/i2/T14H1LFwBcXXXXXXXX_!!0-item_pic.jpg'
-                    },
-                    {
-                        itemId: '522076777462',
-                        pictureUrl: 'https://gd1.alicdn.com/bao/uploaded/i1/TB1PXJCJFXXXXciXFXXXXXXXXXX_!!0-item_pic.jpg'
-                    },
-                    {
-                        itemId: '522076777462',
-                        pictureUrl: 'https://gd3.alicdn.com/bao/uploaded/i3/TB1x6hYLXXXXXazXVXXXXXXXXXX_!!0-item_pic.jpg'
-                    },
-                    {
-                        itemId: '522076777467',
-                        pictureUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1491837948&di=3dcecd1b1d709196873a91f9fd585962&imgtype=jpg&er=1&src=http%3A%2F%2Fphotocdn.sohu.com%2F20160304%2Fmp61863731_1457078539188_3.gif'
-                    }
-                ]
+                recommendList: [],
+                hottestList : [],
+                
 			}
 		},
 		methods : {
@@ -131,15 +108,38 @@ var stream = weex.requireModule('stream');
             "changeHandler": function (e) {
                 this.scrollHnadlerCallCount = 0;
             },
-            linkBanner (id){
-            	buiweex.toast(id);
+            linkBanner (item){
+            	// buiweex.alert(item.url);
             },
             rateChange (val){
             	buiweex.toast(val);
             },
             microClass (){
             	buiweex.push(buiweex.getContextPath() + "/micro-class.weex.js");
-            }
+            },
+            getHottestList () {
+            	ajax({
+            		url : 'api/course/gethottestlist',
+            	}).then((res) =>{
+            		this.hottestList = res.r;
+            	},(errorT,status) =>{
+            		
+            	})
+
+            },
+            hottestLink (couseId) {
+            	
+            },
+            getRecommend () {
+            	ajax({
+            		url : 'api/course/gethottestlist',
+            	}).then((res) =>{
+            		this.recommendList = res.r;
+            	},(errorT,status) =>{
+            		
+            	})
+            },
+            
 			
 		},
 		created (){
@@ -149,6 +149,11 @@ var stream = weex.requireModule('stream');
 	    },
 		components : {
 			rate
+		},
+		mounted () {
+			this.getHottestList();
+			this.getRecommend();
+			
 		}
 	}
 

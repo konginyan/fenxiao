@@ -5,7 +5,10 @@
 		</div>
 		<div class="filter-dialog" :style="dialogStyle">
 				<div class="filter-dialog-body">
-					<slot name="body"></slot>
+					<scroller >
+						<slot name="body"></slot>
+					</scroller>
+					
 				</div>
 				<div class="filter-dialog-foot">
 					<slot name="foot"></slot>
@@ -16,7 +19,7 @@
 </template>
 
 <script>
-import buiweex from "../../js/buiweex.js";
+
 	export default {
 		props : {
 			

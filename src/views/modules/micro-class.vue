@@ -14,44 +14,38 @@
 		
 		<bui-content-scroll class="span1">
 			<div class="course-list">
-				<div class="course-list-item" v-for="item in 10">
-					<bui-image class="course-item-img" src="/image/trailer-img.png"></bui-image>
+				<div class="course-list-item" v-for="item in pageList">
+					<bui-image class="course-item-img" :src="item.picture"></bui-image>
 					<div class="course-content">
-						<text class="course-item-title">2017年政企事业部需求分析师交流分享会</text>
-						<text class="course-item-text">51人学过</text>
-						<rate @change="rateChange" :value="3" :disabled="true"></rate>
+						<text class="course-item-title">{{item.name}}</text>
+						<text class="course-item-text">{{item.learnCount}}人学过</text>
+						<rate @change="rateChange" :value="item.score" :disabled="true"></rate>
 					</div>
 				</div>
 			</div>
 
 		</bui-content-scroll>
 
-		<filter-dialog v-if="isShow"  top="400px">
+		<filter-dialog v-if="isShow"  top="180px">
 			<div slot="body">
 				<div class="micro-class-type-wrap">
 					<text class="micro-class-type">课程类型</text>
 				</div>
-				<div class="micro-class-filter">
-					<button type="default" value="全部"  class="filter-btn"></button>
-					<button type="default" value="操作系统"  class="filter-btn"></button>
-					<button type="default" value="开发技术"  class="filter-btn"></button>
-				</div>
-				<div class="micro-class-filter">
-					<button type="default" value="项目管理"  class="filter-btn"></button>
-					<button type="default" value="需求分析"  class="filter-btn"></button>
-					<button type="default" value="UI/UE"  class="filter-btn"></button>
-				</div>
-				<div class="micro-class-filter">
-					<button type="default" value="售前"  class="filter-btn"></button>
-					<button type="default" value="日常办公"  class="filter-btn"></button>
-					<button type="default" value="规章制度"  class="filter-btn"></button>
+				<div class="micro-class-filter-list">
+					<div class="micro-class-filter"  >
+						<div class="micro-class-filter-item" v-for="(item,index) in filterList">
+							<button  @click="filterBtn(item.name,index,item.categoryId)" type="default"  :value="item.name"  class="filter-btn" :class="[index === currentIndex ? 'filter-btn-active' : '']" ></button>
+						</div>
+						
+						
+					</div>
 				</div>
 
 				
 			</div>
 			<div slot="foot">
 				<div class="operation">
-					<button type="normal" class="operation-btn" @click="confirm" value="重置筛选"></button>
+					<button type="normal" class="operation-btn" @click="resetFilter" value="重置筛选"></button>
 					<button type="primary" class="operation-btn" @click="confirm" value="确定"></button>
 				</div>
 				
@@ -62,12 +56,14 @@
 
 <script>
 import buiweex from "../../js/buiweex.js";
+var globalEvent = weex.requireModule('globalEvent');
+import ajax from '../../js/ajax.js';
 import buiSearchbarLeft from '../../components/bui-searchbar-left.vue';
 import filterBar from '../components/filter-bar.vue';
 import rate from '../components/rate.vue';
 import filterDialog from '../components/filter-dialog.vue';
-var globalEvent = weex.requireModule('globalEvent');
-var stream = weex.requireModule('stream');
+
+
 
 	export default {
 		data (){
@@ -96,7 +92,13 @@ var stream = weex.requireModule('stream');
                         selected: false,
                     },
                 ],
-                isShow : true,
+                isShow : false,
+                filterList : [],
+                currentIndex : -1,
+                pageList : [],
+                type : 'time',
+                categoryId : '',
+                selectIndex : 0
                 
 			}
 		},
@@ -111,8 +113,17 @@ var stream = weex.requireModule('stream');
 	        	buiweex.toast(val);
 	        },
 	        filterChange (index){
+	        	switch (index){
+	        		case 0 : this.type = 'time'; 
+	        				 this.selectIndex = index;
+	        				 break;
+	        		case 1 : this.type = 'hot';
+	        				 this.selectIndex = index;
+	        				 break;
+	        		case 2 : this.filter();
+	        	}
 
-	        	index === 2 && this.filter();
+	        	this.getpagelist(this.type,this.categoryId);
 	        },
 	        dialog (isShow) {
 	        	
@@ -122,8 +133,10 @@ var stream = weex.requireModule('stream');
 	        	this.isShow = true;
 	        },
 	        confirm () {
-	        	buiweex.toast(Math.random())
 	        	this.isShow = false;
+	        	this.getpagelist(this.type,this.categoryId);
+	        	this.filterItems[2].selected = false;
+	        	this.filterItems[this.selectIndex].selected = true;
 	        },
 	        mask () {
 	        	
@@ -131,11 +144,51 @@ var stream = weex.requireModule('stream');
 	        rateChange (val){
 	        	buiweex.toast(val);
 	        },
+	        getFilterList () {
+	        	ajax({
+	        		url : 'api/course/category/list',
+	        	}).then((res) =>{
+	        		this.filterList = res.r;
+	        		// buiweex.alert(res.r);
+	        	},(errorT,status) =>{
+	        		
+	        	})
+	        },
+	        filterBtn (name,index,categoryId) {
+	        	this.currentIndex = index;
+	        	this.categoryId = categoryId;
+	        },
+	        resetFilter(){
+	        	this.currentIndex = -1;
+	        	this.categoryId = '';
+	        },
+	        getpagelist (type='time',categoryId='') {
+            	ajax({
+            		url : 'api/course/getpagelist',
+            		data : {
+            			categoryid : categoryId,
+            			type : type,
+            			rows : 10,
+            			page : 1
+            		}
+            	}).then((res) =>{
+            		
+            		this.pageList = res.r;
+            		
+            	},(errorT,status) =>{
+            		
+            	})
+            }
 		},
 		created (){
-	        // globalEvent.addEventListener("androidback", function (e){
-	        //       buiweex.pop();
-	        // });
+	        globalEvent.addEventListener("androidback", function (e){
+	              buiweex.pop();
+	        });
+	    },
+	    mounted () {
+	    	this.getFilterList();
+
+	    	this.getpagelist();
 	    },
 	    components :{
 	    	buiSearchbarLeft,

@@ -7,7 +7,7 @@
 	</div>
 </template>
 <script>
-import buiweex from "../../js/buiweex.js";
+
 	export default {
 		props : {
 			icon : {
