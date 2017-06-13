@@ -119,7 +119,7 @@ import ajax from '../../js/ajax.js';
             },
             getHottestList () {
             	ajax({
-            		url : 'api/course/gethottestlist',
+            		url : 'api/course/gethottestlist'
             	}).then((res) =>{
             		this.hottestList = res.r;
             	},(errorT,status) =>{
