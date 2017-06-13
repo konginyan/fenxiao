@@ -19,6 +19,9 @@
 <script>
     var buiweex = require("../../js/buiweex.js");
     var globalEvent = weex.requireModule('globalEvent');
+    const storage = weex.requireModule('storage')
+import sso from '../../js/sso.js';
+
     module.exports = {
         data: function () {
             return {
@@ -77,12 +80,25 @@
                 
             },
             tabItemOnClick: function (e) {
-                // buiweex.toast("tab" + e.index);
-                //设置标题栏
-                // this.currentTab = this.tabItems[e.index].title;
 
+            },
+            login () {
+                sso.login('admin@bingosoft','123456',function(res) {
+
+                    
+                    // buiweex.alert(res['ex.oauth_access_token']);
+                    var token = res['ex.oauth_access_token'];
+                    storage.setItem('token', token);
+                    
+                },function(err) {
+                    buiweex.toast(err);
+                });
             }
             
-        }
+        },
+        mounted () {
+            this.login();
+        },
+        
     }
 </script>

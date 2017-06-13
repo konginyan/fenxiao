@@ -1,0 +1,54 @@
+.micro-class-wrap{
+	flex : 1;
+}
+.micro-class-type{
+	padding-left: 56px;
+	padding-top: 28px;
+	padding-bottom: 28px;
+}
+
+
+.micro-class-filter{
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	padding-left: 46px;
+	padding-right: 46px;
+
+
+}
+.filter-btn{
+	width: 180px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 26px;
+	padding-left: 0;
+	padding-right: 0;
+	background-color: #f5f5f5;
+}
+
+.operation{
+	flex-direction: row;
+	justify-content: space-between;
+	margin-top: 28px;
+	padding-left: 56px;
+	padding-right: 56px;
+	padding-top: 28px;
+	padding-bottom: 28px;
+	border-top-width: 1px;
+	border-top-style : solid;
+	border-top-color : #dedede;
+}
+.operation-btn{
+	padding-top: 23px;
+	padding-bottom: 23px;
+	padding-left: 74px;
+	padding-right: 74px;
+}
+
+.filter-btn-active{
+	background-color: #3399ff;
+	color: #fff;
+}
