@@ -7,7 +7,7 @@
                 @centerClick="showDemo"
                
                 >
-                <icon slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
+               
         </bui-header>
 		 <bui-searchbar-left @onSearch="search"></bui-searchbar-left>
 		<filter-bar :filterItems="filterItems" @change="filterChange"></filter-bar>
@@ -23,9 +23,10 @@
 				
 				<cell class="course-list">
 				   <div class="course-list-item" :class="[index===0?'no-border':'']" v-for="(item,index) in pageList">
-	   					<bui-image class="course-item-img" :src="item.picture"></bui-image>
+	   					<bui-image class="course-item-img" :src="fixedPicture(item.picture)"></bui-image>
 	   					<div class="course-content">
 	   						<text class="course-item-title">{{item.name}}</text>
+	   						
 	   						<text class="course-item-text">{{item.learnCount}}人学过</text>
 	   						<rate @change="rateChange" :value="item.score" :disabled="true"></rate>
 	   					</div>
@@ -85,7 +86,7 @@ import buiSearchbarLeft from '../../components/bui-searchbar-left.vue';
 import filterBar from '../components/filter-bar.vue';
 import rate from '../components/rate.vue';
 import filterDialog from '../components/filter-dialog.vue';
-
+import {unicode,fixedPic} from '../../js/tool.js';
 
 
 	export default {
@@ -129,7 +130,8 @@ import filterDialog from '../components/filter-dialog.vue';
                 loadingText: "正在加载更多数据...",
                 page : 1,
                 rows : 10,
-                filterName : '筛选'
+                filterName : '筛选',
+                keyword : ''
                 
 			}
 		},
@@ -141,7 +143,22 @@ import filterDialog from '../components/filter-dialog.vue';
 	        	buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
 	        },
 	        search (val) {
-	        	buiweex.toast(val);
+	        	// buiweex.toast(val);
+	        	this.keyword = val.trim();
+	        	ajax({
+	        		url : 'api/course/getpagelist',
+	        		data : {
+	        			keyword : unicode(this.keyword),
+	        			type : this.type,
+	        			rows : 100,
+	        			page : 1
+
+	        		}
+	        	}).then((res) =>{
+	        		this.pageList = res.r;
+	        	},(errorT,status) =>{
+	        		
+	        	})
 	        },
 	        filterChange (index){
 	        	switch (index){
@@ -198,7 +215,7 @@ import filterDialog from '../components/filter-dialog.vue';
 	        	this.currentIndex = -1;
 	        	this.categoryId = '';
 	        },
-	        getpagelist (type='time',categoryId='') {
+	        getpagelist (type='time',categoryId='',keyword = '') {
 	        	this.refreshIcon = "icon-loadding";
 	        	this.refreshText = "正在刷新";
             	ajax({
@@ -207,7 +224,8 @@ import filterDialog from '../components/filter-dialog.vue';
             			categoryid : categoryId,
             			type : type,
             			rows : this.rows,
-            			page : 1
+            			page : 1,
+            			keyword
             		}
             	}).then((res) =>{
             		
@@ -256,16 +274,6 @@ import filterDialog from '../components/filter-dialog.vue';
                 this.refreshing = true;
                 this.page = 1;
                 this.getpagelist(this.type,this.categoryId);
-                //下面代码是模拟异步请求效果
-                /*setTimeout(() => {
-                    this.refreshIcon = "icon-checkbox-on";
-                    this.refreshText = "刷新成功";
-
-                    setTimeout(() => {
-                        this.refreshing = false;
-                    }, 300);
-
-                }, 500);*/
             },
             //refresh下拉放手前的文字与图标
             "onPullingdown": function (e) {
@@ -280,12 +288,11 @@ import filterDialog from '../components/filter-dialog.vue';
             },
 
             "onLoading": function (e) {
-                buiweex.toast("loading");
                 this.getMorePageList(this.type,this.categoryId);
-                /*this.showLoading = true;
-                setTimeout(() => {
-                    this.showLoading = false;
-                }, 2000);*/
+
+            },
+            fixedPicture (source) {
+            	return fixedPic(source);
             }
 		},
 		created (){
