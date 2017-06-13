@@ -12,8 +12,31 @@
 		 <bui-searchbar-left @onSearch="search"></bui-searchbar-left>
 		<filter-bar :filterItems="filterItems" @change="filterChange"></filter-bar>
 		
-		<bui-content-scroll class="span1">
-			<div class="course-list">
+		<bui-content class="span1">
+			<list class="bui-list p-r">
+				<!--刷新组件-->
+				<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
+				         :display="refreshing ? 'show' : 'hide'">
+				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
+				    <text class="bui-refresh-indicator">{{refreshText}}</text>
+				</refresh>
+				
+				<cell class="course-list">
+				   <div class="course-list-item" :class="[index===0?'no-border':'']" v-for="(item,index) in pageList">
+	   					<bui-image class="course-item-img" :src="item.picture"></bui-image>
+	   					<div class="course-content">
+	   						<text class="course-item-title">{{item.name}}</text>
+	   						<text class="course-item-text">{{item.learnCount}}人学过</text>
+	   						<rate @change="rateChange" :value="item.score" :disabled="true"></rate>
+	   					</div>
+	   				</div>
+				</cell>
+
+				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+				    <text class="bui-loading-indicator">{{loadingText}}</text>
+				</loading>
+			</list>
+			<!-- <div class="course-list">
 				<div class="course-list-item" v-for="item in pageList">
 					<bui-image class="course-item-img" :src="item.picture"></bui-image>
 					<div class="course-content">
@@ -23,8 +46,8 @@
 					</div>
 				</div>
 			</div>
-
-		</bui-content-scroll>
+			 -->
+		</bui-content>
 
 		<filter-dialog v-if="isShow"  top="180px">
 			<div slot="body">
@@ -98,7 +121,15 @@ import filterDialog from '../components/filter-dialog.vue';
                 pageList : [],
                 type : 'time',
                 categoryId : '',
-                selectIndex : 0
+                selectIndex : 0,
+                refreshing: false,
+                showLoading: false,
+                refreshIcon: "icon-todown",
+                refreshText: "下拉刷新...",
+                loadingText: "正在加载更多数据...",
+                page : 1,
+                rows : 10,
+                filterName : '筛选'
                 
 			}
 		},
@@ -136,7 +167,10 @@ import filterDialog from '../components/filter-dialog.vue';
 	        	this.isShow = false;
 	        	this.getpagelist(this.type,this.categoryId);
 	        	this.filterItems[2].selected = false;
+	        	this.filterItems[2].title = this.filterName;
 	        	this.filterItems[this.selectIndex].selected = true;
+
+
 	        },
 	        mask () {
 	        	
@@ -155,29 +189,103 @@ import filterDialog from '../components/filter-dialog.vue';
 	        	})
 	        },
 	        filterBtn (name,index,categoryId) {
+	        	this.filterName = name;
 	        	this.currentIndex = index;
 	        	this.categoryId = categoryId;
 	        },
 	        resetFilter(){
+	        	this.filterName = '筛选';
 	        	this.currentIndex = -1;
 	        	this.categoryId = '';
 	        },
 	        getpagelist (type='time',categoryId='') {
+	        	this.refreshIcon = "icon-loadding";
+	        	this.refreshText = "正在刷新";
             	ajax({
             		url : 'api/course/getpagelist',
             		data : {
             			categoryid : categoryId,
             			type : type,
-            			rows : 10,
+            			rows : this.rows,
             			page : 1
             		}
             	}).then((res) =>{
             		
             		this.pageList = res.r;
+            		this.refreshIcon = "icon-checkbox-on";
+            		this.refreshText = "刷新成功";
+            		this.refreshing = false;
             		
             	},(errorT,status) =>{
+            		this.refreshIcon = "icon-todown";
+            		this.refreshText = "刷新失败";
+            		this.refreshing = false;
             		
             	})
+            },
+            getMorePageList (type='time',categoryId=''){
+	        	this.showLoading = true;
+	        	this.page += 1;
+            	ajax({
+            		url : 'api/course/getpagelist',
+            		data : {
+            			categoryid : categoryId,
+            			type : type,
+            			rows : this.rows,
+            			page : this.page
+            		}
+            	}).then((res) =>{
+            		this.showLoading = false;
+            		if(res.r.length === 0){
+            			this.loadingText = '没有更多数据了';
+            			return;
+            		}else{
+            			this.loadingText = '正在加载更多数据...';
+            		}
+            		this.pageList = this.pageList.concat(res.r);
+            		
+            		
+            	},(errorT,status) =>{
+            		this.page -= 1;
+            		this.showLoading = false;
+            		
+            	})
+            },
+            //refresh下拉放手后的文字与图标
+            "onRefresh": function (e) {
+                this.refreshing = true;
+                this.page = 1;
+                this.getpagelist(this.type,this.categoryId);
+                //下面代码是模拟异步请求效果
+                /*setTimeout(() => {
+                    this.refreshIcon = "icon-checkbox-on";
+                    this.refreshText = "刷新成功";
+
+                    setTimeout(() => {
+                        this.refreshing = false;
+                    }, 300);
+
+                }, 500);*/
+            },
+            //refresh下拉放手前的文字与图标
+            "onPullingdown": function (e) {
+                //默认refresh文字与图标
+                this.refreshIcon = "icon-todown";
+                this.refreshText = "下拉刷新...";
+                //下拉一定距离时文字与图标
+                if (Math.abs(e.pullingDistance) > 80) {
+                    this.refreshIcon = "icon-toup";
+                    this.refreshText = "松开即可刷新...";
+                }
+            },
+
+            "onLoading": function (e) {
+                buiweex.toast("loading");
+                this.getMorePageList(this.type,this.categoryId);
+                /*this.showLoading = true;
+                setTimeout(() => {
+                    this.showLoading = false;
+                }, 2000);*/
             }
 		},
 		created (){
@@ -207,3 +315,6 @@ import filterDialog from '../components/filter-dialog.vue';
 <style src="../../css/layout.css"></style>
 <style src="../../css/customer/micro-class.css"></style>
 <style src="../../css/customer/course-list.css" />
+
+<style src="../../css/refresh.css"></style>
+<style src="../../css/loading.css"></style>
