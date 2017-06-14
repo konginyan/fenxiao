@@ -16,6 +16,7 @@
 .bb1{
 	border-top-width : 0px;
 	border-bottom-width : 1px;
+	border-bottom-color : #dedede;
 }
 
 .course-item-img{
@@ -34,6 +35,11 @@
 }
 .course-item-text{
 	margin-top: 20px;
+	font-size: 22px;
+	color: #999;
+}
+.course-item-time{
+	margin-top: 75px;
 	font-size: 22px;
 	color: #999;
 }
