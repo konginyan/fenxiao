@@ -74,7 +74,7 @@ import sso from '../../js/sso.js';
                 buiweex.pop();
             },
             showDemo (){
-                buiweex.push(buiweex.getContextPath() + "/app-view.weex.js",{"name":"qinzhou"});
+                buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
             },
             scan () {
                 
@@ -89,9 +89,10 @@ import sso from '../../js/sso.js';
                     // buiweex.alert(res['ex.oauth_access_token']);
                     var token = res['ex.oauth_access_token'];
                     storage.setItem('token', token);
-                    
+                    console.log('aaaa');
                 },function(err) {
                     buiweex.toast(err);
+                    console.log(err);
                 });
             }
             

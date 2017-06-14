@@ -4,10 +4,10 @@
 			
 		</div>
 		<div class="filter-dialog" :style="dialogStyle">
-				<div class="filter-dialog-body">
-					<scroller >
+				<div class="filter-dialog-body"  >
+					<!-- <scroller > -->
 						<slot name="body"></slot>
-					</scroller>
+					<!-- </scroller> -->
 					
 				</div>
 				<div class="filter-dialog-foot">

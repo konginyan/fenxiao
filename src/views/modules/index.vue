@@ -119,7 +119,7 @@ import {fixedPic} from '../../js/tool.js';
             },
             getHottestList () {
             	ajax({
-            		url : 'api/course/gethottestlist'
+            		url : 'ba/api/course/gethottestlist'
             	}).then((res) =>{
             		this.hottestList = res.r;
             	},(errorT,status) =>{
@@ -132,7 +132,7 @@ import {fixedPic} from '../../js/tool.js';
             },
             getRecommend () {
             	ajax({
-            		url : 'api/course/gethottestlist',
+            		url : 'ba/api/course/gethottestlist',
             	}).then((res) =>{
             		this.recommendList = res.r;
             	},(errorT,status) =>{
@@ -140,13 +140,15 @@ import {fixedPic} from '../../js/tool.js';
             	})
             },
             getLastact () {
+         
             	ajax({
-            		url : 'api/homepage/lastact',
+            		url : 'ba/api/homepage/lastact',
             	}).then((res) =>{
             		this.lastact = res.r;
             	},(errorT,status) =>{
-            		
+
             	})
+
             },
             fixedPicture (source) {
             	return fixedPic(source);

@@ -9,7 +9,7 @@
                 >
                
         </bui-header>
-		 <bui-searchbar-left @onSearch="search"></bui-searchbar-left>
+		 <bui-searchbar-left @onSearch="search" placeholder="请输入课程名"></bui-searchbar-left>
 		<filter-bar :filterItems="filterItems" @change="filterChange"></filter-bar>
 		
 		<bui-content class="span1">
@@ -22,7 +22,7 @@
 				</refresh>
 				
 				<cell class="course-list">
-				   <div class="course-list-item" :class="[index===0?'no-border':'']" v-for="(item,index) in pageList">
+				   <div class="course-list-item" :class="[index===0?'no-border':'']" v-for="(item,index) in pageList" @click="linkDetail">
 	   					<bui-image class="course-item-img" :src="fixedPicture(item.picture)"></bui-image>
 	   					<div class="course-content">
 	   						<text class="course-item-title">{{item.name}}</text>
@@ -56,13 +56,16 @@
 					<text class="micro-class-type">课程类型</text>
 				</div>
 				<div class="micro-class-filter-list">
-					<div class="micro-class-filter"  >
+					
+					  <scroller  style="height: 500px;">
+					  <div  class="micro-class-filter">
 						<div class="micro-class-filter-item" v-for="(item,index) in filterList">
 							<button  @click="filterBtn(item.name,index,item.categoryId)" type="default"  :value="item.name"  class="filter-btn" :class="[index === currentIndex ? 'filter-btn-active' : '']" ></button>
 						</div>
+						</div>
+					  </scroller>
 						
-						
-					</div>
+					
 				</div>
 
 				
@@ -146,7 +149,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	// buiweex.toast(val);
 	        	this.keyword = val.trim();
 	        	ajax({
-	        		url : 'api/course/getpagelist',
+	        		url : 'ba/api/course/getpagelist',
 	        		data : {
 	        			keyword : unicode(this.keyword),
 	        			type : this.type,
@@ -196,11 +199,13 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	buiweex.toast(val);
 	        },
 	        getFilterList () {
+	        	var that=this;
 	        	ajax({
-	        		url : 'api/course/category/list',
+	        		url : 'ba/api/course/category/list',
 	        	}).then((res) =>{
-	        		this.filterList = res.r;
-	        		// buiweex.alert(res.r);
+	        		buiweex.toast("2222222")
+	        		that.filterList = res.r;
+	        		console.info(this.filterList[0])
 	        	},(errorT,status) =>{
 	        		
 	        	})
@@ -219,7 +224,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	this.refreshIcon = "icon-loadding";
 	        	this.refreshText = "正在刷新";
             	ajax({
-            		url : 'api/course/getpagelist',
+            		url : 'ba/api/course/getpagelist',
             		data : {
             			categoryid : categoryId,
             			type : type,
@@ -245,7 +250,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	this.showLoading = true;
 	        	this.page += 1;
             	ajax({
-            		url : 'api/course/getpagelist',
+            		url : 'ba/api/course/getpagelist',
             		data : {
             			categoryid : categoryId,
             			type : type,
@@ -293,6 +298,9 @@ import {unicode,fixedPic} from '../../js/tool.js';
             },
             fixedPicture (source) {
             	return fixedPic(source);
+            },
+            linkDetail () {
+            	buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js");
             }
 		},
 		created (){

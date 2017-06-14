@@ -50,6 +50,7 @@ module.exports = {
         }, function (resp) {
             if (resp.ok) {
                 var auth = that.parseAuthData(resp.data);
+                 
                 if (auth.error) {
                     fail(auth.error);
                 } else {
