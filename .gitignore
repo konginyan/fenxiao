@@ -4,5 +4,4 @@ dist
 .idea/*
 /config.js
 *.css
-*.map
 .sass-cache
