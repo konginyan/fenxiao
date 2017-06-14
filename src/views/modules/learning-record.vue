@@ -11,23 +11,23 @@
 					<text class="record-font-20 learning-record-detail">需求分析师</text>
 				</div>
 				<div class="learning-record-time-block">
-					<text class="record-font-36 learning-record-time">14时23分</text>
+					<text class="record-font-36 learning-record-time">{{second2Time(profile.learnDuration)}}</text>
 					<text class="learning-record-tim">学习时长</text>
 				</div>
 			</div>
 			<div class="learning-record-center">
 				<div class="learning-record-count">
-					<text class="record-font-32 record-color-6">123门</text>
+					<text class="record-font-32 record-color-6">{{profile.courseDoneNum}}门</text>
 					<text class="record-font-20 record-color-9">已学微课</text>
 				</div>
 				<div class="record-border"></div>
 				<div class="learning-record-count">
-					<text class="record-font-32 record-color-6">123次</text>
+					<text class="record-font-32 record-color-6">{{profile.signupCount}}次</text>
 					<text class="record-font-20 record-color-9">参加培训</text>
 				</div>
 				<div class="record-border"></div>
 				<div class="learning-record-count">
-					<text class="record-font-32 record-color-6">123个</text>
+					<text class="record-font-32 record-color-6">{{profile.liveDoneNum}}个</text>
 					<text class="record-font-20 record-color-9">观看直播</text>
 				</div>
 			</div>
@@ -37,10 +37,10 @@
 			<div v-if="records.length > 0">
 				<div class="course-list">
 					<div class="course-list-item bb1" v-for="record in records">
-						<bui-image class="course-item-img" :src="record.picture"></bui-image>
+						<bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
 						<div class="course-content">
-							<text class="course-item-title">2017年政企事业部需求分析师交流分享会</text>
-							<text class="course-item-time">51人学过</text>
+							<text class="course-item-title">{{record.name}}</text>
+							<text class="course-item-time">{{record.time}}</text>
 						</div>
 					</div>
 				</div>
@@ -59,6 +59,7 @@
 <script>
 import buiweex from "../../js/buiweex.js";
 import ajax from "../../js/ajax.js";
+import {fixedPic, departUrl, secondToTime} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
@@ -67,11 +68,22 @@ var globalEvent = weex.requireModule('globalEvent');
 				leftItem: {
 					icons: 'icon-back',
 				},
-				records: []
+				profile: {
+					head_img: '',
+					signupCount: 0,
+					courseDoneNum: 0,
+					liveDoneNum: 0,
+					learnDuration: 0
+				},
+				records: [],
+				courses: [],
+				trains: [],
+				lives: []
 			}
 		},
 		mounted(){
 			this.getRecords();
+			this.getProfile();
 		},
 		methods:{
 			back(){
@@ -85,13 +97,38 @@ var globalEvent = weex.requireModule('globalEvent');
 						rows : 4
 					}
 				}).then((res) =>{
-					this.records = res.r;				
+					this.records = res.r;
 				},(errorT,status) =>{
 					
 				})
 			},
+			getProfile () {
+				ajax({
+					url : 'api/ta/info',
+					data : {
+						userid : '43fe6476-cd7b-493b-8044-c7e3149d0876'
+					}
+				}).then((res) =>{
+					this.profile.signupCount = res.r[0].signupCount;
+					this.profile.courseDoneNum = res.r[0].courseDoneNum;
+					this.profile.liveDoneNum = res.r[0].liveDoneNum;
+					this.profile.learnDuration = res.r[0].learnDuration;
+				},(errorT,status) =>{
+
+				})
+			},
 			getMoreRecords () {
 				buiweex.push(buiweex.getContextPath() + "/more-record.weex.js");
+			},
+			getPicture (src) {
+				return fixedPic(src);
+			},
+			getRecordType (rec) {
+				let obj = departUrl(rec.url);
+				return obj.args[0].value;
+			},
+			second2Time (second){
+				return secondToTime(second);
 			}
 		},
 		created (){
