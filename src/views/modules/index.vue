@@ -13,7 +13,7 @@
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 	                    @change="changeHandler" infinite="false" >
 	                <div class="bui-slider-pages" v-for="item in recommendList" >
-	                    	<bui-image @click="linkBanner(item)" class="img slider-img" :src="item.picture"></bui-image>
+	                    	<bui-image @click="linkBanner(item)" class="img slider-img" :src="fixedPicture(item.picture)"></bui-image>
 	                </div>
 	                <indicator class="bui-slider-indicator"></indicator>
 	            </slider>
@@ -33,13 +33,13 @@
 	            	</div>
 	            </div>
 
-	            <div class="trailer-wrap">
+	            <div class="trailer-wrap" v-for="item in lastact">
 	            	<bui-image src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
 	            	<div class="trailer-inner">
-	            		<bui-image src="/image/trailer-img.png" class="trailer-img"></bui-image>
+	            		<bui-image :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
 	            		<div class="trailer-content">
-	            			<text class="trailer-title">设计源于生活—小黎哥的设计之路</text>
-	            			<text class="trailer-date">05-02 17:30</text>
+	            			<text class="trailer-title">{{item.name}}</text>
+	            			<text class="trailer-date">{{item.created_time}}</text>
 	            		</div>
 	            	</div>
 	            </div>
@@ -52,11 +52,10 @@
 					</div>
 					<div class="h-line"></div>
 				</div>
-
 				<div class="course-list">
 					<div class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
-						<bui-image class="course-item-img" :src="item.picture" @click="hottestLink(item.courseId)"></bui-image>
-						<div class="course-content">
+						<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
+						<div class="course-content">				
 							<text class="course-item-title">{{item.name}}</text>
 							<text class="course-item-text">{{item.learnCount}}人学过</text>
 							<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
@@ -78,7 +77,7 @@ import buiweex from "../../js/buiweex.js";
 import rate from '../components/rate.vue';
 var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
-
+import {fixedPic} from '../../js/tool.js';
 
 	export default {
 		data () {
@@ -88,6 +87,7 @@ import ajax from '../../js/ajax.js';
                 },
                 recommendList: [],
                 hottestList : [],
+                lastact : {}
                 
 			}
 		},
@@ -109,7 +109,7 @@ import ajax from '../../js/ajax.js';
                 this.scrollHnadlerCallCount = 0;
             },
             linkBanner (item){
-            	// buiweex.alert(item.url);
+            	// buiweex.alert(item.name);
             },
             rateChange (val){
             	buiweex.toast(val);
@@ -139,6 +139,18 @@ import ajax from '../../js/ajax.js';
             		
             	})
             },
+            getLastact () {
+            	ajax({
+            		url : 'api/homepage/lastact',
+            	}).then((res) =>{
+            		this.lastact = res.r;
+            	},(errorT,status) =>{
+            		
+            	})
+            },
+            fixedPicture (source) {
+            	return fixedPic(source);
+            }
             
 			
 		},
@@ -153,6 +165,8 @@ import ajax from '../../js/ajax.js';
 		mounted () {
 			this.getHottestList();
 			this.getRecommend();
+			this.getLastact();
+
 			
 		}
 	}

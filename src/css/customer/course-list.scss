@@ -28,8 +28,9 @@
 }
 .course-item-title{
 	font-size: 28px;
-	line : 2;
-	height: 60px;
+	lines : 2;
+	height: 65px;
+	text-overflow : ellipsis;
 }
 .course-item-text{
 	margin-top: 20px;
