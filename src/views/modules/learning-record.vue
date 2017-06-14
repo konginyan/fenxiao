@@ -79,7 +79,11 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			getRecords () {
 				ajax({
-					url : 'api/course/gethottestlist'
+					url : 'api/homepage/historyInfos',
+					data : {
+						page : 1,
+						rows : 4
+					}
 				}).then((res) =>{
 					this.records = res.r;				
 				},(errorT,status) =>{
