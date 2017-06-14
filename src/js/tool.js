@@ -58,5 +58,50 @@ export function fixedPic(source){
     } else {
         return source;
     }
-}	
+
+}
+
+export function departUrl(url){
+    let arr = url.split('\?');
+    let args = arr[1].split('&')
+    let obj = {
+        url : arr[0],
+        args : []
+    }
+
+    args.forEach(function(value){
+        let ars = value.split('=');
+        obj.args.push({
+            key : ars[0],
+            value : ars[1]
+        })
+    }, this);
+
+    return obj;
+}
+
+export function secondToTime(second){
+    let hour = 0;
+    let min = 0;
+    if(second>=3600){
+        hour = parseInt(second/3600);
+        second -= hour * 3600;
+    }
+    if(second>=60){
+        min = parseInt(second/60);
+        second -= min * 60;
+    }
+    if(hour>0){
+        return hour + '时' + min + '分'
+    }
+    return min + '分' + second + '秒'
+}
+
+export function getDateDiff(startDate)  
+{  
+    var endTime = new Date().getTime();     
+    var startTime = new Date(Date.parse(startDate.replace(/-/g,   "/"))).getTime();     
+    var dates = (endTime - startTime)/(1000*60*60*24);     
+    return  dates;    
+}
 
