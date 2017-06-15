@@ -25,28 +25,28 @@ function left_zero_4(str) {
  
  */
 
-export function formatDate (time,show) {
-	return new Date(time).formatDate(show);
-}
+// export function formatDate (time,show) {
+// 	return new Date(time).formatDate(show);
+// }
 
-Date.prototype.formatDate = function (format){
-    var o = {
-        "M+": this.getMonth() + 1, //month
-        "d+": this.getDate(),    //day
-        "h+": this.getHours(),   //hour
-        "m+": this.getMinutes(), //minute
-        "s+": this.getSeconds(), //second
-        "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
-        "S": this.getMilliseconds() //millisecond
-    }
-    if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
-    (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o) if (new RegExp("(" + k + ")").test(format))
-        format = format.replace(RegExp.$1,
-      RegExp.$1.length == 1 ? o[k] :
-        ("00" + o[k]).substr(("" + o[k]).length));
-    return format;
-}
+// Date.prototype.formatDate = function (format){
+//     var o = {
+//         "M+": this.getMonth() + 1, //month
+//         "d+": this.getDate(),    //day
+//         "h+": this.getHours(),   //hour
+//         "m+": this.getMinutes(), //minute
+//         "s+": this.getSeconds(), //second
+//         "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
+//         "S": this.getMilliseconds() //millisecond
+//     }
+//     if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
+//     (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+//     for (var k in o) if (new RegExp("(" + k + ")").test(format))
+//         format = format.replace(RegExp.$1,
+//       RegExp.$1.length == 1 ? o[k] :
+//         ("00" + o[k]).substr(("" + o[k]).length));
+//     return format;
+// }
 
 export function fixedPic(source){
     let dataReg = /\d{4}\/\d{2}\/\d{2}/,
@@ -58,6 +58,7 @@ export function fixedPic(source){
     } else {
         return source;
     }
+
 }
 
 export function departUrl(url){
@@ -103,3 +104,4 @@ export function getDateDiff(startDate)
     var dates = (endTime - startTime)/(1000*60*60*24);     
     return  dates;    
 }
+
