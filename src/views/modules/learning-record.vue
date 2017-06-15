@@ -4,30 +4,30 @@
 		</bui-header>
 		<bui-content-scroll>
 			<div class="learning-record-row">
-				<bui-image class="learning-record-head-img" src="/image/icon_kefu.png" radius="57px"></bui-image>
+				<bui-image class="learning-record-head-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>
 				<div class="learning-record-col">
-					<text class="record-font-36 learning-record-author">黄丽</text>
-					<text class="record-font-20 learning-record-detail">技术管理部</text>
-					<text class="record-font-20 learning-record-detail">需求分析师</text>
+					<text class="record-font-36 learning-record-author">{{profile.name}}</text>
+					<text class="record-font-20 learning-record-detail">{{profile.orgName}}</text>
+					<text class="record-font-20 learning-record-detail">{{profile.postDescription}}</text>
 				</div>
 				<div class="learning-record-time-block">
-					<text class="record-font-36 learning-record-time">{{second2Time(profile.learnDuration)}}</text>
+					<text class="record-font-36 learning-record-time">{{second2Time(recordStat.learnDuration)}}</text>
 					<text class="learning-record-tim">学习时长</text>
 				</div>
 			</div>
 			<div class="learning-record-center">
 				<div class="learning-record-count">
-					<text class="record-font-32 record-color-6">{{profile.courseDoneNum}}门</text>
+					<text class="record-font-32 record-color-6">{{recordStat.courseDoneNum}}门</text>
 					<text class="record-font-20 record-color-9">已学微课</text>
 				</div>
 				<div class="record-border"></div>
 				<div class="learning-record-count">
-					<text class="record-font-32 record-color-6">{{profile.signupCount}}次</text>
+					<text class="record-font-32 record-color-6">{{recordStat.signupCount}}次</text>
 					<text class="record-font-20 record-color-9">参加培训</text>
 				</div>
 				<div class="record-border"></div>
 				<div class="learning-record-count">
-					<text class="record-font-32 record-color-6">{{profile.liveDoneNum}}个</text>
+					<text class="record-font-32 record-color-6">{{recordStat.liveDoneNum}}个</text>
 					<text class="record-font-20 record-color-9">观看直播</text>
 				</div>
 			</div>
@@ -68,12 +68,17 @@ var globalEvent = weex.requireModule('globalEvent');
 				leftItem: {
 					icons: 'icon-back',
 				},
+				recordStat: {
+					// signupCount: 0,
+					// courseDoneNum: 0,
+					// liveDoneNum: 0,
+					// learnDuration: 0
+				},
 				profile: {
-					head_img: '',
-					signupCount: 0,
-					courseDoneNum: 0,
-					liveDoneNum: 0,
-					learnDuration: 0
+					avatar: '',
+					name: '',
+					orgName: '',
+					postDescription: ''
 				},
 				records: [],
 				courses: [],
@@ -83,6 +88,7 @@ var globalEvent = weex.requireModule('globalEvent');
 		},
 		mounted(){
 			this.getRecords();
+			this.getRecordStat();
 			this.getProfile();
 		},
 		methods:{
@@ -91,7 +97,7 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			getRecords () {
 				ajax({
-					url : 'api/homepage/historyInfos',
+					url : 'ba/api/homepage/historyInfos',
 					data : {
 						page : 1,
 						rows : 4
@@ -102,17 +108,26 @@ var globalEvent = weex.requireModule('globalEvent');
 					
 				})
 			},
-			getProfile () {
+			getRecordStat () {
 				ajax({
-					url : 'api/ta/info',
+					url : 'ba/api/ta/info',
 					data : {
 						userid : '43fe6476-cd7b-493b-8044-c7e3149d0876'
 					}
 				}).then((res) =>{
-					this.profile.signupCount = res.r[0].signupCount;
-					this.profile.courseDoneNum = res.r[0].courseDoneNum;
-					this.profile.liveDoneNum = res.r[0].liveDoneNum;
-					this.profile.learnDuration = res.r[0].learnDuration;
+					this.recordStat = res.r[0];
+				},(errorT,status) =>{
+
+				})
+			},
+			getProfile () {
+				ajax({
+					url : 'uam/api/user/getUserById',
+					data : {
+						id : '43fe6476-cd7b-493b-8044-c7e3149d0876'
+					}
+				}).then((res) =>{
+					this.profile = res.r
 				},(errorT,status) =>{
 
 				})
@@ -121,11 +136,8 @@ var globalEvent = weex.requireModule('globalEvent');
 				buiweex.push(buiweex.getContextPath() + "/more-record.weex.js");
 			},
 			getPicture (src) {
-				return fixedPic(src);
-			},
-			getRecordType (rec) {
-				let obj = departUrl(rec.url);
-				return obj.args[0].value;
+				let field = arguments[1];
+				return fixedPic(src, field);
 			},
 			second2Time (second){
 				return secondToTime(second);

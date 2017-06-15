@@ -7,26 +7,6 @@
       >
     </bui-header>
 
-    <!--<bui-content>
-			<list class="bui-list">
-				<cell class="record-list">
-				   <div v-for="item in [1,2]" class="record-list-item">
-	   					<text>6666666666666666666</text>
-	   			</div>
-				</cell>
-
-        <cell class="record-list">
-				   <div v-for="item in [1,2]" class="record-list-item">
-	   					<text>6666666666666666666</text>
-	   			</div>
-				</cell>
-
-				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
-				    <text class="bui-loading-indicator">{{loadingText}}</text>
-				</loading>
-			</list>
-		</bui-content>-->
-
     <bui-content-scroll>
       <list class="bui-list">
         <cell v-if="today.length > 0" class="record-list">
@@ -34,7 +14,7 @@
           <div class="record-list-item" v-for="item in today">
             <bui-image class="record-item-pic" :src="getPicture(item.picture)"></bui-image>
             <text class="record-item-name">{{item.name}}</text>
-            <text class="record-item-progress">已学到17分5秒</text>
+            <text class="record-item-progress">{{getRecordExt(item)}}</text>
           </div>
         </cell>
         <cell v-if="yesterday.length > 0" class="record-list">
@@ -42,7 +22,7 @@
           <div class="record-list-item" v-for="item in yesterday">
             <bui-image class="record-item-pic" :src="getPicture(item.picture)"></bui-image>
             <text class="record-item-name">{{item.name}}</text>
-            <text class="record-item-progress">已学到17分5秒</text>
+            <text class="record-item-progress">{{getRecordExt(item)}}</text>
           </div>
         </cell>
         <cell v-if="lastweek.length > 0" class="record-list">
@@ -50,7 +30,7 @@
           <div class="record-list-item" v-for="item in lastweek">
             <bui-image class="record-item-pic" :src="getPicture(item.picture)"></bui-image>
             <text class="record-item-name">{{item.name}}</text>
-            <text class="record-item-progress">已学到17分5秒</text>
+            <text class="record-item-progress">{{getRecordExt(item)}}</text>
           </div>
         </cell>
         <cell v-if="before.length > 0" class="record-list">
@@ -58,7 +38,7 @@
           <div class="record-list-item" v-for="item in before">
             <bui-image class="record-item-pic" :src="getPicture(item.picture)"></bui-image>
             <text class="record-item-name">{{item.name}}</text>
-            <text class="record-item-progress">已学到17分5秒</text>
+            <text class="record-item-progress">{{getRecordExt(item)}}</text>
           </div>
         </cell>
 
@@ -73,7 +53,7 @@
 <script>
 import buiweex from "../../js/buiweex.js";
 import ajax from "../../js/ajax.js";
-import {fixedPic, departUrl, getDateDiff} from "../../js/tool.js";
+import {fixedPic, departUrl, getDateDiff, secondToTime} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 
 export default {
@@ -102,13 +82,13 @@ export default {
     },
     getRecords () {
       ajax({
-        url : 'api/homepage/historyInfos',
+        url : 'ba/api/homepage/historyInfos',
         data : {
           page : this.page,
           rows : this.rows
         }
       }).then((res) =>{
-        this.page += this.rows;
+        this.page += 1;
         this.showLoading = false;
         if(res.r.length === 0){
           this.loadingText = '没有更多数据了';
@@ -120,9 +100,9 @@ export default {
         res.r.forEach((record)=>{
           let diff = getDateDiff(record.time);
           if(diff<0) this.future.push(record);
-          else if(diff<1) this.today.push(record);
-          else if(diff<2) this.yesterday.push(record);
-          else if(diff<8) this.lastweek.push(record);
+          else if(diff==0) this.today.push(record);
+          else if(diff==1) this.yesterday.push(record);
+          else if(diff<=7) this.lastweek.push(record);
           else this.before.push(record);
         })
       },(errorT,status) =>{
@@ -138,8 +118,17 @@ export default {
     getNextPage () {
       this.showLoading = true;
       this.getRecords();
+    },
+    getRecordType (rec) {
+      let obj = departUrl(rec.url);
+      return obj.args[0].value;
+    },
+    getRecordExt (rec) {
+      let type = this.getRecordType(rec);
+      if(type === 'Live') return rec.ext.startTime.substring(5,16);
+      if(type === 'Course') return '学习到' + secondToTime(rec.ext.duration);
+      return rec.ext.regTime.substring(5,16);      
     }
-
   },
   created (){
     globalEvent.addEventListener("androidback", function (e){
@@ -162,13 +151,13 @@ export default {
 }
 
 .record-list-item{
-  height: 310px;
+  height: 410px;
   margin-bottom: 50px;
 }
 
 .record-item-pic{
   width: 702px;
-  height: 251px;
+  height: 360px;
 }
 
 .record-item-name{

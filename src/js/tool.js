@@ -49,12 +49,14 @@ function left_zero_4(str) {
 // }
 
 export function fixedPic(source){
+    let fieldPart = arguments[1] || 'ba';
+
     let dataReg = /\d{4}\/\d{2}\/\d{2}/,
         decodeReg = /\//gi;
 
     if (dataReg.test(source) ) {
         source = source.replace(decodeReg,'%2F').replace(/\|\|.*/,'');
-        return 'http://ba.depts.bingosoft.net:8088/ba/ui/download?filepath=' + source;
+        return 'http://ba.depts.bingosoft.net:8088/'+ fieldPart +'/ui/download?filepath=' + source;
     } else {
         return source;
     }
@@ -101,7 +103,7 @@ export function getDateDiff(startDate)
 {  
     var endTime = new Date().getTime();     
     var startTime = new Date(Date.parse(startDate.replace(/-/g,   "/"))).getTime();     
-    var dates = (endTime - startTime)/(1000*60*60*24);     
-    return  dates;    
+    var dates = parseInt(endTime/(1000*60*60*24)) - parseInt(startTime/(1000*60*60*24));     
+    return dates;    
 }
 
