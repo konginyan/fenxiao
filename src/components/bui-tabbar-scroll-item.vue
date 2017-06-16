@@ -1,11 +1,11 @@
 <template>
-    <div class="bui-scroller-tabbar-row" @click="onclickitem">
-        <text v-if="type!='icon'" :style="{ 'color': titleColor }" class="text">{{title}}</text>
-        <text class="actived" v-if="selected"></text>
+    <div class="bui-scroller-tabbar-row" @click="onclickitem" :style="{'width': width}">
+        <text class="text" :style="{ 'color': titleColor, 'font-size': titleSize }">{{title}}</text>
+        <text class="actived" :style="{'border-bottom-color': titleColor}" v-if="selected"></text>
     </div>
 </template>
 
-<style src="../css/tabbar.css"></style>
+<style lang="sass" src="../css/tabbar.scss"></style>
 
 <script>
     module.exports = {
@@ -13,11 +13,10 @@
             index: {default: 0},
             title: {default: ''},
             titleColor: {default: '#000000'},
-            titleSize: {default:'25'},
-            icon: {default: ''},
-            backgroundColor: {default: '#ffffff'},
+            titleSize: {default:'28'},
             selected: {default: false},
-            type:{default:'icon-text'} //text,icon-text,icon
+            length: {},
+            scroll: {default: true}
         },
         methods: {
             onclickitem: function (e) {
@@ -25,6 +24,13 @@
                     index: this.index
                 };
                 this.$emit('tabItemOnClick', params);
+            }
+        },
+        computed:{
+            width: function () {
+                if(this.scroll) return;
+                var i = 750/this.length;
+                return i;
             }
         }
     }

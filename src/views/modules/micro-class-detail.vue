@@ -1,7 +1,14 @@
 <template>
 	<div class="micro-class-detail-wrap">
 		<div class="video-wrap">
-
+				<bui-header
+                title="分晓"
+                @leftClick="back"
+                @centerClick="showDemo"
+                :leftItem="leftItem"
+                >
+                <icon @click="more" slot="right" name="icon-more" size="45px" color="#ffffff" class="pdl10"></icon>
+        </bui-header>
 			<video class="bui-video"
 	                   :src="src"
 	                   controls
@@ -14,8 +21,7 @@
 		<tabbar-scroll :tabItems="tabItems"
 		                     selectedIndex="0"
 		                     :scroll="false"
-		                     itemClass = 'tab-item'
-		                     top="400px" @tabItemOnClick="tabItemOnClick"></tabbar-scroll>
+		                     top="437px" @tabItemOnClick="tabItemOnClick"></tabbar-scroll>
 		
 	</div>
 </template>
@@ -34,6 +40,7 @@ var globalEvent = weex.requireModule('globalEvent');
 				        selected: false,
 				        src: '/brief-introduction.weex.js',
 				        visibility: 'visible',
+				        titleSize : 30,
 				    },
 				    {
 				        index: 1,
@@ -41,6 +48,7 @@ var globalEvent = weex.requireModule('globalEvent');
 				        selected: false,
 				        src: '/catalog.weex.js',
 				        visibility: 'hidden',
+				        titleSize : 30,
 				    },
 				    {
 				        index: 2,
@@ -48,10 +56,14 @@ var globalEvent = weex.requireModule('globalEvent');
 				        selected: false,
 				        src: '/comment.weex.js',
 				        visibility: 'hidden',
+				        titleSize : 30,
 				    }
 				],
 				state: '---',
-				src: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4'
+				src: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4',
+				leftItem: {
+                    icons: 'icon-back',
+                },
 			}
 		},
 		mounted(){
@@ -61,6 +73,12 @@ var globalEvent = weex.requireModule('globalEvent');
 		methods:{
 			back(){
 				buiweex.pop();
+			},
+			showDemo (){
+				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
+			},
+			more () {
+
 			},
 			tabItemOnClick: function (e) {
 			    buiweex.toast("tab" + e.index);
@@ -107,6 +125,3 @@ var globalEvent = weex.requireModule('globalEvent');
 <style src="../../css/video.css"></style>
 
 <style src="../../css/customer/micro-class-detail.css"></style>
-<style>
-
-</style>

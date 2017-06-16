@@ -4,11 +4,26 @@
                 title="分晓"
                 :leftItem="leftItem"
                 @centerClick="showDemo"
+                
                 >
                 <icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
         </bui-header>
-
+	
        	<bui-content-scroll class="span1">
+       		<!-- <bg  src="/image/icon-micro.png" resize="contain" :bgStyle="bgStyle" :contentStyle="contentStyle">
+       			  					<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       				       			<text>我是内容</text>
+       		</bg> -->
 			<div>
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 	                    @change="changeHandler" infinite="false" >
@@ -39,7 +54,7 @@
 	            		<bui-image :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
 	            		<div class="trailer-content">
 	            			<text class="trailer-title">{{item.name}}</text>
-	            			<text class="trailer-date">{{item.created_time}}</text>
+	            			<text class="trailer-date">{{fiexedDate(item.created_time)}}</text>
 	            		</div>
 	            	</div>
 	            </div>
@@ -77,7 +92,7 @@ import buiweex from "../../js/buiweex.js";
 import rate from '../components/rate.vue';
 var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
-import {fixedPic} from '../../js/tool.js';
+import {fixedPic,formatDate} from '../../js/tool.js';
 
 	export default {
 		data () {
@@ -90,6 +105,20 @@ import {fixedPic} from '../../js/tool.js';
                 lastact : {}
                 
 			}
+		},
+		computed : {
+			/*bgStyle () {
+				return {
+					width : '750px',
+					height : '500px',
+					backgroundColor :'blue'
+				}
+			},
+			contentStyle () {
+				return {
+					height : '500px'
+				}
+			}*/
 		},
 		methods : {
 			back () {
@@ -152,6 +181,9 @@ import {fixedPic} from '../../js/tool.js';
             },
             fixedPicture (source) {
             	return fixedPic(source);
+            },
+            fiexedDate (time) {
+            	return formatDate(time,'MM-dd hh:mm:ss')
             }
             
 			
@@ -162,7 +194,7 @@ import {fixedPic} from '../../js/tool.js';
 	        });
 	    },
 		components : {
-			rate
+			rate,
 		},
 		mounted () {
 			this.getHottestList();
