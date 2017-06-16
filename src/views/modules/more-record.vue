@@ -11,34 +11,50 @@
       <list class="bui-list">
         <cell v-if="today.length > 0" class="record-list">
           <text class="record-time-title">今天</text>
-          <div class="record-list-item" v-for="item in today">
-            <bui-image class="record-item-pic" :src="getPicture(item.picture)"></bui-image>
-            <text class="record-item-name">{{item.name}}</text>
-            <text class="record-item-progress">{{getRecordExt(item)}}</text>
+          <div class="course-list" v-for="(item,index) in today">
+            <div class="course-list-item no-border" :class="[index===today.length-1?'no-border':'bb1']">
+              <bui-image class="course-item-img" :src="getPicture(item.picture)"></bui-image>
+              <div class="course-content">
+                <text class="course-item-title">{{item.name}}</text>
+                <text class="course-item-time">{{getRecordExt(item)}}</text>
+              </div>
+            </div>
           </div>
         </cell>
         <cell v-if="yesterday.length > 0" class="record-list">
           <text class="record-time-title">昨天</text>
-          <div class="record-list-item" v-for="item in yesterday">
-            <bui-image class="record-item-pic" :src="getPicture(item.picture)"></bui-image>
-            <text class="record-item-name">{{item.name}}</text>
-            <text class="record-item-progress">{{getRecordExt(item)}}</text>
+          <div class="course-list" v-for="(item,index) in yesterday">
+            <div class="course-list-item" :class="[index===yesterday.length-1?'no-border':'bb1']">
+              <bui-image class="course-item-img" :src="getPicture(item.picture)"></bui-image>
+              <div class="course-content">
+                <text class="course-item-title">{{item.name}}</text>
+                <text class="course-item-time">{{getRecordExt(item)}}</text>
+              </div>
+            </div>
           </div>
         </cell>
         <cell v-if="lastweek.length > 0" class="record-list">
           <text class="record-time-title">此前一周</text>
-          <div class="record-list-item" v-for="item in lastweek">
-            <bui-image class="record-item-pic" :src="getPicture(item.picture)"></bui-image>
-            <text class="record-item-name">{{item.name}}</text>
-            <text class="record-item-progress">{{getRecordExt(item)}}</text>
+          <div class="course-list" v-for="(item,index) in lastweek">
+            <div class="course-list-item" :class="[index===lastweek.length-1?'no-border':'bb1']">
+              <bui-image class="course-item-img" :src="getPicture(item.picture)"></bui-image>
+              <div class="course-content">
+                <text class="course-item-title">{{item.name}}</text>
+                <text class="course-item-time">{{getRecordExt(item)}}</text>
+              </div>
+            </div>
           </div>
         </cell>
         <cell v-if="before.length > 0" class="record-list">
           <text class="record-time-title">更早</text>
-          <div class="record-list-item" v-for="item in before">
-            <bui-image class="record-item-pic" :src="getPicture(item.picture)"></bui-image>
-            <text class="record-item-name">{{item.name}}</text>
-            <text class="record-item-progress">{{getRecordExt(item)}}</text>
+          <div class="course-list" v-for="(item,index) in before">
+            <div class="course-list-item" :class="[index===before.length-1?'no-border':'bb1']">
+              <bui-image class="course-item-img" :src="getPicture(item.picture)"></bui-image>
+              <div class="course-content">
+                <text class="course-item-title">{{item.name}}</text>
+                <text class="course-item-time">{{getRecordExt(item)}}</text>
+              </div>
+            </div>
           </div>
         </cell>
 
@@ -53,7 +69,7 @@
 <script>
 import buiweex from "../../js/buiweex.js";
 import ajax from "../../js/ajax.js";
-import {fixedPic, departUrl, getDateDiff, secondToTime} from "../../js/tool.js";
+import {fixedPic, departUrl, getDateDiff, secondToTime, formatDate} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 
 export default {
@@ -70,7 +86,9 @@ export default {
       page: 1,
       rows: 20,
       loadingText: "正在加载更多数据...",
-      showLoading: false
+      showLoading: false,
+      placeholder: '/image/no-pic.png',
+      noBorder: true
     }
   },
   mounted(){
@@ -98,7 +116,7 @@ export default {
         }
 
         res.r.forEach((record)=>{
-          let diff = getDateDiff(record.time);
+          let diff = getDateDiff(formatDate(record.time,'yyyy-MM-dd hh:mm:ss'));
           if(diff<0) this.future.push(record);
           else if(diff==0) this.today.push(record);
           else if(diff==1) this.yesterday.push(record);
@@ -110,10 +128,10 @@ export default {
       })
     },
     getPicture (src) {
-      return fixedPic(src);
+      return fixedPic(src) || this.placeholder;
     },
     "onLoading": function (e) {
-        this.getNextPage();
+      this.getNextPage();
     },
     getNextPage () {
       this.showLoading = true;
@@ -125,9 +143,13 @@ export default {
     },
     getRecordExt (rec) {
       let type = this.getRecordType(rec);
-      if(type === 'Live') return rec.ext.startTime.substring(5,16);
-      if(type === 'Course') return '学习到' + secondToTime(rec.ext.duration);
-      return rec.ext.regTime.substring(5,16);      
+      if(type === 'Live') return formatDate(rec.ext.startTime, '开始于 MM-dd hh:mm');
+      if(type === 'Course') {
+        if(rec.ext.duration === undefined) return '';
+        if(rec.ext.duration === '-1') return '已学完';
+        return '学习到' + secondToTime(rec.ext.duration);
+      }
+      return formatDate(rec.ext.regTime, '开始于 MM-dd hh:mm');      
     }
   },
   created (){
@@ -139,42 +161,14 @@ export default {
 </script>
 
 <style scope>
-.record-list{
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
 .record-time-title{
   margin-top: 64px;
+  margin-left: 24px;
   font-size: 36px;
   margin-bottom: 30px;
-}
-
-.record-list-item{
-  height: 410px;
-  margin-bottom: 50px;
-}
-
-.record-item-pic{
-  width: 702px;
-  height: 360px;
-}
-
-.record-item-name{
-  font-size: 28px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-}
-
-.record-item-progress{
-  font-size: 24px;
-  color: #9B9B9B;
-  position: absolute;
-  bottom: 0;
-  right: 0;
 }
 </style>
 
 <style src="../../css/layout.css"></style>
 <style src="../../css/loading.css"></style>
+<style src="../../css/customer/course-list.css"></style>
