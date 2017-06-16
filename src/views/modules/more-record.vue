@@ -4,60 +4,26 @@
       title="观看记录"
       :leftItem="leftItem"
       @leftClick = "back"
+      :rightItem="rightItem"
       >
     </bui-header>
 
     <bui-content-scroll>
       <list class="bui-list">
-        <cell v-if="today.length > 0" class="record-list">
-          <text class="record-time-title">今天</text>
-          <div class="course-list" v-for="(item,index) in today">
-            <div class="course-list-item no-border" :class="[index===today.length-1?'no-border':'bb1']">
-              <bui-image class="course-item-img" :src="getPicture(item.picture)"></bui-image>
-              <div class="course-content">
-                <text class="course-item-title">{{item.name}}</text>
-                <text class="course-item-time">{{getRecordExt(item)}}</text>
+        <cell v-for="part in all">
+          <div v-if="part.records.length > 0" class="record-list">
+            <text class="record-time-title">{{part.title}}</text>
+            <div class="course-list" v-for="(record,index) in part.records">
+              <div class="course-list-item no-border" :class="[index===part.records.length-1?'no-border':'bb1']">
+                <bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
+                <div class="course-content">
+                  <text class="course-item-title">{{record.name}}</text>
+                  <text class="course-item-time">{{getRecordExt(record)}}</text>
+                </div>
               </div>
             </div>
           </div>
         </cell>
-        <cell v-if="yesterday.length > 0" class="record-list">
-          <text class="record-time-title">昨天</text>
-          <div class="course-list" v-for="(item,index) in yesterday">
-            <div class="course-list-item" :class="[index===yesterday.length-1?'no-border':'bb1']">
-              <bui-image class="course-item-img" :src="getPicture(item.picture)"></bui-image>
-              <div class="course-content">
-                <text class="course-item-title">{{item.name}}</text>
-                <text class="course-item-time">{{getRecordExt(item)}}</text>
-              </div>
-            </div>
-          </div>
-        </cell>
-        <cell v-if="lastweek.length > 0" class="record-list">
-          <text class="record-time-title">此前一周</text>
-          <div class="course-list" v-for="(item,index) in lastweek">
-            <div class="course-list-item" :class="[index===lastweek.length-1?'no-border':'bb1']">
-              <bui-image class="course-item-img" :src="getPicture(item.picture)"></bui-image>
-              <div class="course-content">
-                <text class="course-item-title">{{item.name}}</text>
-                <text class="course-item-time">{{getRecordExt(item)}}</text>
-              </div>
-            </div>
-          </div>
-        </cell>
-        <cell v-if="before.length > 0" class="record-list">
-          <text class="record-time-title">更早</text>
-          <div class="course-list" v-for="(item,index) in before">
-            <div class="course-list-item" :class="[index===before.length-1?'no-border':'bb1']">
-              <bui-image class="course-item-img" :src="getPicture(item.picture)"></bui-image>
-              <div class="course-content">
-                <text class="course-item-title">{{item.name}}</text>
-                <text class="course-item-time">{{getRecordExt(item)}}</text>
-              </div>
-            </div>
-          </div>
-        </cell>
-
         <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
           <text class="bui-loading-indicator">{{loadingText}}</text>
 				</loading>
@@ -78,11 +44,31 @@ export default {
       leftItem: {
         icons: 'icon-back',
       },
-      future: [],
-      today: [],
-      yesterday: [],
-      lastweek: [],
-      before: [],
+      rightItem:{
+        icons: 'icon-search',
+      },
+      all: [
+        {
+          title: '未来',
+          records: [],
+        },
+        {
+          title: '今天',
+          records: [],
+        },
+        {
+          title: '昨天',
+          records: [],
+        },
+        {
+          title: '此前一周',
+          records: [],
+        },
+        {
+          title: '更早',
+          records: [],
+        }
+      ],
       page: 1,
       rows: 20,
       loadingText: "正在加载更多数据...",
@@ -117,11 +103,11 @@ export default {
 
         res.r.forEach((record)=>{
           let diff = getDateDiff(formatDate(record.time,'yyyy-MM-dd hh:mm:ss'));
-          if(diff<0) this.future.push(record);
-          else if(diff==0) this.today.push(record);
-          else if(diff==1) this.yesterday.push(record);
-          else if(diff<=7) this.lastweek.push(record);
-          else this.before.push(record);
+          if(diff<0) this.all[0].records.push(record);
+          else if(diff==0) this.all[1].records.push(record);
+          else if(diff==1) this.all[2].records.push(record);
+          else if(diff<=7) this.all[3].records.push(record);
+          else this.all[4].records.push(record);
         })
       },(errorT,status) =>{
         
@@ -165,7 +151,7 @@ export default {
   margin-top: 64px;
   margin-left: 24px;
   font-size: 36px;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
 }
 </style>
 

@@ -96,7 +96,7 @@ var globalEvent = weex.requireModule('globalEvent');
 				courses: [],
 				trains: [],
 				lives: [],
-				placeholder: 'image/no-pic.png'
+				placeholder: '/image/no-pic.png'
 			}
 		},
 		mounted(){
