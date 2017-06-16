@@ -50,14 +50,18 @@ function formatDates(time,format){
 }
 
 export function fixedPic(source){
+
     let dataReg = /\d{4}\/\d{2}\/\d{2}/,
-        decodeReg = /\//gi;
+        decodeReg = /\//gi,
+        isHttp = /http/;
 
     if (dataReg.test(source) ) {
         source = source.replace(decodeReg,'%2F').replace(/\|\|.*/,'');
         return 'http://ba.depts.bingosoft.net:8088/ba/ui/download?filepath=' + source;
-    } else {
-        return source;
+    } else if(isHttp.test(source)){
+        return 'http://ba.depts.bingosoft.net:8088/ba/ui/download?filepath=' + source;
+    }else{
+         return source;
     }
 
 }
