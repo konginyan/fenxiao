@@ -16,7 +16,7 @@ function left_zero_4(str) {
 }
 
 
-	/**
+/**
  * 时间格式化
  * @param {} format
  * @return {}
@@ -50,18 +50,31 @@ function formatDates(time,format){
 }
 
 export function fixedPic(source){
-    let dataReg = /\d{4}\/\d{2}\/\d{2}/,
-        decodeReg = /\//gi;
+    let fieldPart = arguments[1] || 'ba';
 
+    let dataReg = /\d{4}\/\d{2}\/\d{2}/,
+        decodeReg = /\//gi,
+        httpReg = /^http:\/\//;
+
+    if (source === ''){
+        return undefined;
+    }
     if (dataReg.test(source) ) {
         source = source.replace(decodeReg,'%2F').replace(/\|\|.*/,'');
-        return 'http://ba.depts.bingosoft.net:8088/ba/ui/download?filepath=' + source;
-    } else {
+        return 'http://ba.depts.bingosoft.net:8088/'+ fieldPart +'/ui/download?filepath=' + source;
+    } 
+    else if (httpReg.test(source)) {
         return source;
     }
-
+    else return 'http://ba.depts.bingosoft.net:8088/'+ fieldPart +'/ui/download?filepath=' + source;
 }
 
+
+/**
+ * 把 get url 拆分出多个参数
+ * @param {*} url 
+ * @return {url, args} obj
+ */
 export function departUrl(url){
     let arr = url.split('\?');
     let args = arr[1].split('&')
@@ -81,6 +94,11 @@ export function departUrl(url){
     return obj;
 }
 
+/**
+ * 把秒数转换成 "_分_秒" 或者 "_时_分"
+ * @param {*} second 
+ * @return string
+ */
 export function secondToTime(second){
     let hour = 0;
     let min = 0;
@@ -98,11 +116,16 @@ export function secondToTime(second){
     return min + '分' + second + '秒'
 }
 
+/**
+ * 计算当前时间和指定时间相差天数（按整天算）
+ * @param startDate demo: 2017-03-20
+ * @return dates 整数
+ */
 export function getDateDiff(startDate)  
 {  
     var endTime = new Date().getTime();     
     var startTime = new Date(Date.parse(startDate.replace(/-/g,   "/"))).getTime();     
-    var dates = (endTime - startTime)/(1000*60*60*24);     
-    return  dates;    
+    var dates = parseInt(endTime/(1000*60*60*24)) - parseInt(startTime/(1000*60*60*24));     
+    return dates;    
 }
 

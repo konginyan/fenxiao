@@ -1,65 +1,77 @@
 <template>
 	<div class="learning-record-wrap">
-		<bui-header title="学习记录">
-		</bui-header>
-		<bui-content-scroll>
-			<div class="learning-record-row">
-				<bui-image class="learning-record-head-img" src="/image/icon_kefu.png" radius="57px"></bui-image>
-				<div class="learning-record-col">
-					<text class="record-font-36 learning-record-author">黄丽</text>
-					<text class="record-font-20 learning-record-detail">技术管理部</text>
-					<text class="record-font-20 learning-record-detail">需求分析师</text>
-				</div>
-				<div class="learning-record-time-block">
-					<text class="record-font-36 learning-record-time">{{second2Time(profile.learnDuration)}}</text>
-					<text class="learning-record-tim">学习时长</text>
-				</div>
-			</div>
-			<div class="learning-record-center">
-				<div class="learning-record-count">
-					<text class="record-font-32 record-color-6">{{profile.courseDoneNum}}门</text>
-					<text class="record-font-20 record-color-9">已学微课</text>
-				</div>
-				<div class="record-border"></div>
-				<div class="learning-record-count">
-					<text class="record-font-32 record-color-6">{{profile.signupCount}}次</text>
-					<text class="record-font-20 record-color-9">参加培训</text>
-				</div>
-				<div class="record-border"></div>
-				<div class="learning-record-count">
-					<text class="record-font-32 record-color-6">{{profile.liveDoneNum}}个</text>
-					<text class="record-font-20 record-color-9">观看直播</text>
-				</div>
-			</div>
-			<div class="learning-record-bar">
-					<text class="record-font-28 record-text">学习记录</text>
-			</div>
-			<div v-if="records.length > 0">
-				<div class="course-list">
-					<div class="course-list-item bb1" v-for="record in records">
-						<bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
-						<div class="course-content">
-							<text class="course-item-title">{{record.name}}</text>
-							<text class="course-item-time">{{record.time}}</text>
-						</div>
+		<bg src="/image/record-header.png" 
+			:contentStyle="contentStyle"
+			:bgStyle="bgStyle"
+			>
+			<bui-header title="学习记录"
+				:leftItem="leftItem"
+				@leftClick = "back"
+				backgroundColor="transparent"
+				>
+				<bui-image class="record-header" src="/image/record-header.png"></bui-image>
+			</bui-header>
+			<bui-content-scroll>
+				<div class="learning-record-row">
+					<bui-image class="learning-record-head-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>
+					<div class="learning-record-col">
+						<text class="record-font-36 learning-record-author">{{profile.name}}</text>
+						<text class="record-font-20 learning-record-detail">{{profile.orgName}}</text>
+						<text class="record-font-20 learning-record-detail">{{profile.postDescription}}</text>
+					</div>
+					<div class="learning-record-time-block">
+						<text class="record-font-36 learning-record-time">{{second2Time(recordStat.learnDuration)}}</text>
+						<text class="learning-record-tim">学习时长</text>
 					</div>
 				</div>
-				<div @click="getMoreRecords" class="more-record">
-					<text class="record-font-28 record-color-6 more-record-text">更多记录</text>
+				<div class="white-background">
+					<div class="learning-record-center">
+						<div class="learning-record-count">
+							<text class="record-font-32 record-color-6">{{recordStat.courseDoneNum}}门</text>
+							<text class="record-font-20 record-color-9">已学微课</text>
+						</div>
+						<div class="record-border"></div>
+						<div class="learning-record-count">
+							<text class="record-font-32 record-color-6">{{recordStat.signupCount}}次</text>
+							<text class="record-font-20 record-color-9">参加培训</text>
+						</div>
+						<div class="record-border"></div>
+						<div class="learning-record-count">
+							<text class="record-font-32 record-color-6">{{recordStat.liveDoneNum}}个</text>
+							<text class="record-font-20 record-color-9">观看直播</text>
+						</div>
+					</div>
+					<div class="learning-record-bar">
+							<text class="record-font-28 record-text">学习记录</text>
+					</div>
+					<div v-if="records.length > 0">
+						<div class="course-list">
+							<div class="course-list-item bb1" v-for="record in records">
+								<bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
+								<div class="course-content">
+									<text class="course-item-title">{{record.name}}</text>
+									<text class="course-item-time">{{getRecordExt(record)}}</text>
+								</div>
+							</div>
+						</div>
+						<div @click="getMoreRecords" class="more-record">
+							<text class="record-font-28 record-color-6 more-record-text">更多记录</text>
+						</div>
+					</div>
+					<div v-else class="no-record">
+						<bui-image class="no-record-img" src="/image/no-record.png"></bui-image>
+						<text class="no-record-text">亲，你还没有学习记录哦！</text>
+					</div>
 				</div>
-			</div>
-			<div v-else class="no-record">
-				<bui-image class="no-record-img" src="/image/no-record.png"></bui-image>
-				<text class="no-record-text">亲，你还没有学习记录哦！</text>
-			</div>
-		</bui-content-scroll>
+			</bui-content-scroll>
+		</bg>
 	</div>
 </template>
 
 <script>
 import buiweex from "../../js/buiweex.js";
 import ajax from "../../js/ajax.js";
-import {fixedPic, departUrl, secondToTime} from "../../js/tool.js";
+import {fixedPic, departUrl, secondToTime, formatDate} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
@@ -68,22 +80,41 @@ var globalEvent = weex.requireModule('globalEvent');
 				leftItem: {
 					icons: 'icon-back',
 				},
-				profile: {
-					head_img: '',
+				recordStat: {
 					signupCount: 0,
 					courseDoneNum: 0,
 					liveDoneNum: 0,
 					learnDuration: 0
 				},
+				profile: {
+					avatar: '',
+					name: '',
+					orgName: '',
+					postDescription: ''
+				},
 				records: [],
 				courses: [],
 				trains: [],
-				lives: []
+				lives: [],
+				placeholder: '/image/no-pic.png'
 			}
 		},
 		mounted(){
 			this.getRecords();
+			this.getRecordStat();
 			this.getProfile();
+		},
+		computed: {
+			bgStyle () {
+				return {
+					height : '260px',
+				}
+			},
+			contentStyle () {
+				return {
+					height : '1000px'
+				}
+			}
 		},
 		methods:{
 			back(){
@@ -91,7 +122,7 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			getRecords () {
 				ajax({
-					url : 'api/homepage/historyInfos',
+					url : 'ba/api/homepage/historyInfos',
 					data : {
 						page : 1,
 						rows : 4
@@ -102,17 +133,26 @@ var globalEvent = weex.requireModule('globalEvent');
 					
 				})
 			},
-			getProfile () {
+			getRecordStat () {
 				ajax({
-					url : 'api/ta/info',
+					url : 'ba/api/ta/info',
 					data : {
 						userid : '43fe6476-cd7b-493b-8044-c7e3149d0876'
 					}
 				}).then((res) =>{
-					this.profile.signupCount = res.r[0].signupCount;
-					this.profile.courseDoneNum = res.r[0].courseDoneNum;
-					this.profile.liveDoneNum = res.r[0].liveDoneNum;
-					this.profile.learnDuration = res.r[0].learnDuration;
+					this.recordStat = res.r[0];
+				},(errorT,status) =>{
+
+				})
+			},
+			getProfile () {
+				ajax({
+					url : 'uam/api/user/getUserById',
+					data : {
+						id : '43fe6476-cd7b-493b-8044-c7e3149d0876'
+					}
+				}).then((res) =>{
+					this.profile = res.r
 				},(errorT,status) =>{
 
 				})
@@ -121,14 +161,25 @@ var globalEvent = weex.requireModule('globalEvent');
 				buiweex.push(buiweex.getContextPath() + "/more-record.weex.js");
 			},
 			getPicture (src) {
-				return fixedPic(src);
+				let field = arguments[1];
+				return fixedPic(src, field) || this.placeholder;
+			},
+			second2Time (second){
+				return secondToTime(second);
 			},
 			getRecordType (rec) {
 				let obj = departUrl(rec.url);
 				return obj.args[0].value;
 			},
-			second2Time (second){
-				return secondToTime(second);
+			getRecordExt (rec) {
+				let type = this.getRecordType(rec);
+				if(type === 'Live') return formatDate(rec.ext.startTime, '开始于 MM-dd hh:mm');
+				if(type === 'Course') {
+					if(rec.ext.duration === undefined) return '';
+					if(rec.ext.duration === '-1') return '已学完';
+					return '学习到' + secondToTime(rec.ext.duration);
+				}
+				return formatDate(rec.ext.regTime, '开始于 MM-dd hh:mm');      
 			}
 		},
 		created (){
@@ -139,9 +190,14 @@ var globalEvent = weex.requireModule('globalEvent');
 	}
 </script>
 
-<style src="../../css/customer/course-list.css" />
+<style src="../../css/customer/course-list.css"></style>
 
 <style scope>
+.record-header{
+	width: 1000px;
+	height: 300px;
+}
+
 .record-font-36{
 	font-size: 36px;
 	text-align: center;
@@ -177,7 +233,7 @@ var globalEvent = weex.requireModule('globalEvent');
 
 .learning-record-row{
 	flex-direction: row;
-	background-color: #4ca4fe;
+	background-color: transparent;
 	padding-left : 28px; 
 	padding-bottom: 32px;
 	padding-top: 20px;
@@ -229,7 +285,6 @@ var globalEvent = weex.requireModule('globalEvent');
 
 .learning-record-center{
 	flex-direction: row;
-	background-color: white;
 	align-items: center;
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -244,6 +299,10 @@ var globalEvent = weex.requireModule('globalEvent');
 	width: 2px;
 	height: 59px;
 	background-color: #DEDEDE;
+}
+
+.white-background{
+	background-color: white;	
 }
 
 .learning-record-bar{
