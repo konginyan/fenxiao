@@ -201,11 +201,11 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	buiweex.toast(val);
 	        },
 	        getFilterList () {
-	        	var that=this;
+	        	
 	        	ajax({
 	        		url : 'ba/api/course/category/list',
 	        	}).then((res) =>{
-	        		that.filterList = res.r;
+	        		this.filterList = res.r;
 	        	},(errorT,status) =>{
 	        		
 	        	})

@@ -8,7 +8,7 @@
                 :leftItem="leftItem"
                 >
                 <icon @click="more" slot="right" name="icon-more" size="45px" color="#ffffff" class="pdl10"></icon>
-        </bui-header>
+        		</bui-header>
 			<video class="bui-video"
 	                   :src="src"
 	                   controls
@@ -22,6 +22,21 @@
 		                     selectedIndex="0"
 		                     :scroll="false"
 		                     top="437px" @tabItemOnClick="tabItemOnClick"></tabbar-scroll>
+		<div class="course-footer" style="position: absolute;bottom: 0px;left:0;right:0;">
+			<button v-if="false"  value="参加课程" type="primary" size="large" radius="0"></button>
+			<div class="operation">
+				<div class="operation-item">
+					<icon name="icon-comment" size="40px" class="operation-icon"></icon>
+					<text class="operation-item-title">评论</text>
+				</div>
+				<div class="operation-item">
+					<icon name="icon-edit" size="40px" class="operation-icon"></icon>
+					<text class="operation-item-title">编辑</text>
+				</div>
+				<button class="learn-continue" type="primary" size="large" value="继续学习"></button>
+			</div>
+		</div>                     
+
 		
 	</div>
 </template>
@@ -81,7 +96,7 @@ var globalEvent = weex.requireModule('globalEvent');
 
 			},
 			tabItemOnClick: function (e) {
-			    buiweex.toast("tab" + e.index);
+			    // buiweex.toast("tab" + e.index);
 			    //设置标题栏
 			    // this.currentTab = this.tabItems[e.index].title;
 			},
