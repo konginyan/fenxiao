@@ -11,7 +11,8 @@ var mixins = {
         'bui-button': require('../components/bui-button.vue'),
         'bui-image': require('../components/bui-image.vue'),
         'icon' :  require('../components/icon.vue'),
-        'button' : require('../views/components/button.vue')
+        'button' : require('../views/components/button.vue'),
+        'bg' : require('../views/components/bg.vue'),
     }
 }
 

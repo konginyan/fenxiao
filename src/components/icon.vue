@@ -34,7 +34,16 @@
                     'icon-record' : '&#xe837;',
                     'icon-home' : '&#xe601;',
                     'icon-star' : '&#xe63b;',
-                    'icon-filter' : '&#xe69c;'
+                    'icon-filter' : '&#xe69c;',
+                    'icon-edu' : '&#xe653;',
+                    'icon-download' : '&#xe6a3;',
+                    'icon-play' : '&#xe614;',
+                    'icon-loading' : '&#xe634;',
+                    'icon-right' : '&#xe602;',
+                    'icon-edit' : '&#xe71e;',
+                    'icon-comment' : '&#xe604;',
+                    'icon-more' : '&#xe603;',
+                    
                 }
             }
         },
@@ -50,7 +59,7 @@
             var domModule = weex.requireModule("dom");
             domModule.addRule('fontFace',{
                 'fontFamily': 'iconfonts',
-                'src': "url(\'https://at.alicdn.com/t/font_ekxbjohab01i3sor.ttf\')"
+                'src': "url(\'https://at.alicdn.com/t/font_3vroi8ys7f6o5hfr.ttf\')"
             });
         }
     }

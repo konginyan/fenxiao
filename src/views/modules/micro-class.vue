@@ -57,13 +57,13 @@
 				</div>
 				<div class="micro-class-filter-list">
 					
-					  <scroller  style="height: 500px;">
+					<scroller  style="height: 500px;">
 					  <div  class="micro-class-filter">
 						<div class="micro-class-filter-item" v-for="(item,index) in filterList">
 							<button  @click="filterBtn(item.name,index,item.categoryId)" type="default"  :value="item.name"  class="filter-btn" :class="[index === currentIndex ? 'filter-btn-active' : '']" ></button>
 						</div>
 						</div>
-					  </scroller>
+					 </scroller>
 						
 					
 				</div>
@@ -95,6 +95,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	export default {
 		data (){
 			return {
+				
 				leftItem: {
                     icons: 'icon-back',
                 },
@@ -139,6 +140,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 			}
 		},
 		methods : {
+
 			back () {
 	            buiweex.pop();
 	        },	
@@ -203,9 +205,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	ajax({
 	        		url : 'ba/api/course/category/list',
 	        	}).then((res) =>{
-	        		buiweex.toast("2222222")
 	        		that.filterList = res.r;
-	        		console.info(this.filterList[0])
 	        	},(errorT,status) =>{
 	        		
 	        	})
@@ -318,7 +318,8 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	    	filterBar,
 	    	filterDialog,
 	    	rate
-	    }
+	    },
+	    
 	}
 </script>
 <style >

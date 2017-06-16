@@ -15,7 +15,7 @@
 		</div> -->
 </template>
 <script>
-import buiweex from '../../js/buiweex.js'
+
 	export default {
 		props : {
 			"type": {
@@ -109,7 +109,8 @@ import buiweex from '../../js/buiweex.js'
 	}
 
 	.btn-large{
-		@include padding(30px,60px);
+		font-size: 30px;
+		@include padding(28px,60px);
 	}
 	.btn-small{
 		@include padding(10px,20px);

@@ -1,6 +1,170 @@
 .course-teacher{
-	font-size: 32px;
+	
 	color: #28312A;
 	padding-top: 34px;
 	padding-bottom: 34px;
+	padding-left: 25px;
 }
+.course-teacher-title{
+	font-size: 30px;
+	lines : 1;
+	text-overflow: ellipsis;
+}
+.teacher-score{
+	flex-direction: row;
+	align-items: center;
+	padding-left: 25px;
+	padding-right: 25px;
+	padding-top: 34px;
+	padding-bottom: 34px;
+	border-bottom-color: #dedede;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
+.edu{
+	margin-right: 20px;
+	color: #999;
+	font-size: 40px;
+}
+.teacher-name{
+	flex : 1;
+	lines : 1;
+	text-overflow: ellipsis;
+	font-size: 30px;
+	color: #999;
+
+}
+.teacher-rate{
+	margin-left: 20px;
+}
+
+.learn-title{
+	color :#28312a;
+	font-size: 24px;
+	padding-top: 26px;
+	padding-bottom: 20px;
+	padding-left: 24px;
+}
+.learn-people-wrap{
+	border-bottom-width: 16px;
+	border-bottom-color: #f4f4f4;
+	border-bottom-style: solid;
+}
+.learn-people{
+	flex-direction: row;
+	align-items: start;
+}
+.learn-people-list{
+	flex : 1;
+	flex-direction: row;
+	align-items: center;
+	padding-left: 20px;
+}
+
+.learn-item{
+	width: 60px;
+	height: 60px;
+	margin-right: 38px;
+}
+.avatar{
+	position: relative;
+	width: 54px;
+	height: 54px;
+	background-color: #25aafe;
+	border-radius: 27px;
+}
+.avatar-name{
+	line-height: 54;
+	text-align: center;
+	color: #fff;
+	font-size: 28px;
+}
+.avatar-pic{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 54px;
+	height: 54px;
+	border-radius: 27px;
+}
+.learn-name{
+	
+	color: #999;
+	font-size: 21px;
+	padding-top: 12px;
+	padding-bottom: 30px;
+	lines : 1;
+}
+.learn-people-count{
+	margin-left: 10px;
+	color: #3a3a3a;
+	font-size: 21px;
+}
+.learn-arrow{
+	color: #ddd;
+	font-size: 60px;
+}
+
+.course-desc{
+	padding-left: 24px;
+	padding-right: 24px;
+	padding-top: 27px;
+	padding-bottom: 27px;
+}
+
+.course-desc-title{
+
+	color: #28312a;
+	font-size: 24px;
+	padding-bottom: 12px;
+	border-bottom-width: 1px;
+	border-bottom-color: #dedede;
+	border-bottom-style: solid;
+
+}
+.course-desc-list{
+	padding-top: 14px;
+}
+.course-desc-item{
+	font-size: 24px;
+	color: #666;
+	margin-bottom: 14px;
+}
+
+.operation{
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+.operation-item{
+	width: 150px;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	border-left-width: 1px;
+	border-left-color: #dedede;
+	border-left-style: solid;
+	border-top-width: 1px;
+	border-top-color: #dedede;
+	border-top-style: solid;
+	padding-top: 10px;
+	&:active{
+		background-color: #dedede;
+	}
+
+}
+.operation-icon{
+	color: #999;
+}
+.operation-item-title{
+	font-size: 22px;
+	color: #666;
+	
+}
+.learn-continue{
+	flex : 1;
+	border-radius: 0;
+	padding-top: 23px;
+	padding-bottom: 23px;
+}
+

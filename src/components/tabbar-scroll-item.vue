@@ -1,13 +1,13 @@
 <template>
     <div class="bui-scroller-tabbar-row" @click="onclickitem" :style="{'width': width}">
-        <text v-if="type!='icon'" :style="{ 'color': titleColor }" class="text" :class="[itemClass ? itemClass : '']" >{{title}}</text>
+        <text v-if="type!='icon'" :style="{ 'color': titleColor,'font-size' : titleSize }" class="text" :class="[itemClass ? itemClass : '']" >{{title}}</text>
         <text class="actived" v-if="selected"></text>
     </div>
 </template>
 
 <style src="../css/tabbar.css"></style>
 <script>
-import buiweex from '../js/buiweex.js';
+
     module.exports = {
         props: {
             index: {default: 0},
@@ -30,6 +30,7 @@ import buiweex from '../js/buiweex.js';
                 var params = {
                     index: this.index
                 };
+
                 this.$emit('tabItemOnClick', params);
             },
         },
