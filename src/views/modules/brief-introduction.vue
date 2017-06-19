@@ -110,7 +110,7 @@ var globalEvent = weex.requireModule('globalEvent');
 
 			},
 			students () {
-				buiweex.push(buiweex.getContextPath() + "/signUp-list.weex.js");
+				buiweex.push(buiweex.getContextPath() + "/students.weex.js");
 			}
 		},
 		created (){
