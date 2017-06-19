@@ -49,7 +49,7 @@ function formatDates(time,format){
     return format;
 }
 
-export function fixedPic(source){
+export function fixedPic(source,dir='ba'){
 
     let dataReg = /\d{4}\/\d{2}\/\d{2}/,
         decodeReg = /\//gi,
@@ -57,11 +57,11 @@ export function fixedPic(source){
 
     if (dataReg.test(source) ) {
         source = source.replace(decodeReg,'%2F').replace(/\|\|.*/,'');
-        return 'http://ba.depts.bingosoft.net:8088/ba/ui/download?filepath=' + source;
+        return 'http://ba.depts.bingosoft.net:8088/'+dir+'/ui/download?filepath=' + source;
     } else if(isHttp.test(source)){
-        return 'http://ba.depts.bingosoft.net:8088/ba/ui/download?filepath=' + source;
+        return source;
     }else{
-         return source;
+         return 'http://ba.depts.bingosoft.net:8088/'+dir+'/ui/download?filepath=' + source;
     }
 
 }
