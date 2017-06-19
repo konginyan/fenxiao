@@ -25,7 +25,7 @@
 		<div class="course-footer" style="position: absolute;bottom: 0px;left:0;right:0;">
 			<button v-if="false"  value="参加课程" type="primary" size="large" radius="0"></button>
 			<div class="operation">
-				<div class="operation-item">
+				<div class="operation-item" @click="evaluate">
 					<icon name="icon-comment" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">评论</text>
 				</div>
@@ -43,6 +43,7 @@
 
 <script>
 import buiweex from "../../js/buiweex.js";
+import ajax from '../../js/ajax.js';
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
@@ -79,11 +80,8 @@ var globalEvent = weex.requireModule('globalEvent');
 				leftItem: {
                     icons: 'icon-back',
                 },
+                detail : ''
 			}
-		},
-		mounted(){
-			
-
 		},
 		methods:{
 			back(){
@@ -102,9 +100,25 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			initPath () {
 				for (var i = 0; i < this.tabItems.length; i++) {
-	                var path = this.tabItems[i].src;
+	                var path = this.tabItems[i].src + '?courseId='+buiweex.getPageParams().courseId;
 	                this.tabItems[i].src = buiweex.getContextPath() + path;
 	            }
+			},
+			getDetail () {
+				let courseId = buiweex.getPageParams().courseId;
+				ajax({
+					url : 'ba/learn/course/detail',
+					method : 'POST',
+					data : {
+						courseId : courseId,
+
+
+					}
+				}).then((res) =>{
+					this.detail = res.returnval;
+				},(errorT,status) =>{
+					
+				})
 			},
 			"onstart": function () {
                 console.log(this.stateall);
@@ -122,13 +136,20 @@ var globalEvent = weex.requireModule('globalEvent');
             },
             "onfail": function (event) {
                 this.state = 'onfinish'
+            },
+            evaluate () {
+            	buiweex.push(buiweex.getContextPath() + "/evaluate.weex.js");
             }
 		},
 		created (){
 			this.initPath();
+			
 	        globalEvent.addEventListener("androidback", function (e){
 	              buiweex.pop();
 	        });
+	    },
+	    mounted (){
+	    	this.getDetail();
 	    },
 	    components : {
 	    	'tabbar-scroll': require('../../components/tabbar-scroll.vue'),

@@ -3,12 +3,12 @@
 		
 		<scroller class="span1">
 			<div class="course-teacher">
-				<text class="course-teacher-title">JAVA开发工程师专项课程</text>
+				<text class="course-teacher-title">{{detail.name}}</text>
 			</div>
 			<div class="teacher-score">
 				<icon name="icon-edu" class="edu"></icon>
-				<text class="teacher-name">黄讲师</text>
-				<rate class="teacher-rate" :disabled="true" value="3"></rate>
+				<text class="teacher-name">{{detail.teacher}}</text>
+				<rate class="teacher-rate" :disabled="true" :value="detail.score || 0"></rate>
 			</div>
 			<div class="learn-people-wrap">
 				<text class="learn-title">TA们学习了这门课程</text>
@@ -22,7 +22,7 @@
 							<text class="learn-name">张林</text>
 						</div>
 					</scroller>
-					<text class="learn-people-count">550人</text>
+					<text class="learn-people-count">{{detail.learnCount}}人</text>
 					<icon class="learn-arrow" name="icon-right"></icon>
 				</div>
 			</div>
@@ -37,41 +37,69 @@
 				</div>
 			</div>
 		</scroller>
-		<!-- <div class="course-footer">
-			<button v-if="false"  value="参加课程" type="primary" size="large" radius="0"></button>
-			<div class="operation">
-				<div class="operation-item">
-					<icon name="icon-comment" size="40px" class="operation-icon"></icon>
-					<text class="operation-item-title">评论</text>
-				</div>
-				<div class="operation-item">
-					<icon name="icon-edit" size="40px" class="operation-icon"></icon>
-					<text class="operation-item-title">编辑</text>
-				</div>
-				<button class="learn-continue" type="primary" size="large" value="继续学习"></button>
-			</div>
-		</div> -->
 	</div>
 </template>
 
 <script>
 import buiweex from "../../js/buiweex.js";
 import rate from '../components/rate.vue';
+import ajax from '../../js/ajax.js';
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
 		data () {
 			return {
-				
+				detail : {},
+				attendList : [],
+				courseId : ''
 			}
 		},
 		mounted(){
-			// buiweex.alert(buiweex.getPageParams().name);
-
+			this.courseId = buiweex.getPageParams().courseId;
+			this.getDetail()
+			
+			this.getAttendList();
 			
 
 		},
 		methods:{
+			getDetail () {
+
+				ajax({
+					url : 'ba/learn/course/detail',
+					method : 'POST',
+					data : {
+						courseId : this.courseId,
+
+
+					}
+				}).then((res) =>{
+
+					this.detail = res.returnval;
+					
+				},(errorT,status) =>{
+					
+				})
+			},
+			getAttendList () {
+
+				ajax({
+					url : 'ba/api/course/attend/list',
+					data : {
+						id : this.courseId,
+						rows : 10,
+						page : 1
+
+
+					}
+				}).then((res) =>{
+
+					// buiweex.alert(res);
+					
+				},(errorT,status) =>{
+					// buiweex.alert(errorT);
+				})
+			},
 			back(){
 				buiweex.pop();
 			},

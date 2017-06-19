@@ -9,20 +9,6 @@
         </bui-header>
 	
        	<bui-content-scroll class="span1">
-       		<!-- <bg  src="/image/icon-micro.png" resize="contain" :bgStyle="bgStyle" :contentStyle="contentStyle">
-       			  					<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       				       			<text>我是内容</text>
-       		</bg> -->
 			<div>
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 	                    @change="changeHandler" infinite="false" >
@@ -106,18 +92,7 @@ import {fixedPic,formatDate} from '../../js/tool.js';
 			}
 		},
 		computed : {
-			// bgStyle () {
-			// 	return {
-			// 		width : '750px',
-			// 		height : '500px',
-			// 		backgroundColor :'blue'
-			// 	}
-			// },
-			// contentStyle () {
-			// 	return {
-			// 		height : '500px'
-			// 	}
-			// }
+			
 		},
 		methods : {
 			back () {

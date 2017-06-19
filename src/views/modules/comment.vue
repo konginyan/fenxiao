@@ -1,12 +1,13 @@
 <template>
 	<div class="comment-wrap">
+		<div class="comment-subtitle">
+			<text class="overall-merit">综合评价</text>
+			<rate :disabled="true" color="#25aafe" :value="score" class="merit-rate"></rate>
+			<text class="merit-total">({{count}}份评论)</text>
+		</div>
 		<bui-content-scroll class="span1">
 			
-			<div class="comment-subtitle">
-				<text class="overall-merit">综合评价</text>
-				<rate :disabled="true" color="#25aafe" value="4" class="merit-rate"></rate>
-				<text class="merit-total">(150份评论)</text>
-			</div>
+			
 			<div class="comment-list">
 				<div class="comment-item" v-for="item in 10">
 					<div class="comment-inner">
@@ -32,15 +33,24 @@
 <script>
 import buiweex from "../../js/buiweex.js";
 import rate from '../components/rate.vue';
+import ajax from '../../js/ajax.js';
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
 		data () {
-			return {}
+			return {
+				commentList : [],
+				courseId : '',
+				rows : 10,
+				count : 0,
+				score : 0
+			}
 		},
 		mounted(){
 			// buiweex.alert(buiweex.getPageParams().name);
-
+			this.courseId = buiweex.getPageParams().courseId;
+			this.getComment()
+			this.getCommentList();
 			
 
 		},
@@ -49,7 +59,38 @@ var globalEvent = weex.requireModule('globalEvent');
 				buiweex.pop();
 			},
 			deleteComment (item) {
-				buiweex.toast(11);
+				
+			},
+			getCommentList () {
+				ajax({
+					url : 'ba/api/course/comments/list',
+					data : {
+						id : this.courseId,
+						rows : this.rows,
+						page : 1
+					}
+				}).then((res) =>{
+					this.commentList = res.r;
+					// buiweex.alert(res.r)
+					
+				},(errorT,status) =>{
+					
+				})
+			},
+			getComment () {
+				ajax({
+					url : 'ba/api/course/comments',
+					data : {
+						id : this.courseId,
+					}
+				}).then((res) =>{
+					this.count = res.r[0].count;
+					this.score = res.r[0].score;
+					
+					
+				},(errorT,status) =>{
+					
+				})
 			}
 		},
 		created (){

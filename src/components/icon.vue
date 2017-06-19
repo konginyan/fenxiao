@@ -43,6 +43,7 @@
                     'icon-edit' : '&#xe71e;',
                     'icon-comment' : '&#xe604;',
                     'icon-more' : '&#xe603;',
+                    'icon-plane' : '&#xe689;'
                     
                 }
             }
@@ -59,7 +60,7 @@
             var domModule = weex.requireModule("dom");
             domModule.addRule('fontFace',{
                 'fontFamily': 'iconfonts',
-                'src': "url(\'https://at.alicdn.com/t/font_3vroi8ys7f6o5hfr.ttf\')"
+                'src': "url(\'https://at.alicdn.com/t/font_nuyg9pyw25m9ggb9.ttf\')"
             });
         }
     }
