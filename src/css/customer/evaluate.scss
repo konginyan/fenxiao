@@ -1,0 +1,35 @@
+.evaluate-textarea{
+	padding-left: 24px;
+	padding-right: 24px;
+	padding-top: 32px;
+	padding-bottom: 32px;
+	font-size: 30px;
+}
+.textarea-limit{
+	flex-direction: row;
+	justify-content: flex-end;
+	padding-left: 24px;
+	padding-right: 24px;	
+	padding-top: 32px;
+	padding-bottom: 32px;
+}
+.current-number,.split{
+	font-size: 24px;
+}
+.total-number{
+	color: #666;
+}
+.rate-panel{
+	flex-direction: row;
+	justify-content: space-between;
+	border-top-width: 16px;
+	border-top-style: solid;
+	border-top-color: #f4f4f4;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #ddd;
+	padding-left: 24px;
+	padding-right: 24px;
+	padding-top: 32px;
+	padding-bottom: 32px;
+}
