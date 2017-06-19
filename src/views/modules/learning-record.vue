@@ -7,12 +7,12 @@
 			<bui-header title="学习记录"
 				:leftItem="leftItem"
 				@leftClick = "back"
-				backgroundColor="transparent"
+				backgroundColor="transparent"				
 				>
 				<bui-image class="record-header" src="/image/record-header.png"></bui-image>
 			</bui-header>
-			<bui-content-scroll>
-				<div class="learning-record-row">
+			<scroller class="span1" @scroll="scroll" >
+				<div class="learning-record-row" ref="profile">
 					<bui-image class="learning-record-head-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>
 					<div class="learning-record-col">
 						<text class="record-font-36 learning-record-author">{{profile.name}}</text>
@@ -63,7 +63,7 @@
 						<text class="no-record-text">亲，你还没有学习记录哦！</text>
 					</div>
 				</div>
-			</bui-content-scroll>
+			</scroller>
 		</bg>
 	</div>
 </template>
@@ -73,7 +73,7 @@ import buiweex from "../../js/buiweex.js";
 import ajax from "../../js/ajax.js";
 import {fixedPic, departUrl, secondToTime, formatDate} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
-
+const dom = weex.requireModule('dom');
 	export default {
 		data () {
 			return {
@@ -112,7 +112,7 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			contentStyle () {
 				return {
-					height : '1000px'
+					flex : 1
 				}
 			}
 		},
@@ -180,6 +180,15 @@ var globalEvent = weex.requireModule('globalEvent');
 					return '学习到' + secondToTime(rec.ext.duration);
 				}
 				return formatDate(rec.ext.regTime, '开始于 MM-dd hh:mm');      
+			},
+			scroll (e) {
+				if (e.contentOffset.y > 0) {
+					var profile = this.$refs.profile;
+					console.log(profile);
+					// dom.scrollToElement(profile, { offset: 0 })
+				}
+				console.log(e.contentOffset );
+				// buiweex.toast(e.contentOffset );
 			}
 		},
 		created (){
@@ -193,6 +202,9 @@ var globalEvent = weex.requireModule('globalEvent');
 <style src="../../css/customer/course-list.css"></style>
 
 <style scope>
+.span1{
+	flex : 1;
+}
 .record-header{
 	width: 1000px;
 	height: 300px;
@@ -238,7 +250,6 @@ var globalEvent = weex.requireModule('globalEvent');
 	padding-bottom: 32px;
 	padding-top: 20px;
 }
-
 .learning-record-head-img{
 	height: 114px;
 	width: 114px;

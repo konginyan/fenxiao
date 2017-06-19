@@ -63,37 +63,39 @@
 
 .learn-item{
 	width: 60px;
-	height: 60px;
 	margin-right: 38px;
 }
 .avatar{
-	position: relative;
-	width: 54px;
-	height: 54px;
-	background-color: #25aafe;
-	border-radius: 27px;
+	// position: relative;
+	// width: 50px;
+	// height: 100px;
+	// background-color: #25aafe;
+	// border-radius: 27px;
 }
-.avatar-name{
-	line-height: 54;
-	text-align: center;
-	color: #fff;
-	font-size: 28px;
-}
+// .avatar-name{
+// 	line-height: 50px;
+// 	text-align: center;
+// 	color: #fff;
+// 	font-size: 28px;
+// }
 .avatar-pic{
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 54px;
-	height: 54px;
-	border-radius: 27px;
+	// position: absolute;
+	// left: 0;
+	// top: 0;
+	// right: 0;
+	// bottom: 0;
+	width: 50px;
+	height: 50px;
+	border-radius: 25px;
+	margin-bottom: 12px;
 }
 .learn-name{
-	
+	align-items: center;
 	color: #999;
 	font-size: 21px;
-	padding-top: 12px;
-	padding-bottom: 30px;
-	lines : 1;
+	// padding-top: 12px;
+	// padding-bottom: 30px;
+	// lines : 1;
 }
 .learn-people-count{
 	margin-left: 10px;
@@ -131,10 +133,12 @@
 	margin-bottom: 14px;
 }
 
+
 .operation{
 	flex-direction: row;
-	align-items: center;
+	align-items: stretch;
 	justify-content: center;
+	
 }
 .operation-item{
 	width: 150px;
@@ -167,4 +171,5 @@
 	padding-top: 23px;
 	padding-bottom: 23px;
 }
+
 

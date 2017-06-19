@@ -1,0 +1,71 @@
+.comment-subtitle{
+	flex-direction: row;
+	align-items: center;
+	background-color: #eee;
+	font-size: 28px;
+	padding-top: 26px;
+	padding-bottom: 26px;
+	padding-left: 24px;
+	padding-right: 24px;
+	color: #999;
+}
+.overall-merit{
+	color: #28312a;
+	font-size: 28px;
+}
+.merit-rate{
+	margin-left: 20px;
+	margin-right: 20px;
+}
+.merit-total{
+	color: #999;
+	font-size: 24px;
+}
+.comment-list{
+	padding-left: 24px;
+	padding-right: 24px;
+}
+.comment-item{
+	padding-top: 24px;
+	border-bottom-color: #dedede;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
+.comment-inner{
+	flex-direction: row;
+}
+.avatar{
+	width: 72px;
+	height: 72px;
+	border-radius: 36px;
+	margin-right: 40px;
+}
+.reader-wrap{
+	flex : 1;
+
+}
+.readers{
+	font-size: 28px;
+	color: #999;
+}
+.date-wrap{
+	padding-top: 10px;
+	flex-direction: row;
+
+}
+.date{
+	font-size: 24px;
+	color: #999;
+	margin-right: 40px;
+}
+.delete{
+	font-size: 24px;
+	color: #0476be;
+}
+
+.comment-text{
+	padding-top: 24px;
+	padding-bottom: 24px;
+	color: #28312a;
+	font-size: 24px;
+}

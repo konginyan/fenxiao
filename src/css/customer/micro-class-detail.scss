@@ -1,3 +1,45 @@
 .video-wrap{
 	height: 420px;
 }
+
+
+.operation{
+	flex-direction: row;
+	align-items: stretch;
+	justify-content: center;
+	background-color: #fff;
+	
+}
+.operation-item{
+	width: 150px;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	border-left-width: 1px;
+	border-left-color: #dedede;
+	border-left-style: solid;
+	border-top-width: 1px;
+	border-top-color: #dedede;
+	border-top-style: solid;
+	padding-top: 10px;
+	&:active{
+		background-color: #dedede;
+	}
+
+}
+.operation-icon{
+	color: #999;
+}
+.operation-item-title{
+	font-size: 22px;
+	color: #666;
+	
+}
+.learn-continue{
+	flex : 1;
+	border-radius: 0;
+	padding-top: 23px;
+	padding-bottom: 23px;
+}
+
+

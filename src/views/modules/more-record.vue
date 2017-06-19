@@ -1,5 +1,5 @@
 <template>
-  <div class="more-record-warp">
+  <div class="more-record-warp span1">
     <bui-header
       title="观看记录"
       :leftItem="leftItem"
@@ -7,9 +7,7 @@
       :rightItem="rightItem"
       >
     </bui-header>
-
-    <bui-content-scroll>
-      <list class="bui-list">
+      <list class="bui-list span1" >
         <cell v-for="part in all">
           <div v-if="part.records.length > 0" class="record-list">
             <text class="record-time-title">{{part.title}}</text>
@@ -28,7 +26,6 @@
           <text class="bui-loading-indicator">{{loadingText}}</text>
 				</loading>
       </list>
-    </bui-content-scroll>
   </div>
 </template>
 
@@ -152,6 +149,9 @@ export default {
   margin-left: 24px;
   font-size: 36px;
   margin-bottom: 24px;
+}
+.span1{
+  flex : 1;
 }
 </style>
 

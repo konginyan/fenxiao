@@ -4,7 +4,6 @@
                 title="分晓"
                 :leftItem="leftItem"
                 @centerClick="showDemo"
-                
                 >
                 <icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
         </bui-header>
@@ -107,18 +106,18 @@ import {fixedPic,formatDate} from '../../js/tool.js';
 			}
 		},
 		computed : {
-			/*bgStyle () {
-				return {
-					width : '750px',
-					height : '500px',
-					backgroundColor :'blue'
-				}
-			},
-			contentStyle () {
-				return {
-					height : '500px'
-				}
-			}*/
+			// bgStyle () {
+			// 	return {
+			// 		width : '750px',
+			// 		height : '500px',
+			// 		backgroundColor :'blue'
+			// 	}
+			// },
+			// contentStyle () {
+			// 	return {
+			// 		height : '500px'
+			// 	}
+			// }
 		},
 		methods : {
 			back () {
