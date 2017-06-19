@@ -6,27 +6,27 @@
       @leftClick = "back"
       >
     </bui-header>
-      <list class="bui-list span1" >
-        <cell v-for="part in all">
-          <div v-if="part.records.length > 0" class="record-list">
-            <text class="record-time-title">{{part.title}}</text>
-            <div class="course-list" v-for="(record,index) in part.records">
-              <div class="course-list-item no-border" 
-                  :class="[index===part.records.length-1?'no-border':'bb1']" 
-                  @click="linkDetail(record.itemId)">
-                <bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
-                <div class="course-content">
-                  <text class="course-item-title">{{record.name}}</text>
-                  <text class="course-item-time">{{getRecordExt(record)}}</text>
-                </div>
+    <list class="bui-list span1" >
+      <cell v-for="part in all">
+        <div v-if="part.records.length > 0" class="record-list">
+          <text class="record-time-title">{{part.title}}</text>
+          <div class="course-list" v-for="(record,index) in part.records">
+            <div class="course-list-item no-border" 
+                :class="[index===part.records.length-1?'no-border':'bb1']" 
+                @click="linkDetail(record.itemId)">
+              <bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
+              <div class="course-content">
+                <text class="course-item-title">{{record.name}}</text>
+                <text class="course-item-time">{{getRecordExt(record)}}</text>
               </div>
             </div>
           </div>
-        </cell>
-        <loading class="bui-loading white-bg" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
-          <text class="bui-loading-indicator">{{loadingText}}</text>
-				</loading>
-      </list>
+        </div>
+      </cell>
+      <loading class="bui-loading white-bg" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+        <text class="bui-loading-indicator">{{loadingText}}</text>
+      </loading>
+    </list>
   </div>
 </template>
 
@@ -137,10 +137,7 @@ export default {
       return formatDate(rec.ext.regTime, '开始于 MM-dd hh:mm');      
     },
     linkDetail (goal) {
-      buiweex.push({
-        url: buiweex.getContextPath() + "/micro-class-detail.weex.js",
-        itemId: goal
-      });
+      buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js",{itemId: goal});
     }
   },
   created (){
