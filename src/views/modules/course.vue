@@ -1,8 +1,19 @@
 <template>
 	<div class="course-wrap">
-		<bui-content padded="true">
-	        <text>course</text>
-	    </bui-content>
+		<bg src="/image/record-header.png"
+			height='529px'
+			>
+			<bui-header title="岗位课程"
+				:leftItem="leftItem"
+				@leftClick = "back"
+				backgroundColor="transparent"				
+				>
+				<div>
+					<text></text>
+					<bui-icon></bui-icon>
+				</div>
+			</bui-header>
+		</bg>
 		
 	</div>
 </template>

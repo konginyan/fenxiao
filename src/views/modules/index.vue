@@ -24,7 +24,7 @@
 	            		<text class="course-title">微课</text>
 	            	</div>
 	            	<div class="course-item">
-	            		<bui-image class="course-img" src="/image/icon-live.png"></bui-image>
+	            		<bui-image @click="liveList" class="course-img" src="/image/icon-live.png"></bui-image>
 	            		<text class="course-title">直播课堂</text>
 	            	</div>
 	            	<div class="course-item">
@@ -119,6 +119,9 @@ import {fixedPic,formatDate} from '../../js/tool.js';
             },
             microClass (){
             	buiweex.push(buiweex.getContextPath() + "/micro-class.weex.js");
+            },
+						liveList (){
+            	buiweex.push(buiweex.getContextPath() + "/live-list.weex.js");
             },
             getHottestList () {
             	ajax({
