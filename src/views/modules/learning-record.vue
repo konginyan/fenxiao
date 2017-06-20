@@ -11,19 +11,19 @@
 				>
 				<bui-image class="record-header" src="/image/record-header.png"></bui-image>
 			</bui-header>
-			<scroller class="span1" @scroll="scroll" >
-				<div class="learning-record-row" ref="profile">
-					<bui-image class="learning-record-head-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>
-					<div class="learning-record-col">
-						<text class="record-font-36 learning-record-author">{{profile.name}}</text>
-						<text class="record-font-20 learning-record-detail">{{profile.orgName}}</text>
-						<text class="record-font-20 learning-record-detail">{{profile.postDescription}}</text>
-					</div>
-					<div class="learning-record-time-block">
-						<text class="record-font-36 learning-record-time">{{second2Time(recordStat.learnDuration)}}</text>
-						<text class="learning-record-tim">学习时长</text>
-					</div>
+			<div class="learning-record-row" ref="profile">
+				<bui-image class="learning-record-head-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>
+				<div class="learning-record-col">
+					<text class="record-font-36 learning-record-author">{{profile.name}}</text>
+					<text class="record-font-20 learning-record-detail">{{profile.orgName}}</text>
+					<text class="record-font-20 learning-record-detail">{{profile.postDescription}}</text>
 				</div>
+				<div class="learning-record-time-block">
+					<text class="record-font-36 learning-record-time">{{second2Time(recordStat.learnDuration)}}</text>
+					<text class="learning-record-tim">学习时长</text>
+				</div>
+			</div>
+			<scroller class="span1" @scroll="onScroll">
 				<div class="white-background">
 					<div class="learning-record-center">
 						<div class="learning-record-count">
@@ -46,7 +46,7 @@
 					</div>
 					<div v-if="records.length > 0">
 						<div class="course-list">
-							<div class="course-list-item bb1" v-for="record in records">
+							<div class="course-list-item bb1" v-for="record in records" @click="linkDetail">
 								<bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
 								<div class="course-content">
 									<text class="course-item-title">{{record.name}}</text>
@@ -74,6 +74,7 @@ import ajax from "../../js/ajax.js";
 import {fixedPic, departUrl, secondToTime, formatDate} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 const dom = weex.requireModule('dom');
+const animation = weex.requireModule('animation');
 	export default {
 		data () {
 			return {
@@ -96,7 +97,8 @@ const dom = weex.requireModule('dom');
 				courses: [],
 				trains: [],
 				lives: [],
-				placeholder: '/image/no-pic.png'
+				placeholder: '/image/no-pic.png',
+				showProfile: true
 			}
 		},
 		mounted(){
@@ -107,7 +109,7 @@ const dom = weex.requireModule('dom');
 		computed: {
 			bgStyle () {
 				return {
-					height : '260px',
+					height : '280px',
 				}
 			},
 			contentStyle () {
@@ -181,21 +183,29 @@ const dom = weex.requireModule('dom');
 				}
 				return formatDate(rec.ext.regTime, '开始于 MM-dd hh:mm');      
 			},
-			scroll (e) {
-				if (e.contentOffset.y > 0) {
-					var profile = this.$refs.profile;
-					console.log(profile);
-					// dom.scrollToElement(profile, { offset: 0 })
+			onScroll(e){
+				let o = 0;
+				if(e.contentOffset.y<-10) {
+					o = 0;
 				}
-				console.log(e.contentOffset );
-				// buiweex.toast(e.contentOffset );
+				else{
+					o = 1;
+				}
+				let profile = this.$refs.profile;
+				let option = {
+					styles : {opacity : o}
+				} 
+				animation.transition(profile,option);
+			},
+			linkDetail () {
+				buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js");
 			}
 		},
 		created (){
 			globalEvent.addEventListener("androidback", function (e){
 						buiweex.pop();
 			});
-		},
+		}
 	}
 </script>
 
@@ -205,6 +215,7 @@ const dom = weex.requireModule('dom');
 .span1{
 	flex : 1;
 }
+
 .record-header{
 	width: 1000px;
 	height: 300px;
@@ -244,12 +255,16 @@ const dom = weex.requireModule('dom');
 }
 
 .learning-record-row{
+	position: fixed;
+	top: 117px;
+	width: 750px;
 	flex-direction: row;
 	background-color: transparent;
 	padding-left : 28px; 
 	padding-bottom: 32px;
 	padding-top: 20px;
 }
+
 .learning-record-head-img{
 	height: 114px;
 	width: 114px;
@@ -313,6 +328,7 @@ const dom = weex.requireModule('dom');
 }
 
 .white-background{
+	margin-top: 170px;
 	background-color: white;	
 }
 
