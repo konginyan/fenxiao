@@ -14,12 +14,12 @@
 				<text class="learn-title">TA们学习了这门课程</text>
 				<div class="learn-people" @click="students">
 					<scroller style="height:100px;" scroll-direction="horizontal" show-scrollbar=false class="learn-people-list" >
-						<div class="learn-item"  v-for="item in 10">
+						<div class="learn-item"  v-for="item in userList">
 							<!-- <div class="avatar"> -->
 								<!-- <text class="avatar-name">张</text> -->
-								<bui-image  @click="students" class="avatar-pic" src="/image/icon_kefu.png"></bui-image>
+								<bui-image  @click="students" class="avatar-pic" :src="item.url"></bui-image>
 							<!-- </div> -->
-							<text class="learn-name">张林</text>
+							<text class="learn-name">{{item.name}}</text>
 						</div>
 					</scroller>
 					<text class="learn-people-count">{{detail.learnCount}}人</text>
@@ -31,7 +31,7 @@
 				<div class="course-desc-list">
 					
 						
-						<text class="course-desc-item" v-for="item in 10">{{item}}.掌握入门级基础知识
+						<text class="course-desc-item">{{outline}}
 	</text>
 					
 				</div>
@@ -51,7 +51,9 @@ var globalEvent = weex.requireModule('globalEvent');
 			return {
 				detail : {},
 				attendList : [],
-				courseId : ''
+				courseId : '',
+				outline : '',
+				userList : []
 			}
 		},
 		mounted(){
@@ -66,16 +68,17 @@ var globalEvent = weex.requireModule('globalEvent');
 			getDetail () {
 
 				ajax({
-					url : 'ba/learn/course/detail',
-					method : 'POST',
+					url : 'ba/api/course/show',
 					data : {
-						courseId : this.courseId,
+						id : this.courseId,
 
 
 					}
 				}).then((res) =>{
 
-					this.detail = res.returnval;
+					this.detail = res.r[0];
+					this.outline = this.detail.outline.replace(/<.*?>/g,'');
+
 					
 				},(errorT,status) =>{
 					
@@ -87,14 +90,36 @@ var globalEvent = weex.requireModule('globalEvent');
 					url : 'ba/api/course/attend/list',
 					data : {
 						id : this.courseId,
-						rows : 10,
+						rows : 5,
 						page : 1
 
 
 					}
 				}).then((res) =>{
+					res.r.forEach((item) => {
+						ajax({
+							url : 'uam/api/user/getUserById',
+							data : {
+								id : item.learnBy,
 
-					// buiweex.alert(res);
+							}
+							}).then((res) =>{
+								let url = 'http://ba.depts.bingosoft.net:8088/uam/api/user/getUserById?id=';
+								let obj = {
+									url : url + item.learnBy,
+									name : res.r.name
+								}
+								this.userList.push(obj);
+								// buiweex.alert(this.userList)
+
+								
+
+								
+							},(errorT,status) =>{
+								
+							})
+					});
+					
 					
 				},(errorT,status) =>{
 					// buiweex.alert(errorT);
@@ -110,7 +135,9 @@ var globalEvent = weex.requireModule('globalEvent');
 
 			},
 			students () {
-				buiweex.push(buiweex.getContextPath() + "/students.weex.js");
+				buiweex.push(buiweex.getContextPath() + "/students.weex.js",{
+					courseId : this.courseId 
+				});
 			}
 		},
 		created (){

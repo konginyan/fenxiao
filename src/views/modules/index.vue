@@ -131,7 +131,9 @@ import {fixedPic,formatDate} from '../../js/tool.js';
 
             },
             hottestLink (couseId) {
-            	
+            	buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js",{
+            		courseId : couseId
+            	});
             },
             getRecommend () {
             	ajax({

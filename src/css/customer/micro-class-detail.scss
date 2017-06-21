@@ -1,7 +1,23 @@
 .video-wrap{
+	position: relative;
 	height: 420px;
 }
 
+.icon-back{
+	position: absolute;
+	width: 66px;
+	height: 66px;
+	left: 26px;
+	top: 26px;
+}
+
+.icon-friendship{
+	position: absolute;
+	width: 66px;
+	height: 66px;
+	right: 26px;
+	top: 26px;
+}
 
 .operation{
 	flex-direction: row;

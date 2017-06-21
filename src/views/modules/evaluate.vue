@@ -5,16 +5,16 @@
                 :leftItem="leftItem"
                 @leftClick = "back"
                 @centerClick="showDemo">
-                <icon slot="right" name="icon-plane" color="#ffffff"></icon>
+                <icon @click="submitEvaluate" slot="right" name="icon-plane" color="#ffffff"></icon>
         </bui-header>
-        <textarea class="evaluate-textarea" placeholder="给课程一个评价吧" value="" autofocus="true" rows="6" ></textarea>
+        <textarea class="evaluate-textarea" placeholder="学完有收获吗？写点什么吧..." :value="content" autofocus="true" rows="6" @input="textInput"></textarea>
 		<div class="textarea-limit">
-			<text class="current-number">19</text>
+			<text class="current-number">{{contentLength}}</text>
 			<text class="split">/</text>
 			<text class="total-number">100</text>
 		</div>
 		<div class="rate-panel">
-			<rate @change="rateChange"  size="40px"></rate>
+			<rate @change="rateChange" :value="rateValue"  size="40px"></rate>
 			<text class="rate-text">{{rateText}}</text>
 		</div>
 
@@ -31,10 +31,13 @@ import rate from '../components/rate.vue';
 				leftItem: {
                     icons: 'icon-back',
                 },
-                rateArr : ['极差','差','一般','良好','极好'],
+                rateArr : ['较差','一般','良好','推荐','极佳'],
                 rateValue : 5,
-                rateText : '极好',
+                rateText : '极佳',
                 courseId : '',
+                content : '',
+                contentLength : 0,
+                courseId : ''
 			}
 		},
 		methods : {
@@ -51,16 +54,49 @@ import rate from '../components/rate.vue';
 			},
 			getEvaluateList () {
 
-			} 
+			},
+			submitEvaluate () {
+				if (this.content.length === 0) {
+					buiweex.toast('评论内容不能为空');
+					return;
+				}
+				ajax({
+					url : 'ba/api/course/comments/create',
+					method : 'POST',
+					data : {
+						id : this.courseId,
+						content : this.content,
+						score : this.rateValue
+					}
+				}).then((res) =>{
+					buiweex.toast('评论成功');
+					
+				},(errorT,status) =>{
+					buiweex.toast('评论失败');
+				})
+			},
+			textInput (e) {
+				this.contentLength = e.value.length;
+				
+				if (this.contentLength < 100) {
+					this.content = e.value;
+				}else{
+					this.contentLength = 100;
+				}	
+			}
+		},
+		computed : {
+			
 		},
 		mounted () {
-			this.courseId = buiweex.getPageParams().courseId;
+			// this.courseId = buiweex.getPageParams().courseId;
 			
 		},
 		components : {
 			rate
 		},
 		created (){
+			this.courseId = buiweex.getPageParams().courseId;
 	        globalEvent.addEventListener("androidback", function (e){
 	              buiweex.pop();
 	        });

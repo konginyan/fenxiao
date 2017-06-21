@@ -1,14 +1,14 @@
 <template>
 	<div class="catalog-wrap">
 		<scroller class="span1">
-			<text class="catalog-subtitle">catalog</text>
+			<text class="catalog-subtitle">目录</text>
 			<div class="catalog-list">
 				<div class="catalog-item" v-for="(item,index) in catalogList" @click="catalogSelect(index)">
-					<text class="catalog-index" :class="[index===selectIndex ? 'catalog-active' : '']">{{index}}</text>
+					<text class="catalog-index" :class="[index===selectIndex ? 'catalog-active' : '']">{{index+1}}</text>
 					<icon class="catalog-play " :class="[index===selectIndex ? 'catalog-active' : '']" name="icon-play" ></icon>
 					<text class="catalog-title" :class="[index===selectIndex ? 'catalog-active' : '']">{{item.name}}</text>
 					<div class="catalog-total">127M</div>
-					<icon class="catalog-down" name="icon-download"></icon>
+					<icon v-if="false" class="catalog-down" name="icon-download"></icon>
 					<icon v-if="false" class="catalog-loading" name="icon-loading"></icon>
 				</div>
 			</div>
