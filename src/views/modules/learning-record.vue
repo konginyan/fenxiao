@@ -200,7 +200,9 @@ const animation = weex.requireModule('animation');
 			linkDetail (rec) {
 				let type = this.getRecordType(rec);
 				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js");
-				else if(type === 'Course') buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js");
+				else if(type === 'Course') buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js",{
+            		courseId : rec.itemId
+            	});
 				else buiweex.push(buiweex.getContextPath() + "/train.weex.js");
 			}
 		},

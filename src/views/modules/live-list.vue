@@ -23,7 +23,7 @@
                 <bui-image v-if="btnStyle(live)===1" class="onlive" src="/image/onlive.gif"></bui-image>
                 <text class="live-book" v-if="btnStyle(live)===1">正在直播</text>
                 <text v-if="!(btnStyle(live)===1)" class="live-time">{{getStartTime(live)}}</text>
-                <div class="live-btn" :class="[btnStyle(live)===0?'live-book-btn':'',
+                <div class="live-btn" @click="toLive(live)" :class="[btnStyle(live)===0?'live-book-btn':'',
                                                btnStyle(live)===1?'live-enter-btn':'',
                                                btnStyle(live)===2?'live-end-btn':'']">
                   <text :class="[btnStyle(live)===0?'live-book':'',
@@ -131,6 +131,18 @@ export default {
       this.showLoading = true;
       this.getLives();
     },
+    toLive (live){
+      if(live.liveStatus===0){
+        if(live.isSignup===0)live.isSignup = 1;
+        else live.isSignup = 0;
+      }
+      else if(live.liveStatus===1){
+        buiweex.push(buiweex.getContextPath() + "/live.weex.js")
+      }
+      else if(live.liveStatus===2){
+        if(live.recordingVideo>0) buiweex.push(buiweex.getContextPath() + "/live.weex.js")
+      }
+    }
   }
 }
 </script>

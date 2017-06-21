@@ -1,6 +1,15 @@
 <template>
 	<div class="course-wrap">
-		 <tab
+		<bui-header title="培训详情"
+			:leftItem="leftItem"
+			@leftClick = "back"			
+			>
+		</bui-header>
+		<bui-content class="null">
+			<bui-image class="null-pic" src="/image/null.png"></bui-image>
+			<text class="null-text">培训详情正在开发中</text>
+		</bui-content>
+		 <!--<tab
                 :tabItems="tabItems"
                 :currentTab="currentTab"
                 showSelectedLine="true"
@@ -10,7 +19,6 @@
 
 		<div class="item-content" style="height: 100px;">
 			
-	        <!--选项卡内容-->
 	        <tab-item tabId="tab1" :currentTab="currentTab" >
 	        	<text>选项卡1</text>
 	           
@@ -19,7 +27,7 @@
 	        <tab-item tabId="tab2" :currentTab="currentTab">
 	            <text>选项卡2</text>
 	        </tab-item>
-		</div>
+		</div>-->
 	</div>
 </template>
 
@@ -32,6 +40,9 @@ var globalEvent = weex.requireModule('globalEvent');
 	export default {
 		data () {
 			return {
+				leftItem: {
+					icons: 'icon-back',
+				},
 				//当前选择的tab
 				currentTab: "",
 				tabItems: [
