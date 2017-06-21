@@ -71,7 +71,7 @@
 			</div>
 			<div slot="foot">
 				<div class="operation">
-					<button type="normal" class="operation-btn" @click="resetFilter" value="重置筛选"></button>
+					<button type="normal" class="operation-btn" :class="[isSelected?'filter-btn-active':'']" @click="resetFilter" value="重置筛选"></button>
 					<button type="primary" class="operation-btn" @click="confirm" value="确定"></button>
 				</div>
 				
@@ -134,7 +134,8 @@ import {unicode,fixedPic} from '../../js/tool.js';
                 page : 1,
                 rows : 10,
                 filterName : '筛选',
-                keyword : ''
+                keyword : '',
+								isSelected : false
                 
 			}
 		},
@@ -213,11 +214,13 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	this.filterName = name;
 	        	this.currentIndex = index;
 	        	this.categoryId = categoryId;
+						this.isSelected = true;
 	        },
 	        resetFilter(){
 	        	this.filterName = '筛选';
 	        	this.currentIndex = -1;
 	        	this.categoryId = '';
+						this.isSelected = false;
 	        },
 	        getpagelist (type='time',categoryId='',keyword = '') {
 	        	this.refreshIcon = "icon-loadding";
