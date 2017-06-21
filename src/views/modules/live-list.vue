@@ -20,11 +20,15 @@
                 <text class="live-author-name">{{live.teacher}}</text>
               </div>
               <div style="flex-direction:row; align-items:center;">
-                <bui-image v-if="!btnStyle(live)" class="onlive" src="/image/onlive.gif"></bui-image>
-                <text class="live-book" v-if="!btnStyle(live)">正在直播</text>
-                <text v-if="btnStyle(live)" class="live-time">{{getStartTime(live)}}</text>
-                <div :class="[btnStyle(live)?'live-book-btn':'live-enter-btn']">
-                  <text :class="[btnStyle(live)?'live-book':'live-enter']">{{getBtn(live)}}</text>
+                <bui-image v-if="btnStyle(live)===1" class="onlive" src="/image/onlive.gif"></bui-image>
+                <text class="live-book" v-if="btnStyle(live)===1">正在直播</text>
+                <text v-if="!(btnStyle(live)===1)" class="live-time">{{getStartTime(live)}}</text>
+                <div class="live-btn" :class="[btnStyle(live)===0?'live-book-btn':'',
+                                               btnStyle(live)===1?'live-enter-btn':'',
+                                               btnStyle(live)===2?'live-end-btn':'']">
+                  <text :class="[btnStyle(live)===0?'live-book':'',
+                      btnStyle(live)===1?'live-enter':'',
+                      btnStyle(live)===2?'live-end':'']">{{getBtn(live)}}</text>
                 </div>
               </div>
             </div>
@@ -95,9 +99,9 @@ export default {
     },
     getCount (live) {
       switch(live.liveStatus){
-        case 0: return '预约人数: ' + live.appointmentCount + '人';
-        case 1: return '在线人数: ' + live.liveCount + '人';
-        case 2: return '学习人数: ' + live.recordingCount + '人';
+        case 0: return '预约人数: ' + (live.appointmentCount||0) + '人';
+        case 1: return '在线人数: ' + (live.liveCount||0) + '人';
+        case 2: return '学习人数: ' + (live.recordingCount||0) + '人';
       }
     },
     getStartTime (live) {
@@ -108,14 +112,16 @@ export default {
         case 0: if(live.isSignup===0) return '预约';
                 else return '已预约';
         case 1: return '进入教室';
-        case 2: return '回看';
+        case 2: if(live.recordingVideo>0) return '回看';
+                else return '已结束';
       }
     },
     btnStyle (live){
         switch(live.liveStatus){
-        case 0: return true;
-        case 1: return false;
-        case 2: return true;
+        case 0: return 0;
+        case 1: return 1;
+        case 2: if(live.recordingVideo>0) return 0;
+                else return 2;
       }
     },
     "onLoading": function (e) {

@@ -86,6 +86,18 @@
   background-color: #F6A623;
 }
 
+.live-end-btn{
+  width: 150px;
+  height: 64px;
+  border-style: solid;
+  border-color: #F3F3F3;
+  border-width: 2px;
+  border-radius: 10px;
+  margin-left: 20px;
+  flex-direction: row;
+  align-items: center;
+}
+
 .live-book{
   color: #F6A623;
   font-size: 26px;
@@ -100,9 +112,16 @@
   text-align: center;
 }
 
+.live-end{
+  color: #9B9B9B;
+  font-size: 26px;
+  flex: 1;
+  text-align: center;
+}
+
 .onlive{
   width: 40px;
-  height: 32px;
+  height: 40px;
   margin-right: 16px;
   margin-bottom: 5px;
 }
