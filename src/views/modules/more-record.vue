@@ -13,7 +13,7 @@
           <div class="course-list" v-for="(record,index) in part.records">
             <div class="course-list-item no-border" 
                 :class="[index===part.records.length-1?'no-border':'bb1']" 
-                @click="linkDetail(record.itemId)">
+                @click="linkDetail(record)">
               <bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
               <div class="course-content">
                 <text class="course-item-title">{{record.name}}</text>
@@ -136,9 +136,12 @@ export default {
       }
       return formatDate(rec.ext.regTime, '开始于 MM-dd hh:mm');      
     },
-    linkDetail (goal) {
-      buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js",{itemId: goal});
-    }
+    linkDetail (rec) {
+				let type = this.getRecordType(rec);
+				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js");
+				else if(type === 'Course') buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js");
+				else buiweex.push(buiweex.getContextPath() + "/train.weex.js");
+			}
   },
   created (){
     globalEvent.addEventListener("androidback", function (e){

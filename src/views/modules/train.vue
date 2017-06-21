@@ -1,13 +1,13 @@
 <template>
 	<div class="course-wrap">
-		<bui-header title="岗位课程"
+		<bui-header title="培训详情"
 			:leftItem="leftItem"
 			@leftClick = "back"			
 			>
 		</bui-header>
 		<bui-content class="null">
 			<bui-image class="null-pic" src="/image/null.png"></bui-image>
-			<text class="null-text">岗位课程正在开发中</text>
+			<text class="null-text">培训详情正在开发中</text>
 		</bui-content>
 	</div>
 </template>
