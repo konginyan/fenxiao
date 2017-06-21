@@ -1,14 +1,14 @@
 <template>
 	<div class="micro-class-detail-wrap">
 		<div class="video-wrap">
-				<bui-header
+				<!-- <bui-header
                 title="分晓"
                 @leftClick="back"
                 @centerClick="showDemo"
                 :leftItem="leftItem"
                 >
                 <icon @click="more" slot="right" name="icon-more" size="45px" color="#ffffff" class="pdl10"></icon>
-        		</bui-header>
+        		</bui-header> -->
 			<video class="bui-video"
 	                   :src="src"
 	                   controls
@@ -17,14 +17,16 @@
 	                   @pause="onpause($event)"
 	                   @finish="onfinish($event)"
 	                   @fail="onfail($event)"></video>
+	        <bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
+	        <bui-image v-if="isShow" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 		</div>
 		<tabbar-scroll :tabItems="tabItems"
 		                     selectedIndex="0"
 		                     :scroll="false"
 		                     top="437px" @tabItemOnClick="tabItemOnClick"></tabbar-scroll>
 		<div class="course-footer" style="position: absolute;bottom: 0px;left:0;right:0;">
-			<button v-if="false"  value="参加课程" type="primary" size="large" radius="0"></button>
-			<div class="operation">
+			<button  v-if="!isAttend"  value="参加课程" type="primary" size="large" radius="0" @click="attend"></button>
+			<div class="operation" v-if="isAttend">
 				<div class="operation-item" @click="evaluate">
 					<icon name="icon-comment" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">评论</text>
@@ -75,12 +77,13 @@ var globalEvent = weex.requireModule('globalEvent');
 				        titleSize : 30,
 				    }
 				],
-				state: '---',
 				src: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4',
 				leftItem: {
                     icons: 'icon-back',
                 },
-                detail : ''
+                detail : {},
+                isAttend : false,
+                isShow : true
 			}
 		},
 		methods:{
@@ -107,38 +110,53 @@ var globalEvent = weex.requireModule('globalEvent');
 			getDetail () {
 				let courseId = buiweex.getPageParams().courseId;
 				ajax({
-					url : 'ba/learn/course/detail',
-					method : 'POST',
+					url : 'ba/api/course/show',
 					data : {
-						courseId : courseId,
+						id : courseId,
 
 
 					}
 				}).then((res) =>{
-					this.detail = res.returnval;
+					// this.detail = res.returnval;
+					this.detail = res.r[0];
+					this.isAttend = !!this.detail.isAttend;
+					
 				},(errorT,status) =>{
 					
 				})
 			},
 			"onstart": function () {
-                console.log(this.stateall);
-                this.stateall = '55555';
-                console.log(this.stateall);
+                this.isShow = false;
+                // buiweex.alert(this.isShow);
             },
             "onpause": function (event) {
-                console.log(event);
-                console.log(this.state);
-                this.state = 'onpause';
-                console.log(this.state);
+                this.isShow = true;
+                // buiweex.alert(this.isShow);
             },
             "onfinish": function (event) {
-                this.state = 'onfinish'
+                this.isShow = true;
             },
             "onfail": function (event) {
-                this.state = 'onfinish'
+                this.isShow = true;
             },
             evaluate () {
-            	buiweex.push(buiweex.getContextPath() + "/evaluate.weex.js");
+            	buiweex.push(buiweex.getContextPath() + "/evaluate.weex.js",{
+            		courseId : buiweex.getPageParams().courseId
+            	});
+            },
+            attend () {
+            	ajax({
+            		url : 'ba/api/course/attend',
+            		method : 'POST',
+            		data : {
+            			id : buiweex.getPageParams().courseId,
+            		}
+            	}).then((res) =>{
+            		this.isAttend = true;
+            		buiweex.toast('报名成功');
+            	},(errorT,status) =>{
+            		buiweex.toast('报名失败');
+            	})
             }
 		},
 		created (){
