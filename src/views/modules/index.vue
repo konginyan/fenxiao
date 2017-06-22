@@ -1,12 +1,6 @@
 <template>
 	<div>
 		<scroller class="span1" @scroll="onScroll">
-			<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
-              :display="refreshing ? 'show' : 'hide'">
-        <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
-        <text class="bui-refresh-indicator">{{refreshText}}</text>
-      </refresh>
-
 			<div>
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
@@ -141,30 +135,12 @@ import linkapi from '../../js/linkapi.js';
 			"changeHandler": function (e) {
 					this.scrollHnadlerCallCount = 0;
 			},
-			//refresh下拉放手后的文字与图标
-			"onRefresh": function (e) {
-					this.refreshing = true;
-					this.getHottestList();
-					this.getRecommend();
-					this.getLastact();
-			},
-			//refresh下拉放手前的文字与图标
-			"onPullingdown": function (e) {
-				this.refreshIcon = "icon-todown";
-				this.refreshText = "下拉刷新...";
-				this.showNav = false;
-				//下拉一定距离时文字与图标
-				if (Math.abs(e.pullingDistance) > 80) {
-						this.refreshIcon = "icon-toup";
-						this.refreshText = "松开即可刷新...";
-				}
-			},
 			onScroll(e){
 				if(e.contentOffset.y<0) {
-					this.navBackground = '';
+					this.navColor = '#4ca4fe';
 				}
 				else{
-					this.navBackground = '/image/NavBarBackground.png';
+					this.navColor = 'transparent';
 				}
 			},
 			linkBanner (item){
@@ -186,7 +162,7 @@ import linkapi from '../../js/linkapi.js';
 				buiweex.push(buiweex.getContextPath() + "/live-list.weex.js");
 			},
 			getHottestList () {
-				ajax({
+				return ajax({
 					url : 'ba/api/course/gethottestlist'
 				}).then((res) =>{
 					this.hottestList = res.r;
@@ -209,7 +185,7 @@ import linkapi from '../../js/linkapi.js';
 				return obj.args[0].value;
 			},
 			getRecommend () {
-				ajax({
+				return ajax({
 					url : 'ba/api/homepage/recommend',
 				}).then((res) =>{
 					this.recommendList = res.r;
@@ -218,7 +194,7 @@ import linkapi from '../../js/linkapi.js';
 				})
 			},
 			getLastact () {
-				ajax({
+				return ajax({
 					url : 'ba/api/homepage/lastact',
 				}).then((res) =>{
 					this.lastact = res.r;
