@@ -102,8 +102,7 @@ export function secondToTime(second){
     return min + '分' + second + '秒'
 }
 
-export function getDateDiff(startDate)  
-{  
+export function getDateDiff(startDate){  
     var endTime = new Date().getTime();     
     var startTime = new Date(Date.parse(startDate.replace(/-/g,   "/"))).getTime();     
     var dates = (endTime - startTime)/(1000*60*60*24);     

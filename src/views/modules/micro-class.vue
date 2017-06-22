@@ -238,13 +238,17 @@ import {unicode,fixedPic} from '../../js/tool.js';
             		this.pageList = res.r;
             		this.refreshIcon = "icon-checkbox-on";
             		this.refreshText = "刷新成功";
-            		this.refreshing = false;
-            		
+            		setTimeout(()=>{
+									this.refreshing = false;
+									this.refreshIcon = "icon-todown";
+									this.refreshText = "下拉刷新...";
+								},500)
             	},(errorT,status) =>{
-            		this.refreshIcon = "icon-todown";
-            		this.refreshText = "刷新失败";
-            		this.refreshing = false;
-            		
+            		setTimeout(()=>{
+									this.refreshing = false;
+									this.refreshIcon = "icon-todown";
+									this.refreshText = "刷新失败";
+								},500)
             	})
             },
             getMorePageList (type='time',categoryId=''){
@@ -283,14 +287,13 @@ import {unicode,fixedPic} from '../../js/tool.js';
             },
             //refresh下拉放手前的文字与图标
             "onPullingdown": function (e) {
-                //默认refresh文字与图标
-                this.refreshIcon = "icon-todown";
-                this.refreshText = "下拉刷新...";
-                //下拉一定距离时文字与图标
-                if (Math.abs(e.pullingDistance) > 80) {
-                    this.refreshIcon = "icon-toup";
-                    this.refreshText = "松开即可刷新...";
-                }
+							this.refreshIcon = "icon-todown";
+      				this.refreshText = "下拉刷新...";
+              //下拉一定距离时文字与图标
+							if (Math.abs(e.pullingDistance) > 80) {
+									this.refreshIcon = "icon-toup";
+									this.refreshText = "松开即可刷新...";
+							}
             },
 
             "onLoading": function (e) {
@@ -333,7 +336,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 </style>
 <style src="../../css/layout.css"></style>
 <style src="../../css/customer/micro-class.css"></style>
-<style src="../../css/customer/course-list.css" />
+<style src="../../css/customer/course-list.css"></style>
 
 <style src="../../css/refresh.css"></style>
 <style src="../../css/loading.css"></style>

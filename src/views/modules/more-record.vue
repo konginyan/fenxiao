@@ -7,6 +7,12 @@
       >
     </bui-header>
     <list class="bui-list span1" >
+      <refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
+              :display="refreshing ? 'show' : 'hide'">
+        <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
+        <text class="bui-refresh-indicator">{{refreshText}}</text>
+      </refresh>
+
       <cell v-for="part in all">
         <div v-if="part.records.length > 0" class="record-list">
           <text class="record-time-title">{{part.title}}</text>
@@ -72,7 +78,10 @@ export default {
       loadingText: "正在加载更多数据...",
       showLoading: false,
       placeholder: '/image/no-pic.png',
-      noBorder: true
+      noBorder: true,
+      refreshing: false,
+      refreshIcon: "icon-todown",
+      refreshText: "下拉刷新...",
     }
   },
   mounted(){
@@ -83,6 +92,8 @@ export default {
       buiweex.pop();
     },
     getRecords () {
+      this.refreshIcon = "icon-loadding";
+	    this.refreshText = "正在刷新";
       ajax({
         url : 'ba/api/homepage/historyInfos',
         data : {
@@ -93,12 +104,22 @@ export default {
         this.page += 1;
         if(res.r.length === 0){
           this.loadingText = '没有更多数据了';
-          this.showLoading = false;
+          setTimeout(()=>{
+            this.showLoading = false;
+          },500)
           return;
         }else{
           this.loadingText = '正在加载更多数据...';
         }
         this.showLoading = false;
+
+        if(this.page===2) {
+          this.all[0].records=[];
+          this.all[1].records=[];
+          this.all[2].records=[];
+          this.all[3].records=[];
+          this.all[4].records=[];                   
+        }
 
         res.r.forEach((record)=>{
           let diff = getDateDiff(formatDate(record.time,'yyyy-MM-dd hh:mm:ss'));
@@ -108,8 +129,20 @@ export default {
           else if(diff<=7) this.all[3].records.push(record);
           else this.all[4].records.push(record);
         })
+
+        this.refreshIcon = "icon-checkbox-on";
+        this.refreshText = "刷新成功";
+        setTimeout(()=>{
+          this.refreshing = false;
+          this.refreshIcon = "icon-todown";
+          this.refreshText = "下拉刷新...";
+        },500)
       },(errorT,status) =>{
-        
+        setTimeout(()=>{
+          this.refreshing = false;
+          this.refreshIcon = "icon-todown";
+          this.refreshText = "刷新失败";
+        },500)
       })
     },
     getPicture (src) {
@@ -117,6 +150,22 @@ export default {
     },
     "onLoading": function (e) {
       this.getNextPage();
+    },
+    //refresh下拉放手后的文字与图标
+    "onRefresh": function (e) {
+        this.refreshing = true;
+        this.page = 1;
+        this.getRecords();
+    },
+    //refresh下拉放手前的文字与图标
+    "onPullingdown": function (e) {
+      this.refreshIcon = "icon-todown";
+      this.refreshText = "下拉刷新...";
+      //下拉一定距离时文字与图标
+      if (Math.abs(e.pullingDistance) > 80) {
+          this.refreshIcon = "icon-toup";
+          this.refreshText = "松开即可刷新...";
+      }
     },
     getNextPage () {
       this.showLoading = true;
@@ -174,4 +223,5 @@ export default {
 
 <style src="../../css/layout.css"></style>
 <style src="../../css/loading.css"></style>
+<style src="../../css/refresh.css"></style>
 <style src="../../css/customer/course-list.css"></style>

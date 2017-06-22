@@ -2,11 +2,17 @@
   <div class="live-list-wrapper">
     <bui-header title="直播课堂"
       :leftItem="leftItem"
-      @leftClick = "back"			
+      @leftClick = "back"	
       >
     </bui-header>
     <bui-content class="span1">
       <list class="bui-list">
+        <refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
+				         :display="refreshing ? 'show' : 'hide'">
+				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
+				    <text class="bui-refresh-indicator">{{refreshText}}</text>
+				</refresh>
+
         <cell v-for="live in lives">
           <div class="live">
             <div class="live-detail">
@@ -57,6 +63,9 @@ export default {
       rows: 20,
       loadingText: "正在加载更多数据...",
       showLoading: false,
+      refreshing: false,
+      refreshIcon: "icon-todown",
+      refreshText: "下拉刷新...",
     }
   },
   mounted(){
@@ -67,6 +76,8 @@ export default {
       buiweex.pop();
     },
     getLives(){
+      this.refreshIcon = "icon-loadding";
+	    this.refreshText = "正在刷新";
       ajax({
         url : 'ba/api/live/list',
         data : {
@@ -77,17 +88,31 @@ export default {
         this.page += 1;
         if(res.r.length === 0){
           this.loadingText = '没有更多数据了';
-          this.showLoading = false;
+          setTimeout(()=>{
+            this.showLoading = false;
+          },500)
           return;
         }else{
           this.loadingText = '正在加载更多数据...';
         }
         this.showLoading = false;
-        res.r.forEach((live)=>{
+        if(this.page===2) this.lives = res.r;
+        else res.r.forEach((live)=>{
           this.lives.push(live);
         })
+        this.refreshIcon = "icon-checkbox-on";
+        this.refreshText = "刷新成功";
+        setTimeout(()=>{
+          this.refreshing = false;
+          this.refreshIcon = "icon-todown";
+          this.refreshText = "下拉刷新...";
+        },500)
       },(errorT,status) =>{
-        
+        setTimeout(()=>{
+          this.refreshing = false;
+          this.refreshIcon = "icon-todown";
+          this.refreshText = "刷新失败";
+        },500)
       })
     },
     getPicture (src) {
@@ -127,6 +152,22 @@ export default {
     "onLoading": function (e) {
       this.getNextPage();
     },
+    //refresh下拉放手后的文字与图标
+    "onRefresh": function (e) {
+        this.refreshing = true;
+        this.page = 1;
+        this.getLives();
+    },
+    //refresh下拉放手前的文字与图标
+    "onPullingdown": function (e) {
+      this.refreshIcon = "icon-todown";
+      this.refreshText = "下拉刷新...";
+      //下拉一定距离时文字与图标
+      if (Math.abs(e.pullingDistance) > 80) {
+          this.refreshIcon = "icon-toup";
+          this.refreshText = "松开即可刷新...";
+      }
+    },
     getNextPage () {
       this.showLoading = true;
       this.getLives();
@@ -158,4 +199,5 @@ export default {
 
 <style src="../../css/layout.css"></style>
 <style src="../../css/loading.css"></style>
+<style src="../../css/refresh.css"></style>
 <style src="../../css/customer/live-list.css"></style>
