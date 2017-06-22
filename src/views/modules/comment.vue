@@ -193,7 +193,6 @@ var globalEvent = weex.requireModule('globalEvent');
 <style>
 	.span1{
 		flex: 1;
-		padding-bottom: 70px;
 	}
 </style>
 <style src="../../css/refresh.css"></style>

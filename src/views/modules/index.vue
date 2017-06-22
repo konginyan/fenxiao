@@ -85,6 +85,7 @@ import rate from '../components/rate.vue';
 var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
+import linkapi from '../../js/linkapi.js';
 
 	export default {
 		data () {
@@ -126,6 +127,11 @@ import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
 			},
 			scan () {
+				linkapi.scanCodeHandle({},function(res) {
+					buiweex.toast(res)
+				},function(err) {
+					buiweex.toast(err)
+				});
 				// buiweex.push(buiweex.getContextPath() + "/video.weex.js");
 			},
 			"scrollHandler": function (e) {

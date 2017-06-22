@@ -21,7 +21,7 @@
     var globalEvent = weex.requireModule('globalEvent');
     const storage = weex.requireModule('storage')
 import sso from '../../js/sso.js';
-
+import linkapi from '../../js/linkapi.js';
     module.exports = {
         data: function () {
             return {
@@ -83,17 +83,24 @@ import sso from '../../js/sso.js';
 
             },
             login () {
-                sso.login('admin@bingosoft','123456',function(res) {
-
+               /* linkapi.getLoginInfo((e)=>{
                     
-                    // buiweex.alert(res['ex.oauth_access_token']);
-                    var token = res['ex.oauth_access_token'];
-                    storage.setItem('token', token);
-                    console.log('aaaa');
-                },function(err) {
-                    buiweex.toast(err);
-                    console.log(err);
-                });
+                });*/
+                try{
+                    linkapi.getToken((e)=>{
+                        storage.setItem('token', e.accessToken);
+                    });
+                }catch(e){
+                    sso.login('13751876401','123456',function(res) {
+                        var token = res['ex.oauth_access_token'];
+                        storage.setItem('token', token);
+                    },function(err) {
+                        buiweex.toast(err);
+                        console.log(err);
+                    });
+                }
+                
+                
             }
             
         },

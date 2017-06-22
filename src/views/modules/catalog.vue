@@ -1,18 +1,19 @@
 <template>
 	<div class="catalog-wrap">
-		<scroller class="span1">
-			<text class="catalog-subtitle">目录</text>
-			<div class="catalog-list">
-				<div class="catalog-item" v-for="(item,index) in catalogList" @click="catalogSelect(index)">
-					<text class="catalog-index" :class="[index===selectIndex ? 'catalog-active' : '']">{{index+1}}</text>
-					<icon class="catalog-play " :class="[index===selectIndex ? 'catalog-active' : '']" name="icon-play" ></icon>
-					<text class="catalog-title" :class="[index===selectIndex ? 'catalog-active' : '']">{{item.name}}</text>
-					<div class="catalog-total">127M</div>
+		<div class="catalog-content" v-for="(item,i) in catalogList">
+			<text class="catalog-subtitle">{{item.title}}</text>
+			<div class="catalog-list" v-for="inner in item.detailList">
+				<div class="catalog-item"  @click="catalogSelect(inner)">
+					<text class="catalog-index" :class="[inner.cataIndex===selectIndex ? 'catalog-active' : '']">{{inner.cataIndex}}</text>
+					<icon v-if="inner.type==='Video'" class="catalog-play " :class="[inner.cataIndex===selectIndex ? 'catalog-active' : '']" name="icon-play" ></icon>
+					<icon v-if="inner.type==='html'" class="catalog-play" size="30px" :class="[inner.cataIndex===selectIndex ? 'catalog-active' : '']" name="icon-web" ></icon>
+					<text class="catalog-title" :class="[inner.cataIndex===selectIndex ? 'catalog-active' : '']">{{inner.name}}</text>
+					<div v-if="false" class="catalog-total">127M</div>
 					<icon v-if="false" class="catalog-down" name="icon-download"></icon>
 					<icon v-if="false" class="catalog-loading" name="icon-loading"></icon>
 				</div>
 			</div>
-		</scroller>
+		</div>
 		
 	</div>
 </template>
@@ -20,6 +21,8 @@
 <script>
 import buiweex from "../../js/buiweex.js";
 import ajax from '../../js/ajax.js';
+
+const storage = weex.requireModule('storage');
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
@@ -27,13 +30,15 @@ var globalEvent = weex.requireModule('globalEvent');
 			return {
 				selectIndex : 0,
 				courseId : '',
-				catalogList : []
+				catalogList : [],
+				total : 0,
+				
 			}
 		},
 		mounted(){
 			this.courseId = buiweex.getPageParams().courseId;
 			this.getCatalog();	 
-
+			this.getRecord();
 			
 
 		},
@@ -41,37 +46,68 @@ var globalEvent = weex.requireModule('globalEvent');
 			back(){
 				buiweex.pop();
 			},
-			catalogSelect (index) {
+			catalogSelect (inner) {
 				
-				this.selectIndex = index;
+				this.selectIndex = inner.cataIndex;
+				let type = inner.type;
+				if (type === 'Video') {
+					this.$emit('videoSrc' , inner.url);
+					// console.log(inner.url);
+					this.saveRecord(inner);
+				}else if(type === 'html'){
+					buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
+						url : inner.url
+					});
+				}
+				
+				// console.log(inner);
+				
+			},
+			saveRecord (inner) {
+				let mainId = inner.mainId,
+					cataIndex = inner.cataIndex;
+				storage.setItem(this.courseId, cataIndex);
+			},
+			getRecord () {
+				let courseId = this.courseId;
+				storage.getItem(courseId,e=>{
+					let data = e.data;
+					this.selectIndex = data;
+					console.log(data);
+				})
 			},
 			getCatalog() {
 				ajax({
-					url : 'ba/api/course/catalog',
+					url : 'ba/api/course/catalogweex',
 					data : {
-						id : '012a7214-d40d-11e6-a615-d00ddfc66d37',
+						id : this.courseId,
 					}
 				}).then((res) =>{
+					
+					res.r && res.r.forEach(item=>{
+						item && item.detailList && item.detailList.forEach(inner=>{
+							this.total += 1;
+							let cataIndex = this.total < 10 ? '0' + this.total : this.total;
+							inner.cataIndex = cataIndex;
+						})
+					})
+
 					this.catalogList = res.r;
-					// buiweex.alert(res.r)
+					// console.log(this.catalogList);
 					
 				},(errorT,status) =>{
 					
 				})
-			}
+			},
 		},
 		created (){
 	        globalEvent.addEventListener("androidback", function (e){
 	              buiweex.pop();
 	        });
-	    },
+	    }
 	}
 </script>
+
 <style src="../../css/customer/catalog.css"></style>
-<style>
-	.span1{
-		flex: 1;
-		padding-bottom: 70px;
-	}
-</style>
+
 

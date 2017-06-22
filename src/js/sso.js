@@ -1,5 +1,7 @@
 var stream = weex.requireModule('stream');
-var ssoEndpoint="https://ba.depts.bingosoft.net:20140/sso";
+// var ssoEndpoint="https://ba.depts.bingosoft.net:20140/sso";
+const ssoEndpoint="https://10.201.76.141/sso/";
+
 
 module.exports = {
     //对象转成url查询参数 key=value&key=value

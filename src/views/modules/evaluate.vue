@@ -32,8 +32,8 @@ import rate from '../components/rate.vue';
                     icons: 'icon-back',
                 },
                 rateArr : ['较差','一般','良好','推荐','极佳'],
-                rateValue : 5,
-                rateText : '极佳',
+                rateValue : 0,
+                rateText : '',
                 courseId : '',
                 content : '',
                 contentLength : 0,
@@ -70,7 +70,9 @@ import rate from '../components/rate.vue';
 					}
 				}).then((res) =>{
 					buiweex.toast('评论成功');
-					
+					setTimeout(function () {
+						buiweex.pop();
+					},1000)
 				},(errorT,status) =>{
 					buiweex.toast('评论失败');
 				})

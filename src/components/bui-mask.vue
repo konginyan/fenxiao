@@ -17,4 +17,4 @@
         }
     }
 </script>
-<style src="../css/mask.css"></style>
+<style lang="sass" src="../css/mask.scss"></style>

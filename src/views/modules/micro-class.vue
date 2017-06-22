@@ -102,13 +102,13 @@ import {unicode,fixedPic} from '../../js/tool.js';
                     {
                         index: 0,
                         title: '时间',
-                        icon: 'icon-arrow',
+                        // icon: 'icon-arrow',
                         selected: true,
                     },
                     {
                         index: 1,
                         title: '热门',
-                        icon: 'icon-arrow',
+                        // icon: 'icon-arrow',
                         selected: false,
 
                     },
