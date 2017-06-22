@@ -1,7 +1,5 @@
 <template>
 	<div class="brief-introduction-wrap">
-		
-		<scroller class="span1">
 			<div class="course-teacher">
 				<text class="course-teacher-title">{{detail.name}}</text>
 			</div>
@@ -36,7 +34,7 @@
 					
 				</div>
 			</div>
-		</scroller>
+		
 	</div>
 </template>
 
@@ -78,7 +76,6 @@ var globalEvent = weex.requireModule('globalEvent');
 
 					this.detail = res.r[0];
 					this.outline = this.detail.outline.replace(/<.*?>/g,'');
-
 					
 				},(errorT,status) =>{
 					
@@ -151,10 +148,4 @@ var globalEvent = weex.requireModule('globalEvent');
 	}
 </script>
 <style src="../../css/customer/brief-introduction.css"></style>
-<style>
-.span1{
-	flex: 1;
-	padding-bottom: 70px;
-}
-	
-</style>
+

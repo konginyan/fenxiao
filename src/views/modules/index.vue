@@ -4,6 +4,7 @@
                 title="分晓"
                 :leftItem="leftItem"
                 @centerClick="showDemo"
+                @leftClick = "back"
                 >
                 <icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
         </bui-header>
@@ -78,6 +79,7 @@ import rate from '../components/rate.vue';
 var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate} from '../../js/tool.js';
+import linkapi from '../../js/linkapi.js';
 
 	export default {
 		data () {
@@ -102,6 +104,11 @@ import {fixedPic,formatDate} from '../../js/tool.js';
 				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
 			},
 			scan () {
+				linkapi.scanCodeHandle({},function(res) {
+					buiweex.toast(res)
+				},function(err) {
+					buiweex.toast(err)
+				});
 				// buiweex.push(buiweex.getContextPath() + "/video.weex.js");
 			},
 			"scrollHandler": function (e) {
@@ -112,6 +119,7 @@ import {fixedPic,formatDate} from '../../js/tool.js';
                 this.scrollHnadlerCallCount = 0;
             },
             linkBanner (item){
+            	console.log(item);
             	// buiweex.alert(item.name);
             },
             rateChange (val){

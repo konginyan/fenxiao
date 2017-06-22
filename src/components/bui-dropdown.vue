@@ -1,13 +1,12 @@
 <template>
     <div class="bui-dropdown">
-        <bui-mask v-if="showmask" @click="layoutClick"></bui-mask>
-
-        <div class="bui-dropdown-box" ref="dropdownBox" :style="{'left': left, 'top': top, 'width': widthDrop}">
-            <div class="bui-dropdown-content">
+        <bui-mask v-if="show" @click="layoutClick"></bui-mask>
+        <div v-if="show" class="bui-dropdown-box" ref="dropdownBox" :style="{'left': left, 'top': top, 'width': widthDrop}">
+            <div class="bui-dropdown-content" :style="{ 'background-color': bgColor }">
                 <slot>
                 </slot>
             </div>
-            <bui-icon name="icon-jiantou" color="#ffffff" class="bui-dropdown-jiantou" :style="{'left': sanjiaoLeft}"></bui-icon>
+            <bui-icon name="icon-jiantou" :color="iconColor" class="bui-dropdown-jiantou" :style="{'left': sanjiaoLeft}"></bui-icon>
         </div>
     </div>
 
@@ -31,9 +30,17 @@
             }
         },
         props: {
-            showmask: {
+            bgColor: {
+                type: String,
+                default: "#ffffff"
+            },
+            iconColor: {
+                type: String,
+                default: "#ffffff"
+            },
+            show: {
                 type: Boolean,
-                default: true
+                default: false
             },
             center: {
                 type: Boolean,
@@ -42,29 +49,7 @@
             showArrow: {
                 type: Boolean,
                 default: false
-            },
-//            position: {
-//                type: Object,
-//                default: {
-//                    width: '0px',
-//                    height: '0px',
-//                    left: '0px',
-//                    right: '0px'
-//                }
-//            }
-//            widthDrop: {
-//                default: "260px"
-//            },
-//            left: {
-//                default: "0px"
-//            },
-//            top: {
-//                default: "0px"
-//            },
-//            sanjiaoLeft: {
-//                default: "40px"
-//            },
-
+            }
         },
         computed:{
         },
@@ -93,14 +78,14 @@
                 var el = _this.$refs.dropdownBox;
 
                 _this.position = data.position;
-                console.log();
-                //showArrow为false,宽度按触发元素宽度自适应,如果控制宽度可设置为true,默认宽度为400px,也可自传宽度
+                //showArrow为false,宽度按触发元素宽度自适应,如果控制宽度可设置为true,默认宽度为260px,也可自传宽度
                 if(!_this.showArrow){
                     if(_this.position.width >= 260) {
                         _this.widthDrop = _this.position.width;
                     }
                     if(_this.center){
-                        _this.sanjiaoLeft = _this.position.x + _this.position.width/2-40;
+                        console.log(11);
+                        _this.sanjiaoLeft = _this.position.x + _this.position.width/2-20;
                         _this.left = _this.position.x;
                     }else{
                         if((750 - _this.position.x) < 260){
@@ -112,10 +97,12 @@
                     }
                 }else{
                     if(_this.center){
+                        console.log(22);
                         console.log(_this.position.x);
                         console.log(_this.widthDrop);
 
-                        _this.sanjiaoLeft = _this.position.x + 260/2 -40;
+//                        _this.sanjiaoLeft = _this.position.x + 260/2 -40;
+                        _this.sanjiaoLeft = 260/2 - 20;
                         _this.left = _this.position.x + _this.position.width/2 - 130;
                     }else{
                         if(_this.position.x == 0) {
@@ -152,11 +139,11 @@
             "layoutClick": function () {
                 var _this = this;
                 var el = this.$refs.dropdownBox;
-                _this.showmask = false;
 
 //                var translate = 'translate(0px, -'+parseInt(_this.position.height)+'px)';
                 var translate = 'scale(0.9, 0.9)';
                 _this.animationFn(el, "0", translate,  'ease-out', function () {
+                    _this.show = false;
                     _this.$emit("close");
                 });
             },
@@ -165,6 +152,4 @@
     }
 </script>
 
-<style src="../css/dropdown.css"></style>
-<style>
-</style>
+<style lang="sass" src="../css/dropdown.scss"></style>

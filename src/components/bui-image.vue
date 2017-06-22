@@ -40,7 +40,7 @@
         },
         methods: {
             "_click": function (event) {
-                this.$emit('click');
+                this.$emit('click', event);
             },
             "_load": function () {
                 this.$emit('load');

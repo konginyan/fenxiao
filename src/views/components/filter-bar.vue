@@ -2,7 +2,7 @@
 	<div class="filter-bar">
 		<div class="filter-bar-item" v-for="item in filterItems" @click="selecteItem(item.index)">
 			<text class="filter-bar-item-text" :class="[item.selected ?'text-active' : '']">{{item.title}}</text>
-			<icon class="filter-bar-item-icon" :class="[item.selected ?'icon-active' : '',item.selected && item.icon=='icon-arrow' ?'icon-rotate' : '']" :name="item.icon"></icon>
+			<icon v-if="item.icon" class="filter-bar-item-icon" :class="[item.selected ?'icon-active' : '',item.selected && item.icon=='icon-arrow' ?'icon-rotate' : '']" :name="item.icon"></icon>
 		</div>		
 	</div>
 </template>
