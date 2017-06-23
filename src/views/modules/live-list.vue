@@ -5,7 +5,7 @@
       @leftClick = "back"	
       >
     </bui-header>
-    <bui-content class="span1">
+    <bui-content v-if="lives.length>0" class="span1">
       <list class="bui-list">
         <refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
@@ -13,7 +13,7 @@
 				    <text class="bui-refresh-indicator">{{refreshText}}</text>
 				</refresh>
 
-        <cell v-for="live in lives">
+        <cell :key="live" v-for="live in lives">
           <div class="live">
             <div class="live-detail">
               <bui-image class="live-img" :src="getPicture(live.picture)"></bui-image>
@@ -45,6 +45,10 @@
         </loading>
       </list>
     </bui-content>
+    <bui-content v-if="lives.length===0" class="null">
+			<bui-image class="null-pic2" src="/image/no-live.png"></bui-image>
+			<text class="null-text">当前没有直播</text>
+		</bui-content>
   </div>
 </template>
 
@@ -65,7 +69,7 @@ export default {
       showLoading: false,
       refreshing: false,
       refreshIcon: "icon-todown",
-      refreshText: "下拉刷新...",
+      refreshText: "下拉刷新..."
     }
   },
   mounted(){
@@ -200,4 +204,5 @@ export default {
 <style src="../../css/layout.css"></style>
 <style src="../../css/loading.css"></style>
 <style src="../../css/refresh.css"></style>
+<style src="../../css/customer/null.css"></style>
 <style src="../../css/customer/live-list.css"></style>

@@ -45,7 +45,7 @@
 							<text class="record-font-28 record-text">学习记录</text>
 					</div>
 					<div v-if="records.length > 0">
-						<div class="course-list" v-for="record in records">
+						<div :key="record" class="course-list" v-for="record in records">
 							<div class="course-list-item bb1" @click="linkDetail(record)">
 								<bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
 								<div class="course-content">
