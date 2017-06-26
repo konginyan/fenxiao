@@ -22,7 +22,10 @@
 				
 				<cell class="course-list">
 				   <div class="course-list-item" :class="[index===0?'no-border':'']" v-for="(item,index) in pageList" @click="linkDetail(item.courseId)">
-	   					<bui-image width="295px" height="164px" @click="linkDetail(item.courseId)" class="course-item-img" :src="fixedPicture(item.picture)"></bui-image>
+				   		<div class="avatar-wrap">
+				   			<bui-image class="default-pic" src="/image/no-pic.png" @click="linkDetail(item.courseId)"></bui-image>
+	   						<bui-image width="295px" height="164px" @click="linkDetail(item.courseId)" class="course-item-img" :src="fixedPicture(item.picture)"></bui-image>
+	   					</div>	
 	   					<div class="course-content">
 	   						<text class="course-item-title">{{item.name}}</text>
 	   						

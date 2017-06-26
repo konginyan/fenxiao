@@ -21,8 +21,19 @@
 	border-bottom-width : 1px;
 	border-bottom-color : #f2f2f2;
 }
-
+.avatar-wrap{
+	position: relative;
+	width: 295px;
+	height: 164px;
+}
+.default-pic{
+	width: 295px;
+	height: 164px;
+}
 .course-item-img{
+	position: absolute;
+	left: 0;
+	top: 0;
 	width: 295px;
 	height: 164px;
 }

@@ -71,8 +71,13 @@ var linkapi = {
         @param error {Function} 失败回调函数，返回错误字符串
     */
     getUserInfo : function(id, success, error){
-        link.getUserInfo([id], success, error);
+        if(id instanceof Array){
+            link.getUserListInfo([id], success, error);
+        }else{
+            link.getUserInfo([id], success, error);
+        }
     },
+
     /*
         根据LoginId获取UserId
         @param loginId {String} 用户登录Id
