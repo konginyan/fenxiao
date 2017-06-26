@@ -1,6 +1,6 @@
 .video-wrap{
 	position: relative;
-	height: 420px;
+	height: 418px;
 }
 
 .icon-back{
@@ -37,25 +37,36 @@
 	border-top-width: 1px;
 	border-top-color: #dedede;
 	border-top-style: solid;
-	padding-top: 10px;
+	padding-top: 6px;
+	
 	&:active{
 		background-color: #dedede;
 	}
 
 }
 .operation-icon{
+	margin-top: 10px;
 	color: #999;
 }
 .operation-item-title{
-	font-size: 22px;
+	margin-top: 10px;
+	font-size: 20px;
 	color: #666;
+	padding-bottom: 10px;
 	
 }
 .learn-continue{
 	flex : 1;
 	border-radius: 0;
-	padding-top: 23px;
-	padding-bottom: 23px;
+	padding-top: 36px;
+	padding-bottom: 36px;
+	font-size: 28px;
 }
 
+
+.attend-btn{
+	font-size: 30px;
+	padding-top: 36px;
+	padding-bottom: 36px;
+}
 
