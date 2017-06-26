@@ -3,7 +3,7 @@
 		<bui-content class="span1">
 			<div class="video-wrap" style="height:423px;">
 				<video class="bui-video"
-											src="http://114.67.23.110:8088/data/userdata/vod/transcode/201705/8ejXIdYu_pu.mp4"
+											:src="liveDetail.videoHls"
 											controls
 											@start="onstart($event)"
 											@pause="onpause($event)"

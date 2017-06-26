@@ -72,6 +72,7 @@
 			<bui-header
 					title="分晓"
 					:leftItem="leftItem"
+					@leftClick="back"
 					@centerClick="showDemo"
 					:backgroundColor = 'navColor'
 					>
@@ -125,16 +126,16 @@ import dropdown from '../components/dropdown.vue';
 		},
 		methods : {
 			back () {
-		        buiweex.pop();
-		    },
-		    dropDownClick (e) {
-		    	// console.log(e);
-		    	
-		    },
-		    dropdownChange (val) {
-		    	this.dropdownValue = val;
-		    	console.log(val);
-		    },
+					buiweex.pop();
+			},
+			dropDownClick (e) {
+				// console.log(e);
+				
+			},
+			dropdownChange (val) {
+				this.dropdownValue = val;
+				console.log(val);
+			},
 			showDemo (){
 				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
 			},
@@ -165,8 +166,8 @@ import dropdown from '../components/dropdown.vue';
 				console.log(item);
 				let type = this.getRecordType(item);
 				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
-          liveId : this.getMainId(item)
-        });
+					liveId : this.getMainId(item)
+				});
 				else if(type === 'Course') buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js",{
 								courseId : this.getMainId(item)
 							});
@@ -233,10 +234,10 @@ import dropdown from '../components/dropdown.vue';
 			}
 		},
 		created (){
-	        globalEvent.addEventListener("androidback", function (e){
-	              buiweex.pop();
-	        });
-	    },
+				globalEvent.addEventListener("androidback", function (e){
+							buiweex.pop();
+				});
+		},
 		components : {
 			rate,
 			dropdown,
