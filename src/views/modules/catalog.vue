@@ -14,14 +14,14 @@
 				</div>
 			</div>
 		</div>
-		
+		<prompt v-if="catalogList.length === 0" text="还没有目录" src="/image/empty-catalog.png"></prompt>
 	</div>
 </template>
 
 <script>
 import buiweex from "../../js/buiweex.js";
 import ajax from '../../js/ajax.js';
-
+import prompt from '../components/prompt.vue';
 const storage = weex.requireModule('storage');
 var globalEvent = weex.requireModule('globalEvent');
 
@@ -92,7 +92,7 @@ var globalEvent = weex.requireModule('globalEvent');
 						})
 					})
 
-					this.catalogList = res.r;
+					this.catalogList = res.r || [];
 					// console.log(this.catalogList);
 					
 				},(errorT,status) =>{
@@ -104,6 +104,10 @@ var globalEvent = weex.requireModule('globalEvent');
 	        globalEvent.addEventListener("androidback", function (e){
 	              buiweex.pop();
 	        });
+	    },
+	   
+	    components : {
+	    	prompt
 	    }
 	}
 </script>

@@ -76,7 +76,7 @@
             "open": function (data) {
                 var _this = this;
                 var el = _this.$refs.dropdownBox;
-
+                // console.log(data);
                 _this.position = data.position;
                 //showArrow为false,宽度按触发元素宽度自适应,如果控制宽度可设置为true,默认宽度为260px,也可自传宽度
                 if(!_this.showArrow){
@@ -97,9 +97,9 @@
                     }
                 }else{
                     if(_this.center){
-                        console.log(22);
-                        console.log(_this.position.x);
-                        console.log(_this.widthDrop);
+                        // console.log(22);
+                        // console.log(_this.position.x);
+                        // console.log(_this.widthDrop);
 
 //                        _this.sanjiaoLeft = _this.position.x + 260/2 -40;
                         _this.sanjiaoLeft = 260/2 - 20;
@@ -116,7 +116,7 @@
 
                 }
                 //top位置适配
-                var env = weex.config.env.platform.toLowerCase();
+               /* var env = weex.config.env.platform.toLowerCase();
                 switch(env){
                     case "ios":
                         _this.top = _this.position.y-20;
@@ -129,8 +129,8 @@
                         break;
                     default:
                         console.log(env);
-                }
-
+                }*/
+                _this.top = '20px';
                 var translate = 'translate(0px, '+ parseInt(_this.position.height)+'px)';
                 _this.animationFn(el, "1", translate,  'ease-in');
 

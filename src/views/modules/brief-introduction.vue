@@ -43,6 +43,7 @@ import buiweex from "../../js/buiweex.js";
 import rate from '../components/rate.vue';
 import ajax from '../../js/ajax.js';
 var globalEvent = weex.requireModule('globalEvent');
+import linkapi from '../../js/linkapi.js';
 
 	export default {
 		data () {
@@ -93,8 +94,37 @@ var globalEvent = weex.requireModule('globalEvent');
 
 					}
 				}).then((res) =>{
+					let arrLearnBy = [];
 					res.r.forEach((item) => {
-						ajax({
+						arrLearnBy.push(item.learnBy);
+						try{
+							linkapi.getUserInfo(item.learnBy,(res)=> {
+								let obj = {
+									url : res.picture,
+									name : res.userName
+								}
+								this.userList.push(obj);
+							})
+						}catch(e){
+							ajax({
+								url : 'uam/api/user/getUserById',
+								data : {
+									id : item.learnBy,
+
+								}
+								}).then((res) =>{
+									let url = 'http://ba.depts.bingosoft.net:8088/uam/api/user/getUserById?id=';
+									let obj = {
+										url : url + item.learnBy,
+										name : res.r.name
+									}
+									this.userList.push(obj);
+								},(errorT,status) =>{
+									
+								})
+						}
+						
+						/*ajax({
 							url : 'uam/api/user/getUserById',
 							data : {
 								id : item.learnBy,
@@ -107,15 +137,22 @@ var globalEvent = weex.requireModule('globalEvent');
 									name : res.r.name
 								}
 								this.userList.push(obj);
-								// buiweex.alert(this.userList)
-
-								
-
-								
 							},(errorT,status) =>{
 								
-							})
+							})*/
 					});
+					
+					linkapi.getUserInfo(arrLearnBy,(res)=> {
+						
+						/*let obj = {
+							url : res.picture,
+							name : res.userName
+						}
+						this.userList.push(obj);*/
+					},(err)=>{
+						
+					})
+
 					
 					
 				},(errorT,status) =>{

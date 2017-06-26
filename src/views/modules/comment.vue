@@ -31,6 +31,7 @@
 						</div>
 						<text class="comment-text">{{item.content}}</text>
 					</div>
+					<prompt v-if="commentList.length === 0" text="还没有评论" src="/image/empty-comment.png"></prompt>
 				</cell>
 
 				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
@@ -66,7 +67,7 @@ import rate from '../components/rate.vue';
 import ajax from '../../js/ajax.js';
 import {formatDate} from '../../js/tool.js';
 var globalEvent = weex.requireModule('globalEvent');
-
+import prompt from '../components/prompt.vue';
 	export default {
 		data () {
 			return {
@@ -148,7 +149,7 @@ var globalEvent = weex.requireModule('globalEvent');
                 this.page = 1;
                 this.getCommentList();
 			},
-			onPullingdown () {
+			onPullingdown (e) {
 				 //默认refresh文字与图标
                 this.refreshIcon = "icon-todown";
                 this.refreshText = "下拉刷新...";
@@ -186,7 +187,8 @@ var globalEvent = weex.requireModule('globalEvent');
 	        });
 	    },
 	    components : {
-	    	rate
+	    	rate,
+	    	prompt
 	    }
 	}
 </script>

@@ -24,7 +24,7 @@
 						<text class="course-title">培训班</text>
 					</div>
 				</div>
-
+				
 				<div class="trailer-wrap" v-for="item in lastact">
 					<bui-image src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
 					<div class="trailer-inner">
@@ -35,6 +35,11 @@
 						</div>
 					</div>
 				</div>
+				
+			<!-- 	<dropdown :value="dropdownValue" @change="dropdownChange" >
+					
+				</dropdown> -->
+				
 				
 				<div class="select-wrap">
 					<div class="h-line"></div>
@@ -80,6 +85,7 @@ var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 import linkapi from '../../js/linkapi.js';
+import dropdown from '../components/dropdown.vue';
 
 	export default {
 		data () {
@@ -96,6 +102,7 @@ import linkapi from '../../js/linkapi.js';
 				refreshing: false,
 				refreshIcon: "icon-todown",
 				refreshText: "下拉刷新...", 
+				dropdownValue : '请选择'
 			}
 		},
 		computed: {
@@ -115,8 +122,16 @@ import linkapi from '../../js/linkapi.js';
 		},
 		methods : {
 			back () {
-	        buiweex.pop();
-	    },
+		        buiweex.pop();
+		    },
+		    dropDownClick (e) {
+		    	// console.log(e);
+		    	
+		    },
+		    dropdownChange (val) {
+		    	this.dropdownValue = val;
+		    	console.log(val);
+		    },
 			showDemo (){
 				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
 			},
@@ -216,6 +231,7 @@ import linkapi from '../../js/linkapi.js';
 	    },
 		components : {
 			rate,
+			dropdown,
 		},
 		mounted () {
 			this.getHottestList();

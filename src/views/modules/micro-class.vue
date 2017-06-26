@@ -22,7 +22,7 @@
 				
 				<cell class="course-list">
 				   <div class="course-list-item" :class="[index===0?'no-border':'']" v-for="(item,index) in pageList" @click="linkDetail(item.courseId)">
-	   					<bui-image @click="linkDetail(item.courseId)" class="course-item-img" :src="fixedPicture(item.picture)"></bui-image>
+	   					<bui-image width="295px" height="164px" @click="linkDetail(item.courseId)" class="course-item-img" :src="fixedPicture(item.picture)"></bui-image>
 	   					<div class="course-content">
 	   						<text class="course-item-title">{{item.name}}</text>
 	   						
@@ -30,6 +30,7 @@
 	   						<rate @change="rateChange" :value="item.score" :disabled="true"></rate>
 	   					</div>
 	   				</div>
+	   				<prompt v-if="pageList.length === 0" text="还没有微课" src="/image/empty-micro.png"></prompt>
 				</cell>
 
 				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
@@ -89,7 +90,7 @@ import filterBar from '../components/filter-bar.vue';
 import rate from '../components/rate.vue';
 import filterDialog from '../components/filter-dialog.vue';
 import {unicode,fixedPic} from '../../js/tool.js';
-
+import prompt from '../components/prompt.vue';
 
 	export default {
 		data (){
@@ -323,7 +324,8 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	    	buiSearchbarLeft,
 	    	filterBar,
 	    	filterDialog,
-	    	rate
+	    	rate,
+	    	prompt
 	    },
 	    
 	}
@@ -335,8 +337,9 @@ import {unicode,fixedPic} from '../../js/tool.js';
 
 </style>
 <style src="../../css/layout.css"></style>
-<style src="../../css/customer/micro-class.css"></style>
 <style src="../../css/customer/course-list.css"></style>
+<style src="../../css/customer/micro-class.css"></style>
+
 
 <style src="../../css/refresh.css"></style>
 <style src="../../css/loading.css"></style>

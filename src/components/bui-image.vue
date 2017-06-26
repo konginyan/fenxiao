@@ -3,7 +3,7 @@
            v-bind:placeholder="placeholder"
            v-bind:style="{'border-radius':radius, 'width': width, 'height': height}"
            v-bind:resize="resize"
-           @click="_click()"
+           @click="_click($event)"
            @load="_load()"></image>
 </template>
 
@@ -45,8 +45,8 @@
             }
         },
         methods: {
-            "_click": function () {
-                this.$emit('click');
+            "_click": function (e) {
+                this.$emit('click',e);
             },
             "_load": function () {
                 this.$emit('load');

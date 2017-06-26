@@ -38,7 +38,7 @@ import linkapi from '../../js/linkapi.js';
                         src: '/index.weex.js',
                         visibility: 'visible',
                     },
-                    {
+                   /* {
                         index: 1,
                         title: '岗位课程',
                         icon: 'icon-mycourse',
@@ -46,9 +46,9 @@ import linkapi from '../../js/linkapi.js';
                         src: '/course.weex.js',
                         visibility: 'hidden',
 
-                    },
+                    },*/
                     {
-                        index: 2,
+                        index: 1,
                         title: '学习记录',
                         icon: 'icon-record',
                         selected: false,

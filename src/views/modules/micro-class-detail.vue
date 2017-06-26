@@ -19,6 +19,9 @@
                 @load="onTabLoad"
                 @itemClick="onTabItemClick"
 				titleSize="30px"
+				selectedColor = "#25aafe"
+				normalColor = "#3a3a3a"
+				:itemStyle = "itemStyle"
                 >
         </tab>
 
@@ -44,7 +47,7 @@
 		</div>
 		
 		<div class="course-footer">
-			<button  v-if="!isAttend"  value="参加课程" type="primary" size="large" radius="0" @click="attend"></button>
+			<button  v-if="!isAttend"  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
 			<div class="operation" v-if="isAttend">
 				<div class="operation-item" @click="evaluate">
 					<icon name="icon-comment" size="40px" class="operation-icon"></icon>
@@ -138,22 +141,31 @@ import linkapi from '../../js/linkapi.js';
 			action (item) {
 				item = item.title;
 				if (item === '分享给同事') {
+					try{
+						linkapi.shareToMessage({
+							title : '视频',
+							content : 'content',
+							url : 'http://www.baidu.com',
+							type : 'WEBSITE',
+						});
+					}catch(e){
 
-					linkapi.shareToMessage({
-						title : '视频',
-						content : 'content',
-						url : 'http://www.baidu.com',
-						type : 'WEBSITE',
-					});
+					}
+					
 
 
 				}else if(item === '分享到社区'){
-					linkapi.shareToBlog({
-						title : '视频',
-						content : 'content',
-						url : 'http://www.baidu.com',
-						type : 'WEBSITE',
-					});
+					try{
+
+					}catch(e){
+						linkapi.shareToBlog({
+							title : '视频',
+							content : 'content',
+							url : 'http://www.baidu.com',
+							type : 'WEBSITE',
+						});
+					}
+					
 				}
 				this.closeDropdown();
 			},
@@ -229,7 +241,6 @@ import linkapi from '../../js/linkapi.js';
             	});
             },
             share (event) {
-            	console.log(event);
             	this.openDropdown(event);
             }
 		},
@@ -242,6 +253,16 @@ import linkapi from '../../js/linkapi.js';
 	    },
 	    mounted (){
 	    	this.getDetail();
+	    },
+	    computed : {
+	    	itemStyle () {
+	    		return {
+	    			'padding-top' : '30px',
+	    			'padding-bottom' : '24px',
+	    			'background-color' : '#fff',
+	    			'border-bottom-width' : '3px'
+	    		}
+	    	}
 	    },
 	    components : {
 	    	// 'tabbar-scroll': require('../../components/tabbar-scroll.vue'),
