@@ -4,7 +4,7 @@
 			<div>
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
-						<div class="bui-slider-pages" v-for="item in recommendList" >
+						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
 									<bui-image @click="linkBanner(item)" class="img slider-img" :src="fixedPicture(item.picture)"></bui-image>
 						</div>
 						<indicator class="bui-slider-indicator"></indicator>
@@ -20,15 +20,15 @@
 						<text class="course-title">直播课堂</text>
 					</div>
 					<div class="course-item">
-						<bui-image class="course-img" src="/image/icon-train.png"></bui-image>
+						<bui-image @click="trainList" class="course-img" src="/image/icon-train.png"></bui-image>
 						<text class="course-title">培训班</text>
 					</div>
 				</div>
-				
-				<div class="trailer-wrap" v-for="item in lastact">
-					<bui-image src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
+
+				<div :key="item" class="trailer-wrap" v-for="item in lastact">
+					<bui-image @click="linkBanner(item)" src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
 					<div class="trailer-inner">
-						<bui-image :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
+						<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
 						<div class="trailer-content">
 							<text class="trailer-title">{{item.name}}</text>
 							<text class="trailer-date">{{fiexedDate(item.created_time)}}</text>
@@ -50,7 +50,7 @@
 					<div class="h-line"></div>
 				</div>
 				<div class="course-list">
-					<div class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
+					<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
 						<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
 						<div class="course-content">				
 							<text class="course-item-title">{{item.name}}</text>
@@ -151,7 +151,7 @@ import dropdown from '../components/dropdown.vue';
 					this.scrollHnadlerCallCount = 0;
 			},
 			onScroll(e){
-				if(e.contentOffset.y<0) {
+				if(e.contentOffset.y<-60) {
 					this.navColor = '#4ca4fe';
 				}
 				else{
@@ -161,7 +161,9 @@ import dropdown from '../components/dropdown.vue';
 			linkBanner (item){
 				console.log(item);
 				let type = this.getRecordType(item);
-				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js");
+				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
+          liveId : this.getMainId(item)
+        });
 				else if(type === 'Course') buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js",{
 								courseId : this.getMainId(item)
 							});
@@ -175,6 +177,9 @@ import dropdown from '../components/dropdown.vue';
 			},
 			liveList (){
 				buiweex.push(buiweex.getContextPath() + "/live-list.weex.js");
+			},
+			trainList (){
+				buiweex.push(buiweex.getContextPath() + "/train.weex.js");
 			},
 			getHottestList () {
 				return ajax({
