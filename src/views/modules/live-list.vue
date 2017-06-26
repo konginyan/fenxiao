@@ -69,7 +69,12 @@ export default {
       showLoading: false,
       refreshing: false,
       refreshIcon: "icon-todown",
-      refreshText: "下拉刷新..."
+      refreshText: "下拉刷新...",
+      images: [
+        '/image/play1',
+        '/image/play2',
+        '/image/play3'
+      ]
     }
   },
   mounted(){
@@ -182,10 +187,14 @@ export default {
         else live.isSignup = 0;
       }
       else if(live.liveStatus===1){
-        buiweex.push(buiweex.getContextPath() + "/live.weex.js")
+        buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
+          liveId : live.infoId
+        })
       }
       else if(live.liveStatus===2){
-        if(live.recordingVideo>0) buiweex.push(buiweex.getContextPath() + "/live.weex.js")
+        if(live.recordingVideo>0) buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
+          liveId : live.infoId
+        })
       }
     }
   }

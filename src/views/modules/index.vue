@@ -26,9 +26,9 @@
 				</div>
 
 				<div :key="item" class="trailer-wrap" v-for="item in lastact">
-					<bui-image src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
+					<bui-image @click="linkBanner(item)" src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
 					<div class="trailer-inner">
-						<bui-image :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
+						<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
 						<div class="trailer-content">
 							<text class="trailer-title">{{item.name}}</text>
 							<text class="trailer-date">{{fiexedDate(item.created_time)}}</text>
@@ -146,7 +146,9 @@ import linkapi from '../../js/linkapi.js';
 			linkBanner (item){
 				console.log(item);
 				let type = this.getRecordType(item);
-				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js");
+				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
+          liveId : this.getMainId(item)
+        });
 				else if(type === 'Course') buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js",{
 								courseId : this.getMainId(item)
 							});
