@@ -21,6 +21,7 @@
 	border-bottom-width : 1px;
 	border-bottom-color : #f2f2f2;
 }
+
 .avatar-wrap{
 	position: relative;
 	width: 295px;
@@ -37,6 +38,24 @@
 	width: 295px;
 	height: 164px;
 }
+
+.header-wrap{
+	position: relative;
+	width: 114px;
+	height: 114px;
+}
+.default-header{
+	width: 114px;
+	height: 114px;
+}
+.header-img{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 114px;
+	height: 114px;
+}
+
 .course-content{
 	flex : 1;
 	margin-left: 28px;

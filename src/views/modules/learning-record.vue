@@ -12,7 +12,10 @@
 				<bui-image class="record-header" src="/image/record-header.png"></bui-image>
 			</bui-header>
 			<div class="learning-record-row" ref="profile">
-				<bui-image class="learning-record-head-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>
+				<div class="header-wrap">
+					<bui-image class="default-header" src="/image/icon_kefu.png" radius="57px"></bui-image>
+					<!--<bui-image class="header-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>-->
+				</div>
 				<div class="learning-record-col">
 					<text class="record-font-36 learning-record-author">{{profile.name}}</text>
 					<text class="record-font-20 learning-record-detail">{{profile.orgName}}</text>
@@ -47,7 +50,10 @@
 					<div v-if="records.length > 0">
 						<div :key="record" class="course-list" v-for="record in records">
 							<div class="course-list-item bb1" @click="linkDetail(record)">
-								<bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
+								<div class="avatar-wrap">
+									<bui-image class="default-pic" src="/image/no-pic.png"></bui-image>
+									<bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
+								</div>
 								<div class="course-content">
 									<text class="course-item-title">{{record.name}}</text>
 									<text class="course-item-time">{{getRecordExt(record)}}</text>
@@ -71,6 +77,7 @@
 <script>
 import buiweex from "../../js/buiweex.js";
 import ajax from "../../js/ajax.js";
+import linkapi from '../../js/linkapi.js';
 import {fixedPic, departUrl, secondToTime, formatDate} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 const dom = weex.requireModule('dom');
@@ -98,13 +105,14 @@ const animation = weex.requireModule('animation');
 				trains: [],
 				lives: [],
 				placeholder: '/image/no-pic.png',
-				showProfile: true
+				showProfile: true,
 			}
 		},
 		mounted(){
 			this.getRecords();
 			this.getRecordStat();
 			this.getProfile();
+			// this.getProfileInLink();
 		},
 		computed: {
 			bgStyle () {
@@ -135,11 +143,11 @@ const animation = weex.requireModule('animation');
 					
 				})
 			},
-			getRecordStat () {
+			getRecordStat (uid='43fe6476-cd7b-493b-8044-c7e3149d0876') {
 				ajax({
 					url : 'ba/api/ta/info',
 					data : {
-						userid : '43fe6476-cd7b-493b-8044-c7e3149d0876'
+						userid : uid
 					}
 				}).then((res) =>{
 					this.recordStat = res.r[0];
@@ -147,11 +155,21 @@ const animation = weex.requireModule('animation');
 
 				})
 			},
-			getProfile () {
+			getProfileInLink() {
+				linkapi.getLoginInfo(
+						res=>{	
+							let uid = res.userId;
+							this.getProfile(uid);
+							this.getRecordStat(uid)
+						},
+						()=>{}
+				)
+			},
+			getProfile (uid='43fe6476-cd7b-493b-8044-c7e3149d0876') {
 				ajax({
 					url : 'uam/api/user/getUserById',
 					data : {
-						id : '43fe6476-cd7b-493b-8044-c7e3149d0876'
+						id : uid
 					}
 				}).then((res) =>{
 					this.profile = res.r

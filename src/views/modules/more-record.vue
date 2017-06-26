@@ -13,14 +13,17 @@
         <text class="bui-refresh-indicator">{{refreshText}}</text>
       </refresh>
 
-      <cell v-for="part in all">
+      <cell :key="part" v-for="part in all">
         <div v-if="part.records.length > 0" class="record-list">
           <text class="record-time-title">{{part.title}}</text>
-          <div class="course-list" v-for="(record,index) in part.records">
+          <div :key="(record,index)" class="course-list" v-for="(record,index) in part.records">
             <div class="course-list-item no-border" 
                 :class="[index===part.records.length-1?'no-border':'bb1']" 
                 @click="linkDetail(record)">
-              <bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
+              <div class="avatar-wrap">
+                <bui-image class="default-pic" src="/image/no-pic.png"></bui-image>
+                <bui-image class="course-item-img" :src="getPicture(record.picture)"></bui-image>
+              </div>
               <div class="course-content">
                 <text class="course-item-title">{{record.name}}</text>
                 <text class="course-item-time">{{getRecordExt(record)}}</text>
