@@ -51,7 +51,10 @@
 				</div>
 				<div class="course-list">
 					<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
-						<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
+						<div class="avatar-wrap">
+							<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
+							<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
+						</div>
 						<div class="course-content">				
 							<text class="course-item-title">{{item.name}}</text>
 							<text class="course-item-text">{{item.learnCount}}人学过</text>

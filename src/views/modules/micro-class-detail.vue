@@ -156,14 +156,14 @@ import linkapi from '../../js/linkapi.js';
 
 				}else if(item === '分享到社区'){
 					try{
-
-					}catch(e){
 						linkapi.shareToBlog({
 							title : '视频',
 							content : 'content',
 							url : 'http://www.baidu.com',
 							type : 'WEBSITE',
 						});
+					}catch(e){
+						
 					}
 					
 				}

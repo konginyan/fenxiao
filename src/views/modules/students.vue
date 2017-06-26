@@ -50,6 +50,7 @@ import buiweex from "../../js/buiweex.js";
 import {fixedPic} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
+import linkapi from '../../js/linkapi.js';
 export default {
 	data() {
 		return {
@@ -106,6 +107,26 @@ export default {
 					id: buiweex.getPageParams().courseId
 				}
 			}).then((res) => {
+				let arrLearnBy = [];
+				res.r.forEach(item=> {
+					arrLearnBy.push(item.learnBy);
+				})
+				
+				try{
+					linkapi.getUserInfo(arrLearnBy,(res)=> {
+						buiweex.alert(res)
+						let obj = {
+							url : res.picture,
+							name : res.userName
+						}
+						
+					},(err)=>{
+						buiweex.alert(err);
+					})
+				}catch(e){
+					buiweex.alert(e);
+				}
+
 				this.list = res.r;
 				this.refreshIcon = "icon-checkbox-on";
         		this.refreshText = "刷新成功";
