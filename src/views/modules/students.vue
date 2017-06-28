@@ -3,44 +3,44 @@
 		<bui-header title="报名的人" :leftItem="leftItem" @leftClick="back" @centerClick="showDemo">
 		</bui-header>
 		<bui-content class="span1">
-			<!-- <list class="bui-list p-r">
+			<list class="bui-list p-r">
 				<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
 				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
 				    <text class="bui-refresh-indicator">{{refreshText}}</text>
 				</refresh>
-				<cell>
-					<div class="bui-cell-large" v-for="item in users">
+				<cell  v-for="item in list">
+					<div class="bui-cell-large" @click="startUserCard(item.userId)">
 						<div class="bui-list-left">
-							<bui-image class="bui-list-thumb" :src="getPicture(item.avatar,'uam')" radius="50px"></bui-image>
+							<bui-image @click="startUserCard(item.userId)" class="bui-list-thumb" :src="item.url" radius="50px"></bui-image>
 						</div>
 						<div class="bui-list-main">
 							<text class="bui-list-title">{{item.name}}</text>
-							<text class="bui-list-subtitle">{{item.orgName}}</text>
+							<!-- <text class="bui-list-subtitle">{{item.orgName}}</text> -->
 						</div>
 						<div class="bui-list-right">
 							<bui-icon name="icon-go"></bui-icon>
 						</div>
-					</div>
+					</div>	
 				</cell>
 				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
 				    <text class="bui-loading-indicator">{{loadingText}}</text>
 				</loading>
-			</list> -->
-			<list class="bui-list">
-				<cell class="bui-cell-large" v-for="item in users">
-					<div class="bui-list-left">
-						<bui-image class="bui-list-thumb" :src="getPicture(item.avatar,'uam')" radius="50px"></bui-image>
-					</div>
-					<div class="bui-list-main">
-						<text class="bui-list-title">{{item.name}}</text>
-						<text class="bui-list-subtitle">{{item.orgName}}</text>
-					</div>
-					<div class="bui-list-right">
-						<bui-icon name="icon-go"></bui-icon>
-					</div>
-				</cell>
 			</list>
+		<!-- 	<list class="bui-list">
+			<cell class="bui-cell-large" v-for="item in list">
+				<div class="bui-list-left">
+					<bui-image class="bui-list-thumb" :src="getPicture(item.url,'uam')" radius="50px"></bui-image>
+				</div>
+				<div class="bui-list-main">
+					<text class="bui-list-title">{{item.name}}</text>
+					<text class="bui-list-subtitle">{{item.orgName}}</text>
+				</div>
+				<div class="bui-list-right">
+					<bui-icon name="icon-go"></bui-icon>
+				</div>
+			</cell>
+		</list> -->
 		</bui-content>
 	
 	</div>
@@ -65,7 +65,7 @@ export default {
             refreshText: "下拉刷新...",
             loadingText: "正在加载更多数据...",
             page : 1,
-            rows : 1000,
+            rows : 10,
 		}
 	},
 	mounted() {
@@ -83,7 +83,7 @@ export default {
              this.page = 1;
              this.getList();
 		},
-		onPullingdown () {
+		onPullingdown (e) {
 			//默认refresh文字与图标
 			this.refreshIcon = "icon-todown";
 			this.refreshText = "下拉刷新...";
@@ -111,27 +111,35 @@ export default {
 				res.r.forEach(item=> {
 					arrLearnBy.push(item.learnBy);
 				})
-				
+				// buiweex.alert(arrLearnBy)
 				try{
 					linkapi.getUserInfo(arrLearnBy,(res)=> {
-						buiweex.alert(res)
-						let obj = {
-							url : res.picture,
-							name : res.userName
-						}
+						let tempArr = [];
+						res.forEach(item => {
+							let obj = {
+								url : item.picture,
+								name : item.userName,
+								userId : item.userId
+							}
+							tempArr.push(obj);
+						})
+						// buiweex.alert(tempArr)
+						this.list = tempArr;
+						this.refreshIcon = "icon-checkbox-on";
+		        		this.refreshText = "刷新成功";
+		        		this.refreshing = false;
 						
 					},(err)=>{
-						buiweex.alert(err);
+						this.refreshIcon = "icon-todown";
+						this.refreshText = "刷新失败";
+						this.refreshing = false;
 					})
 				}catch(e){
-					buiweex.alert(e);
+					this.refreshIcon = "icon-todown";
+					this.refreshText = "刷新失败";
+					this.refreshing = false;
 				}
-
-				this.list = res.r;
-				this.refreshIcon = "icon-checkbox-on";
-        		this.refreshText = "刷新成功";
-        		this.refreshing = false;
-				this.getUsers();
+				
 			}, (errorT, status) => {
 				this.refreshIcon = "icon-todown";
 				this.refreshText = "刷新失败";
@@ -149,28 +157,57 @@ export default {
 					id: buiweex.getPageParams().courseId
 				}
 			}).then((res) => {
-				this.showLoading = false;
-				if(res.r.length === 0){
-					this.loadingText = '没有更多数据了';
-					return;
-				}else{
-					this.loadingText = '正在加载更多数据...';
+				let arrLearnBy = [];
+				res.r.forEach(item=> {
+					arrLearnBy.push(item.learnBy);
+				})
+				
+				try{
+					linkapi.getUserInfo(arrLearnBy,(res)=> {
+						let tempArr = [];
+						this.showLoading = false;
+						// buiweex.alert(arrLearnBy)
+						res.forEach(item => {
+							let obj = {
+								url : item.picture,
+								name : item.userName,
+								userId : item.userId
+							}
+							tempArr.push(obj);
+						})
+
+						if(tempArr.length === 0){
+							this.loadingText = '没有更多数据了';
+							return;
+						}else{
+							this.loadingText = '正在加载更多数据...';
+						}
+						this.list = this.list.concat(tempArr);
+						
+						
+					},(err)=>{
+						this.page -= 1;
+						this.showLoading = false;
+					})
+				}catch(e){
+					this.page -= 1;
+					this.showLoading = false;
 				}
-				this.users = this.users.concat(res.r);
-				this.getUsers();
+				
+				
 			}, (errorT, status) => {
 				this.page -= 1;
 				this.showLoading = false;
 			})
 		},
-		getProfile(id1) {
+		/*getProfile(id1) {
 			ajax({
 				url: 'uam/api/user/getUserById',
 				data: {
 					id: id1
 				}
 			}).then((res) => {
-				// buiweex.alert(res);
+				buiweex.toast(res);
 				this.users.push(res.r);
 
 			}, (errorT, status) => {
@@ -181,6 +218,9 @@ export default {
 			for (let i = 0; i < this.list.length; i++) {
 				this.getProfile(this.list[i].learnBy);
 			}
+		},*/
+		startUserCard (userId) {
+			linkapi.startUserCard(userId);
 		},
 		getPicture(src) {
 			let field = arguments[1];

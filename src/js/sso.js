@@ -45,6 +45,8 @@ module.exports = {
         var headers = {
             "X-Requested-With": "XMLHttpRequest"
         }
+        var temp = ssoEndpoint + "/v2?" + that.obj2QueryStr(data);
+        console.log(temp)
         stream.fetch({
             method: 'GET',
             headers: headers,

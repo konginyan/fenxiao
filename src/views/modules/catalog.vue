@@ -64,15 +64,15 @@ var globalEvent = weex.requireModule('globalEvent');
 				
 			},
 			saveRecord (inner) {
-				let mainId = inner.mainId,
+				let url = inner.url,
 					cataIndex = inner.cataIndex;
-				storage.setItem(this.courseId, cataIndex);
+				storage.setItem(this.courseId, cataIndex + '||' +url);
 			},
 			getRecord () {
 				let courseId = this.courseId;
 				storage.getItem(courseId,e=>{
 					let data = e.data;
-					this.selectIndex = data;
+					this.selectIndex = data.split('||')[0];
 					console.log(data);
 				})
 			},

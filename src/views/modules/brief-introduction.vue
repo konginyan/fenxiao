@@ -15,7 +15,7 @@
 						<div class="learn-item"  v-for="item in userList">
 							<!-- <div class="avatar"> -->
 								<!-- <text class="avatar-name">张</text> -->
-								<bui-image  @click="students" class="avatar-pic" :src="item.url"></bui-image>
+								<bui-image  @click="students" class="avatar-pic" :src="item.picture"></bui-image>
 							<!-- </div> -->
 							<text class="learn-name">{{item.name}}</text>
 						</div>
@@ -57,7 +57,7 @@ import linkapi from '../../js/linkapi.js';
 		},
 		mounted(){
 			this.courseId = buiweex.getPageParams().courseId;
-			this.getDetail()
+			this.getDetail();
 			
 			this.getAttendList();
 			
@@ -97,58 +97,16 @@ import linkapi from '../../js/linkapi.js';
 					let arrLearnBy = [];
 					res.r.forEach((item) => {
 						arrLearnBy.push(item.learnBy);
-						try{
-							linkapi.getUserInfo(item.learnBy,(res)=> {
-								let obj = {
-									url : res.picture,
-									name : res.userName
-								}
-								this.userList.push(obj);
-							})
-						}catch(e){
-							ajax({
-								url : 'uam/api/user/getUserById',
-								data : {
-									id : item.learnBy,
-
-								}
-								}).then((res) =>{
-									let url = 'http://ba.depts.bingosoft.net:8088/uam/api/user/getUserById?id=';
-									let obj = {
-										url : url + item.learnBy,
-										name : res.r.name
-									}
-									this.userList.push(obj);
-								},(errorT,status) =>{
-									
-								})
-						}
-						
-						/*ajax({
-							url : 'uam/api/user/getUserById',
-							data : {
-								id : item.learnBy,
-
-							}
-							}).then((res) =>{
-								let url = 'http://ba.depts.bingosoft.net:8088/uam/api/user/getUserById?id=';
-								let obj = {
-									url : url + item.learnBy,
-									name : res.r.name
-								}
-								this.userList.push(obj);
-							},(errorT,status) =>{
-								
-							})*/
 					});
-					
 					linkapi.getUserInfo(arrLearnBy,(res)=> {
-						
-						/*let obj = {
-							url : res.picture,
-							name : res.userName
-						}
-						this.userList.push(obj);*/
+						res.forEach(item=>{
+							let obj = {
+								picture : item.picture,
+								name : item.userName
+							}
+							this.userList.push(obj)
+						})
+						// buiweex.alert(this.userList)
 					},(err)=>{
 						
 					})

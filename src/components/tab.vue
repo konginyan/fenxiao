@@ -20,6 +20,7 @@
 
 
 <script>
+import buiweex from '../js/buiweex.js';
     module.exports = {
         props: {
             tabItems: {default: []},
@@ -45,15 +46,8 @@
                 this.$set(this.tabItems[0], "background", this.selectedBackground);
             }else{
                 //指定激活哪个tab内容
-                for (var i = 0; i < this.tabItems.length; i++) {
-                    var item=this.tabItems[i];
-                    if(item.tabId==this.currentTab){
-                        this.$set(this.tabItems[i], "titleColor",this.selectedColor);
-                        this.$set(this.tabItems[i], "iconColor", this.selectedColor);
-                        this.$set(this.tabItems[i], "borderBottomColor", this.selectedColor);
-                        this.$set(this.tabItems[i], "background", this.selectedBackground);
-                    }
-                }
+                this.selectHandle(this.currentTab);
+               
             }
             this.$emit('load',this.currentTab);
         },
@@ -97,20 +91,29 @@
                 return style;
             },
             "itemClick": function (item, index) {
-                for (var i = 0; i < this.tabItems.length; i++) {
-                    if(index==i){
-                        this.$set(this.tabItems[i], "titleColor",this.selectedColor);
-                        this.$set(this.tabItems[i], "iconColor", this.selectedColor);
-                        this.$set(this.tabItems[i], "borderBottomColor", this.selectedColor);
-                        this.$set(this.tabItems[i], "background", this.selectedBackground);
-                    }else{
-                        this.$set(this.tabItems[i], "titleColor",this.normalColor);
-                        this.$set(this.tabItems[i], "iconColor", this.normalColor);
-                        this.$set(this.tabItems[i], "borderBottomColor", this.background);
-                        this.$set(this.tabItems[i], "background", this.background);
-                    }
-                }
+                this.selectHandle(index);
                 this.$emit('itemClick', item.tabId);
+            },
+            selectHandle (compare) {
+                this.tabItems.forEach(item=>{
+                    if(item.tabId==compare){
+                        this.$set(item, "titleColor",this.selectedColor);
+                        this.$set(item, "iconColor", this.selectedColor);
+                        this.$set(item, "borderBottomColor", this.selectedColor);
+                        this.$set(item, "background", this.selectedBackground);
+                    }else{
+                        this.$set(item, "titleColor",this.normalColor);
+                        this.$set(item, "iconColor", this.normalColor);
+                        this.$set(item, "borderBottomColor", this.background);
+                        this.$set(item, "background", this.background);
+                    }
+                });
+            }
+            
+        },
+        watch : {
+            currentTab (val) {
+                 this.selectHandle(val);
             }
         }
     }
