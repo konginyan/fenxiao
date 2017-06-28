@@ -1,14 +1,26 @@
 <template>
 	<div class="micro-class-detail-wrap">
 		<div class="video-wrap">
-			<video class="bui-video"
-	                   :src="src"
-	                   controls
-	                   play-status="pause"
-	                   @start="onstart($event)"
-	                   @pause="onpause($event)"
-	                   @finish="onfinish($event)"
-	                   @fail="onfail($event)"></video>
+			<bui-video class="bui-video"
+						v-if="src"
+                        :src="src"
+                        :playstatus="videoState"
+                        autoplay="false"
+                        @start="onstart($event)"
+	                    @pause="onpause($event)"
+	                    @finish="onfinish($event)"
+	                    @fail="onfail($event)">
+                        	
+             </bui-video>
+			 <bui-image v-if="isShowPoster" :src="poster" class="poster" width="750px" height="418px" @click="posterHandler"></bui-image>
+			<!-- <video class="bui-video"
+				                   :src="src"
+				                   controls
+				                   play-status="pause"
+				                   @start="onstart($event)"
+				                   @pause="onpause($event)"
+				                   @finish="onfinish($event)"
+				                   @fail="onfail($event)"></video> -->
 	        <bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
 	        <bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 		</div>
@@ -53,11 +65,11 @@
 					<icon name="icon-comment" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">评论</text>
 				</div>
-				<div class="operation-item">
+				<div class="operation-item" @click="runTest">
 					<icon name="icon-edit" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">测试</text>
 				</div>
-				<button class="learn-continue" type="primary" size="large" value="继续学习"></button>
+				<button class="learn-continue" type="primary" size="large" value="继续学习" @click="learnContinue"></button>
 			</div>
 		</div>           
 		<dropdown
@@ -91,12 +103,14 @@ import comment from '../modules/comment.vue';
 import dropdown from '../../components/bui-dropdown.vue';
 var globalEvent = weex.requireModule('globalEvent');
 import linkapi from '../../js/linkapi.js';
-
+import buiVideo from '../../components/bui-video.vue';
+const storage = weex.requireModule('storage');
+import {fixedPic} from '../../js/tool.js';
 	export default {
 		data () {
 			return {
 				//当前选择的tab
-				currentTab: "",
+				currentTab: "tab1",
 				tabItems: [
 				    {
 				        tabId: "tab1",
@@ -111,7 +125,8 @@ import linkapi from '../../js/linkapi.js';
 				        title: "评论"
 				    }
 				],
-				src: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4',
+				src: '',
+				videoState : 'pause',
 				leftItem: {
                     icons: 'icon-back',
                 },
@@ -119,6 +134,8 @@ import linkapi from '../../js/linkapi.js';
                 isAttend : false,
                 isShow : true,
                 isShowDropdown : false,
+                poster : '',
+                isShowPoster : true,
                 shareList : [
                 	{
                 		icon : 'icon-share',
@@ -143,8 +160,8 @@ import linkapi from '../../js/linkapi.js';
 				if (item === '分享给同事') {
 					try{
 						linkapi.shareToMessage({
-							title : '视频',
-							content : 'content',
+							title : this.detail.name,
+							content : this.detail.outline.replace(/<.*?>/g,''),
 							url : 'http://www.baidu.com',
 							type : 'WEBSITE',
 						});
@@ -157,8 +174,8 @@ import linkapi from '../../js/linkapi.js';
 				}else if(item === '分享到社区'){
 					try{
 						linkapi.shareToBlog({
-							title : '视频',
-							content : 'content',
+							title : this.detail.name,
+							content : this.detail.outline.replace(/<.*?>/g,''),
 							url : 'http://www.baidu.com',
 							type : 'WEBSITE',
 						});
@@ -189,6 +206,8 @@ import linkapi from '../../js/linkapi.js';
 				}).then((res) =>{
 					// this.detail = res.returnval;
 					this.detail = res.r[0];
+
+					this.poster = fixedPic(this.detail.picture);
 					this.isAttend = !!this.detail.isAttend;
 					
 				},(errorT,status) =>{
@@ -216,6 +235,15 @@ import linkapi from '../../js/linkapi.js';
             },
             videoSrc (url) {
             	this.src = url;
+            	this.isShowPoster = false;
+            	setTimeout(()=>{
+            		this.videoState = 'play';
+            	},2000)
+            	/*this.$nextTick(()=>{
+            		this.videoState = 'play';
+            	})*/
+            	
+            	
             },
             attend () {
             	ajax({
@@ -242,6 +270,38 @@ import linkapi from '../../js/linkapi.js';
             },
             share (event) {
             	this.openDropdown(event);
+            },
+            learnContinue () {
+            	let courseId = buiweex.getPageParams().courseId;
+				storage.getItem(courseId,e=>{
+					let data = e.data;
+					let url = data.split('||')[1];
+					this.src = url;
+					this.videoState = 'start';
+				})
+            },
+            posterHandler () {
+            	this.isShowPoster = false;
+            	this.currentTab = 'tab2';
+            },
+            runTest () {
+            	try{
+            		linkapi.runApp({
+            			appCode : 'BingoAbility',
+            			appUrl : 'modules/test/index.html',
+            			data : {
+            				id : buiweex.getPageParams().courseId,
+            				type : 'course',
+            				toType : 'test'
+            			}
+            		},()=>{
+
+            		},(err)=>{
+            			buiweex.alert(err);
+            		});
+            	}catch(e){
+
+            	}
             }
 		},
 		created (){
@@ -271,7 +331,8 @@ import linkapi from '../../js/linkapi.js';
 	    	comment,
 	    	tab,
 	    	tabItem,
-	    	dropdown
+	    	dropdown,
+	    	buiVideo
 	
 	    }
 	}
