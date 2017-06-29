@@ -2,16 +2,18 @@
 	<div class="live-wrap">
 		<bui-content class="span1">
 			<div class="video-wrap" style="height:423px;">
-				<video class="bui-video"
-											:src="liveDetail.videoHls"
-											controls
-											@start="onstart($event)"
-											@pause="onpause($event)"
-											@finish="onfinish($event)"
-											@fail="onfail($event)"
-											play-status="pause"></video>
-						<bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
-						<bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
+				<bui-video class="bui-video"
+					v-if="videoSrc"
+					:src="videoSrc"
+					:playstatus="status"
+					:autoplay= "autoplay"
+					@start="onstart($event)"
+					@pause="onpause($event)"
+					@finish="onfinish($event)"
+					@fail="onfail($event)">
+				</bui-video>
+				<bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
+				<bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 			</div>
 			<scroller>
 				<div class="summary-block">
@@ -32,13 +34,15 @@
 						</cell>
 					</list>
 				</div> 
-				<div v-if="playing" class="bobr-bottom">
+				<div v-if="replays.length>0" class="bobr-bottom">
 					<text class="rep-title bobr">精彩回放</text>
 					<div class="rep-block">
 						<scroller scroll-direction="horizontal" class="rep-list">
-							<div :key="item" v-for="item in [1,2,3,4,5,6,7,8,9,10,11,12]">
-								<div class="rep-circle">
-									<text class="rep-index">{{item}}</text>
+							<div :key="item" v-for="item in replays">
+								<div @click="playReplay(item.rank,item.url)"
+								class="rep-circle"
+								:class="[item.rank===replayindex?'rep-circle-act':'']">
+									<text class="rep-index" :class="[item.rank===replayindex?'rep-index-act':'']">{{item.rank}}</text>
 								</div>
 							</div>
 						</scroller>
@@ -75,6 +79,7 @@
 import buiweex from "../../js/buiweex.js";
 import ajax from '../../js/ajax.js';
 import dropdown from '../../components/bui-dropdown.vue';
+import buiVideo from '../../components/bui-video.vue';
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
@@ -84,9 +89,12 @@ var globalEvent = weex.requireModule('globalEvent');
 					icons: 'icon-back',
 				},
 				isShow: true,
-				playing: false,
+				videoSrc: null,
+				replayindex: 0,
+				status: 'pause',
 				liveDetail: {},
 				replays: [],
+				autoplay: 'false',
 				isShowDropdown : false,
 				shareList : [
 					{
@@ -132,18 +140,20 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			"onstart": function () {
 					this.isShow = false;
-					this.playing = true;
-					// buiweex.alert(this.isShow);
 			},
 			"onpause": function (event) {
 					this.isShow = true;
-					// buiweex.alert(this.isShow);
 			},
 			"onfinish": function (event) {
 					this.isShow = true;
+					if(this.replayindex>0 && this.replayindex<this.replays.length)
+						this.playReplay(this.replayindex+1,this.replays[this.replayindex].url);
 			},
 			"onfail": function (event) {
 					this.isShow = true;
+			},
+			liveErrorHit(){
+				
 			},
 			getLiveDetail(){
 				let liveId = buiweex.getPageParams().liveId;
@@ -154,6 +164,11 @@ var globalEvent = weex.requireModule('globalEvent');
 					}
 				}).then((res) =>{
 					this.liveDetail = res.r;
+					// if(this.liveDetail.liveStatus===1){
+					// 	buiweex.alert('请下载分晓客户端观看直播')
+					// }
+					if(this.liveDetail.liveStatus===1)
+						this.videoSrc = this.liveDetail.videoHls;
 				},(errorT,status) =>{
 					
 				})
@@ -163,14 +178,20 @@ var globalEvent = weex.requireModule('globalEvent');
 				ajax({
 					url : 'ba/api/live/recording/list',
 					data : {
-						id: liveId
+						liveId: liveId
 					}
 				}).then((res) =>{
-					console.log(res);
-					this.replays = res.r;
+						this.replays = res.r;
+					if(this.replays.length>0){
+						this.playReplay(this.replays[0].rank,this.replays[0].url)
+					}
 				},(errorT,status) =>{
 					
 				})
+			},
+			playReplay(index,url) {
+				this.videoSrc = url;
+				this.replayindex = index;
 			},
 			closeDropdown () {
 				this.isShowDropdown = false;
@@ -191,7 +212,8 @@ var globalEvent = weex.requireModule('globalEvent');
 				});
 		},
 		components : {
-			dropdown
+			dropdown,
+			buiVideo
 		}
 	}
 </script>

@@ -183,8 +183,33 @@ export default {
     },
     toLive (live){
       if(live.liveStatus===0){
-        if(live.isSignup===0)live.isSignup = 1;
-        else live.isSignup = 0;
+        if(live.isSignup===0){
+          ajax({
+            url : 'ba/api/live/appointment/attend',
+            data : {
+              id: live.infoId
+            }
+          }).then((res) =>{
+            buiweex.toast('预约成功');
+            live.isSignup = 1;
+          },(errorT,status) =>{
+            buiweex.toast('预约失败');
+          })
+        }
+        else {
+          ajax({
+            url : 'ba/api/live/appointment/cancel',
+            data : {
+              id: live.infoId
+            }
+          }).then((res) =>{
+            buiweex.toast('已取消预约');
+            live.isSignup = 0;
+          },(errorT,status) =>{
+            buiweex.toast('取消预约失败');
+          })
+          
+        }
       }
       else if(live.liveStatus===1){
         buiweex.push(buiweex.getContextPath() + "/live.weex.js",{

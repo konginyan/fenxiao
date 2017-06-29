@@ -27,6 +27,7 @@
 	padding-left: 0;
 	padding-right: 0;
 	background-color: #f5f5f5;
+	border-color: #fff;
 }
 
 .operation{
@@ -51,4 +52,15 @@
 .filter-btn-active{
 	background-color: #3399ff;
 	color: #fff;
+}
+
+.reset-btn-active{
+	background-color: transparent;
+	color: #3399ff;
+}
+
+.filter-active{
+	border-color: #3399ff;
+	color: #3399ff;
+	background-color: #e0ffff;
 }
