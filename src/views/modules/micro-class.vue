@@ -63,7 +63,7 @@
 					<scroller  style="height: 500px;">
 					  <div  class="micro-class-filter">
 						<div class="micro-class-filter-item" v-for="(item,index) in filterList">
-							<button  @click="filterBtn(item.name,index,item.categoryId)" type="default"  :value="item.name"  class="filter-btn" :class="[index === currentIndex ? 'filter-btn-active' : '']" ></button>
+							<button  @click="filterBtn(item.name,index,item.categoryId)" type="default"  :value="item.name"  class="filter-btn" :class="[index === currentIndex ? 'filter-active' : '']" ></button>
 						</div>
 						</div>
 					 </scroller>
@@ -75,7 +75,7 @@
 			</div>
 			<div slot="foot">
 				<div class="operation">
-					<button type="normal" class="operation-btn" :class="[isSelected?'filter-btn-active':'']" @click="resetFilter" value="重置筛选"></button>
+					<button type="normal" class="operation-btn" :class="[isSelected?'reset-btn-active':'']" @click="resetFilter" value="重置筛选"></button>
 					<button type="primary" class="operation-btn" @click="confirm" value="确定"></button>
 				</div>
 				

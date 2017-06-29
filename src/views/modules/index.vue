@@ -7,7 +7,7 @@
 						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
 									<bui-image @click="linkBanner(item)" class="img slider-img" :src="fixedPicture(item.picture)"></bui-image>
 						</div>
-						<indicator class="bui-slider-indicator"></indicator>
+						<indicator class="bui-slider-indicator small"></indicator>
 				</slider>
 
 				<div class="course-menu">
@@ -260,5 +260,8 @@ import dropdown from '../components/dropdown.vue';
 <style >
 .span1{
 	flex: 1;
+}
+.small{
+	item-size: 15px;
 }
 </style>
