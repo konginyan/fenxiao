@@ -181,7 +181,7 @@ var globalEvent = weex.requireModule('globalEvent');
 					}
 				}).then((res) =>{
 					this.replays = res.r;
-					if(this.replays.length>0 && this.liveDetail.liveStatus===2){
+					if(this.replays.length>0){
 						this.playReplay(this.replays[0].rank,this.replays[0].url)
 					}
 				},(errorT,status) =>{

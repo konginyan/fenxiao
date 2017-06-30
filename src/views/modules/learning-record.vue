@@ -9,12 +9,11 @@
 				@leftClick = "back"
 				backgroundColor="transparent"				
 				>
-				<bui-image class="record-header" src="/image/record-header.png"></bui-image>
 			</bui-header>
 			<div class="learning-record-row" ref="profile">
 				<div class="header-wrap">
-					<bui-image class="default-header" src="/image/icon_kefu.png" radius="57px"></bui-image>
-					<bui-image class="header-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>
+					<bui-image class="header-img" width="114px" height="114px"
+					 :src="profile.avatar" placeholder="/dist/image/icon_kefu.png" radius="57px"></bui-image>
 				</div>
 				<div class="learning-record-col">
 					<text class="record-font-36 learning-record-author">{{profile.name}}</text>
@@ -177,6 +176,7 @@ const animation = weex.requireModule('animation');
 					}
 				}).then((res) =>{
 					this.profile = res.r
+					this.profile.avatar = getPicture(this.profile.avatar,'uam');
 				},(errorT,status) =>{
 
 				})
@@ -284,13 +284,13 @@ const animation = weex.requireModule('animation');
 }
 
 .learning-record-row{
-	position: fixed;
+	position: absolute;
 	top: 117px;
 	width: 750px;
 	flex-direction: row;
 	background-color: transparent;
 	padding-left : 28px; 
-	padding-bottom: 32px;
+	padding-bottom: 32px; 
 	padding-top: 20px;
 }
 
