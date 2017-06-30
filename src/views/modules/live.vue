@@ -170,7 +170,6 @@ var globalEvent = weex.requireModule('globalEvent');
 					if(this.liveDetail.liveStatus===1)
 						this.videoSrc = this.liveDetail.videoHls;
 				},(errorT,status) =>{
-					
 				})
 			},
 			getReplays(){
@@ -181,8 +180,8 @@ var globalEvent = weex.requireModule('globalEvent');
 						liveId: liveId
 					}
 				}).then((res) =>{
-						this.replays = res.r;
-					if(this.replays.length>0){
+					this.replays = res.r;
+					if(this.replays.length>0 && this.liveDetail.liveStatus===2){
 						this.playReplay(this.replays[0].rank,this.replays[0].url)
 					}
 				},(errorT,status) =>{

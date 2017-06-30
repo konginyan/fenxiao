@@ -14,7 +14,7 @@
 			<div class="learning-record-row" ref="profile">
 				<div class="header-wrap">
 					<bui-image class="default-header" src="/image/icon_kefu.png" radius="57px"></bui-image>
-					<!--<bui-image class="header-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>-->
+					<bui-image class="header-img" :src="getPicture(profile.avatar, 'uam')" radius="57px"></bui-image>
 				</div>
 				<div class="learning-record-col">
 					<text class="record-font-36 learning-record-author">{{profile.name}}</text>
@@ -110,9 +110,13 @@ const animation = weex.requireModule('animation');
 		},
 		mounted(){
 			this.getRecords();
-			this.getRecordStat();
-			this.getProfile();
-			// this.getProfileInLink();
+			try{
+				this.getProfileInLink();
+			}
+			catch(e){
+				this.getRecordStat();
+				this.getProfile();
+			}
 		},
 		computed: {
 			bgStyle () {
