@@ -16,6 +16,7 @@
       <cell :key="part" v-for="part in all">
         <div v-if="part.records.length > 0" class="record-list">
           <text class="record-time-title">{{part.title}}</text>
+          
           <div :key="(record,index)" class="course-list" v-for="(record,index) in part.records">
             <div class="course-list-item no-border" 
                 :class="[index===part.records.length-1?'no-border':'bb1']" 
