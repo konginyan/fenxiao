@@ -5,7 +5,7 @@
 			<icon class="dropdown-icon" name="icon-arrow"></icon>
 		</div>
 		<div class="dropdown-menu" v-if="isOpen">
-			<text class="dropdown-item" v-for="item in 3" @click="itemClick(item)">列表{{item}}</text>
+			<text class="dropdown-item" v-for="item in 3" @click="itemClick(item)">{{item}}</text>
 
 		</div>
 	</div>
@@ -29,7 +29,7 @@
 		},
 		methods : {
 			dropdownClick (event) {
-				// this.$emit('click',event);
+				this.$emit('click',event);
 				this.isOpen = !this.isOpen;
 				console.log(this.value);
 			},
@@ -51,6 +51,7 @@
 	.dropdown-wrap{
 		position: relative;
 		flex : 1;
+		background-image: url('../../image/applogo.png');
 	}
 	.dropdown{
 		flex : 1;
@@ -80,6 +81,10 @@
 	}
 
 	.dropdown-menu{
+		/*  position: absolute;
+		right: 0;
+				left: 0;
+				top: 50px;  */
 	    flex : 1;
 	    background-color: #fff;
 	    

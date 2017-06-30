@@ -36,9 +36,9 @@
 					</div>
 				</div>
 				
-			<!-- 	<dropdown :value="dropdownValue" @change="dropdownChange" >
+				<dropdown :value="dropdownValue" @change="dropdownChange" >
 					
-				</dropdown> -->
+				</dropdown>
 				
 				
 				<div class="select-wrap">

@@ -15,7 +15,7 @@
 						<div class="learn-item"  v-for="item in userList">
 							<!-- <div class="avatar"> -->
 								<!-- <text class="avatar-name">张</text> -->
-								<bui-image  @click="students" class="avatar-pic" :src="item.picture"></bui-image>
+								<bui-image  @click="students" class="avatar-pic" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
 							<!-- </div> -->
 							<text class="learn-name">{{item.name}}</text>
 						</div>
@@ -52,7 +52,8 @@ import linkapi from '../../js/linkapi.js';
 				attendList : [],
 				courseId : '',
 				outline : '',
-				userList : []
+				userList : [],
+				defaultAvatar : buiweex.getContextPath() + '/image/icon-avatar.png'
 			}
 		},
 		mounted(){
@@ -106,7 +107,7 @@ import linkapi from '../../js/linkapi.js';
 							}
 							this.userList.push(obj)
 						})
-						// buiweex.alert(this.userList)
+						
 					},(err)=>{
 						
 					})
