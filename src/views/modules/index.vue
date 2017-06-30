@@ -36,9 +36,9 @@
 					</div>
 				</div>
 				
-				<dropdown :value="dropdownValue" @change="dropdownChange" >
+				<!-- <dropdown :value="dropdownValue" @change="dropdownChange" >
 					
-				</dropdown>
+				</dropdown> -->
 				
 				
 				<div class="select-wrap">
@@ -89,7 +89,7 @@ var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 import linkapi from '../../js/linkapi.js';
-import dropdown from '../components/dropdown.vue';
+// import dropdown from '../components/dropdown.vue';
 
 	export default {
 		data () {
@@ -240,7 +240,7 @@ import dropdown from '../components/dropdown.vue';
 		},
 		components : {
 			rate,
-			dropdown,
+			// dropdown,
 		},
 		mounted () {
 			this.getHottestList();
