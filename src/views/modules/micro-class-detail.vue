@@ -12,15 +12,7 @@
 	                    @fail="onfail($event)">
                         	
              </bui-video>
-			 <bui-image v-if="isShowPoster" :src="poster" class="poster" width="750px" height="418px" @click="posterHandler"></bui-image>
-			<!-- <video class="bui-video"
-				                   :src="src"
-				                   controls
-				                   play-status="pause"
-				                   @start="onstart($event)"
-				                   @pause="onpause($event)"
-				                   @finish="onfinish($event)"
-				                   @fail="onfail($event)"></video> -->
+			 <bui-image v-if="isShowPoster" :src="poster" class="poster" width="750px" height="418px" @click="posterHandler" placeholder="/dist/image/no-pic.png"></bui-image>
 	        <bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
 	        <bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 		</div>
@@ -62,7 +54,7 @@
 			<button  v-if="!isAttend"  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
 			<div class="operation" v-if="isAttend">
 				<div class="operation-item" @click="evaluate">
-					<icon name="icon-comment" size="40px" class="operation-icon"></icon>
+					<icon @click="evaluate" name="icon-comment" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">评论</text>
 				</div>
 				<div class="operation-item" @click="runTest">
@@ -175,7 +167,7 @@ import {fixedPic} from '../../js/tool.js';
 					try{
 						linkapi.shareToBlog({
 							title : this.detail.name,
-							content : '[OpenApp]\nappCode=com.xxx.weex\nappUrl=micro-class.weex.js',
+							content : '[OpenApp]\nappCode=com.xxx.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+courseId,
 							type : 'action',
 						});
 					}catch(e){
@@ -282,6 +274,7 @@ import {fixedPic} from '../../js/tool.js';
             posterHandler () {
             	this.isShowPoster = false;
             	this.currentTab = 'tab2';
+            	this.learnContinue();
             },
             runTest () {
             	try{

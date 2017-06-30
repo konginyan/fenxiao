@@ -5,7 +5,7 @@
 var modal = weex.requireModule('modal');
 var animation = weex.requireModule('animation');
 var navigator = weex.requireModule('navigator');
-
+var navigatorEx = weex.requireModule("NavigatorExModule");
 
 var common = {
     "toast": function (msg) {
@@ -108,11 +108,21 @@ var common = {
             url += "?";
         }
         url += paramsStr;
-        navigator.push({
+       /* navigator.push({
             url: url,
             animated: 'true'
         }, function (e) {
-        })
+        })*/
+        try {
+            navigatorEx.push(url);
+        } catch (ex) {
+            navigator.push({
+                url: url,
+                animated: 'true'
+            }, function (e) {
+            });
+        }
+
     },
     "pop": function () {
         navigator.pop({

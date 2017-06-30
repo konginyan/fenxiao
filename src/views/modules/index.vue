@@ -79,6 +79,8 @@
 					<icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
 			</bui-header>
 		</bg>
+
+		<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
 	</div>
 </template>
 
@@ -89,7 +91,7 @@ var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 import linkapi from '../../js/linkapi.js';
-// import dropdown from '../components/dropdown.vue';
+import loadingView from '../components/loading-view.vue';
 
 	export default {
 		data () {
@@ -106,7 +108,8 @@ import linkapi from '../../js/linkapi.js';
 				refreshing: false,
 				refreshIcon: "icon-todown",
 				refreshText: "下拉刷新...", 
-				dropdownValue : '请选择'
+				dropdownValue : '请选择',
+				isLoading : true
 			}
 		},
 		computed: {
@@ -231,6 +234,15 @@ import linkapi from '../../js/linkapi.js';
 			},
 			fiexedDate (time) {
 				return formatDate(time,'MM-dd hh:mm:ss')
+			},
+			init () {
+				Promise.all([this.getHottestList(),this.getRecommend(),this.getLastact()]).then(()=>{
+					this.isLoading = false;
+				});
+				/*this.getHottestList();
+				this.getRecommend();
+				this.getLastact();*/
+
 			}
 		},
 		created (){
@@ -240,12 +252,11 @@ import linkapi from '../../js/linkapi.js';
 		},
 		components : {
 			rate,
-			// dropdown,
+			loadingView
 		},
 		mounted () {
-			this.getHottestList();
-			this.getRecommend();
-			this.getLastact();
+			this.init();
+			
 		}
 	}
 
