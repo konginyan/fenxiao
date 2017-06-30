@@ -12,11 +12,11 @@
 				<cell  v-for="item in list">
 					<div class="bui-cell-large" @click="startUserCard(item.userId)">
 						<div class="bui-list-left">
-							<bui-image @click="startUserCard(item.userId)" class="bui-list-thumb" :src="item.url" radius="50px"></bui-image>
+							<bui-image @click="startUserCard(item.userId)" class="bui-list-thumb" :src="defaultAvatar" radius="50px" :placeholder="defaultAvatar"></bui-image>
 						</div>
 						<div class="bui-list-main">
 							<text class="bui-list-title">{{item.name}}</text>
-							<!-- <text class="bui-list-subtitle">{{item.orgName}}</text> -->
+							<text class="bui-list-subtitle">{{item.orgName}}</text>
 						</div>
 						<div class="bui-list-right">
 							<bui-icon name="icon-go"></bui-icon>
@@ -66,6 +66,7 @@ export default {
             loadingText: "正在加载更多数据...",
             page : 1,
             rows : 10,
+            defaultAvatar : buiweex.getContextPath() + '/image/icon-avatar.png'
 		}
 	},
 	mounted() {
@@ -114,12 +115,14 @@ export default {
 				// buiweex.alert(arrLearnBy)
 				try{
 					linkapi.getUserInfo(arrLearnBy,(res)=> {
+
 						let tempArr = [];
 						res.forEach(item => {
 							let obj = {
 								url : item.picture,
 								name : item.userName,
-								userId : item.userId
+								userId : item.userId,
+								orgName  : item.orgName || ''
 							}
 							tempArr.push(obj);
 						})

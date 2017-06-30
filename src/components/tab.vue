@@ -5,10 +5,10 @@
              :style="getItemStyle(item)"
              @click="itemClick(item,index)">
 
-            <bui-icon v-if="item.icon" :name="item.icon"
+            <icon v-if="item.icon" :name="item.icon"
                       :color="(!item.iconColor? normalColor:item.iconColor)"
                       @click="itemClick(item,index)" :size="(!item.iconSize?iconSize:item.iconSize)">
-            </bui-icon>
+            </icon>
 
             <text v-if="item.title" :style="getTitleStyle(item)"
                   @click="itemClick(item,index)">{{ item.title }}</text>

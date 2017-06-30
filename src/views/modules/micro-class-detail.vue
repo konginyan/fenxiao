@@ -156,14 +156,14 @@ import {fixedPic} from '../../js/tool.js';
 				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
 			},
 			action (item) {
+				let courseId = buiweex.getPageParams().courseId;
 				item = item.title;
 				if (item === '分享给同事') {
 					try{
 						linkapi.shareToMessage({
 							title : this.detail.name,
-							content : this.detail.outline.replace(/<.*?>/g,''),
-							url : 'http://www.baidu.com',
-							type : 'WEBSITE',
+							content : '[OpenApp]\nappCode=com.xxx.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+courseId,
+							type : 'action',
 						});
 					}catch(e){
 
@@ -175,9 +175,8 @@ import {fixedPic} from '../../js/tool.js';
 					try{
 						linkapi.shareToBlog({
 							title : this.detail.name,
-							content : this.detail.outline.replace(/<.*?>/g,''),
-							url : 'http://www.baidu.com',
-							type : 'WEBSITE',
+							content : '[OpenApp]\nappCode=com.xxx.weex\nappUrl=micro-class.weex.js',
+							type : 'action',
 						});
 					}catch(e){
 						

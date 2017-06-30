@@ -6,6 +6,7 @@ var modal = weex.requireModule('modal');
 var animation = weex.requireModule('animation');
 var navigator = weex.requireModule('navigator');
 
+
 var common = {
     "toast": function (msg) {
         modal.toast({
