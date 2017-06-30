@@ -3,10 +3,7 @@
        
         <div class="tabcontent" style="flex:1">
             <tab-item tabId="tab1" :currentTab="currentTab">
-                <scroller style="flex:1">
-                    <index></index>
-                </scroller>
-                
+                    <index style="flex:1"></index>
             </tab-item>
            <!--  <tab-item tabId="tab2" :currentTab="currentTab">
                <course style="flex:1;"></course>
