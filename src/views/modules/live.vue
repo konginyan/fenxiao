@@ -12,6 +12,26 @@
 					@finish="onfinish($event)"
 					@fail="onfail($event)">
 				</bui-video>
+				<bg v-if="bgSrc" :src="bgSrc" :bgStyle="bgStyle">
+					<div class="overlay"></div>
+					<div v-if="liveDetail.liveStatus===0" class="msg-block">
+						<text class="notStart-text">直播未开始</text>
+						<text class="notStart-text">{{getDate(liveDetail.startTime)}}</text>
+					</div>
+					<div v-if="liveDetail.liveStatus===1 && this.liveFail" class="msg-block">
+						<text class="notStart-text">老师离开</text>
+						<text class="notStart-text">敬请期待</text>						
+					</div>
+					<div v-if="liveDetail.liveStatus===1 && !this.liveFail" class="msg-block">
+						<bui-image class="play-btn" src="/image/play.png" @click="playLive()"></bui-image>
+					</div>
+					<div v-if="liveDetail.liveStatus===2 && replays.length===0" class="msg-block">
+						<text class="notStart-text">直播已结束</text>				
+					</div>
+					<div v-if="liveDetail.liveStatus===2 && replays.length>0" class="msg-block">
+						<bui-image class="play-btn" src="/image/play.png" @click="playReplay(1,replays[0].url)"></bui-image>			
+					</div>
+				</bg>
 				<bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
 				<bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 			</div>
@@ -80,6 +100,7 @@ import buiweex from "../../js/buiweex.js";
 import ajax from '../../js/ajax.js';
 import dropdown from '../../components/bui-dropdown.vue';
 import buiVideo from '../../components/bui-video.vue';
+import {fixedPic,formatDate} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
@@ -90,8 +111,10 @@ var globalEvent = weex.requireModule('globalEvent');
 				},
 				isShow: true,
 				videoSrc: null,
+				bgSrc: null,
 				replayindex: 0,
 				status: 'pause',
+				liveFail: false,
 				liveDetail: {},
 				replays: [],
 				autoplay: 'false',
@@ -140,6 +163,7 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			"onstart": function () {
 					this.isShow = false;
+					this.liveFail = false;
 			},
 			"onpause": function (event) {
 					this.isShow = true;
@@ -151,6 +175,9 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			"onfail": function (event) {
 					this.isShow = true;
+					this.liveFail = true;
+					this.getLiveDetail();
+					this.getReplays();
 			},
 			liveErrorHit(){
 				
@@ -164,13 +191,25 @@ var globalEvent = weex.requireModule('globalEvent');
 					}
 				}).then((res) =>{
 					this.liveDetail = res.r;
-					// if(this.liveDetail.liveStatus===1){
-					// 	buiweex.alert('请下载分晓客户端观看直播')
-					// }
-					if(this.liveDetail.liveStatus===1)
-						this.videoSrc = this.liveDetail.videoHls;
+					if(this.liveDetail.liveStatus===1 && this.liveFail===false)this.testLive();
+					else this.bgSrc = this.getPicture(this.liveDetail.picture);
 				},(errorT,status) =>{
 				})
+			},
+			testLive(){
+				this.playLive();
+				setTimeout(()=>{
+					this.clearLive();
+				},500)
+			},
+			clearLive(){
+				this.bgSrc = this.getPicture(this.liveDetail.picture);
+				this.videoSrc = null;
+			},
+			playLive(){
+				if(this.liveDetail.liveStatus===1)
+						this.videoSrc = this.liveDetail.videoHls;
+						this.bgSrc = null;
 			},
 			getReplays(){
 				let liveId = buiweex.getPageParams().liveId;
@@ -181,9 +220,9 @@ var globalEvent = weex.requireModule('globalEvent');
 					}
 				}).then((res) =>{
 					this.replays = res.r;
-					if(this.replays.length>0){
-						this.playReplay(this.replays[0].rank,this.replays[0].url)
-					}
+					// if(this.replays.length>0){
+					// 	this.playReplay(this.replays[0].rank,this.replays[0].url)
+					// }
 				},(errorT,status) =>{
 					
 				})
@@ -191,6 +230,7 @@ var globalEvent = weex.requireModule('globalEvent');
 			playReplay(index,url) {
 				this.videoSrc = url;
 				this.replayindex = index;
+				this.bgSrc = null;
 			},
 			closeDropdown () {
 				this.isShowDropdown = false;
@@ -203,6 +243,13 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			share (event) {
 				this.openDropdown(event);
+			},
+			getPicture (src) {
+				let field = arguments[1];
+				return fixedPic(src, field) || this.placeholder;
+			},
+			getDate (stamp){
+				return formatDate(stamp,'MM月dd日 hh:mm');
 			}
 		},
 		created (){
@@ -213,7 +260,15 @@ var globalEvent = weex.requireModule('globalEvent');
 		components : {
 			dropdown,
 			buiVideo
-		}
+		},
+		computed: {
+			bgStyle () {
+				return {
+					width: '750px',
+					height: '423px'
+				}
+			}
+		},
 	}
 </script>
 
