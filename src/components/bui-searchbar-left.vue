@@ -49,9 +49,9 @@
             },
             //搜索失去输入焦点
             "onblur": function (event) {
-                this.value = "";
-                this.searchstatus = false;
-                this.deletestatus = false;
+                // this.value = "";
+                // this.searchstatus = false;
+                // this.deletestatus = false;
                 this.autofocus = false;
             },
             //搜索输入值更改

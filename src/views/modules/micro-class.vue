@@ -8,7 +8,7 @@
                
                 >
         </bui-header>
-		 <bui-searchbar-left @onSearch="search" placeholder="请输入课程名"></bui-searchbar-left>
+		 <bui-searchbar-left ref="searchbar"  @onSearch="search" placeholder="请输入课程名"></bui-searchbar-left>
 		<filter-bar :filterItems="filterItems" @change="filterChange"></filter-bar>
 		
 		<bui-content class="span1">
