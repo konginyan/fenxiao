@@ -2,6 +2,8 @@
 	<div>
 		<scroller class="span1" @scroll="onScroll">
 			<div>
+				<text>{{testPic}}</text>
+				<bui-image width="100px" height="100px" :src="testPic"></bui-image>
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
 						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
@@ -79,7 +81,7 @@
 					<icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
 			</bui-header>
 		</bg>
-
+		
 		<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
 	</div>
 </template>
@@ -109,7 +111,8 @@ import loadingView from '../components/loading-view.vue';
 				refreshIcon: "icon-todown",
 				refreshText: "下拉刷新...", 
 				dropdownValue : '请选择',
-				isLoading : true
+				isLoading : true,
+				testPic : ''
 			}
 		},
 		computed: {
@@ -242,6 +245,15 @@ import loadingView from '../components/loading-view.vue';
 				/*this.getHottestList();
 				this.getRecommend();
 				this.getLastact();*/
+
+				try{
+					linkapi.getLoginInfo((res)=>{
+
+						this.testPic = res.picture;
+					})
+				}catch(e){
+						
+					}
 
 			}
 		},
