@@ -112,19 +112,14 @@ export default {
         else res.r.forEach((live)=>{
           this.lives.push(live);
         })
+        console.log(this.lives);
         this.refreshIcon = "icon-checkbox-on";
         this.refreshText = "刷新成功";
-        setTimeout(()=>{
-          this.refreshing = false;
-          this.refreshIcon = "icon-todown";
-          this.refreshText = "下拉刷新...";
-        },500)
+        this.refreshing = false;
       },(errorT,status) =>{
-        setTimeout(()=>{
-          this.refreshing = false;
-          this.refreshIcon = "icon-todown";
-          this.refreshText = "刷新失败";
-        },500)
+        this.refreshing = false;
+        this.refreshIcon = "icon-todown";
+        this.refreshText = "刷新失败";
       })
     },
     getPicture (src) {

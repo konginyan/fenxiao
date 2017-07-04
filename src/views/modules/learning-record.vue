@@ -176,7 +176,7 @@ const animation = weex.requireModule('animation');
 					}
 				}).then((res) =>{
 					this.profile = res.r
-					this.profile.avatar = getPicture(this.profile.avatar,'uam');
+					this.profile.avatar = this.getPicture(this.profile.avatar,'uam');
 				},(errorT,status) =>{
 
 				})
