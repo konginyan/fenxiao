@@ -12,15 +12,7 @@
 	                    @fail="onfail($event)">
                         	
              </bui-video>
-			 <bui-image v-if="isShowPoster" :src="poster" class="poster" width="750px" height="418px" @click="posterHandler"></bui-image>
-			<!-- <video class="bui-video"
-				                   :src="src"
-				                   controls
-				                   play-status="pause"
-				                   @start="onstart($event)"
-				                   @pause="onpause($event)"
-				                   @finish="onfinish($event)"
-				                   @fail="onfail($event)"></video> -->
+			 <bui-image v-if="isShowPoster" :src="poster" class="poster" width="750px" height="418px" @click="posterHandler" placeholder="/dist/image/no-pic.png"></bui-image>
 	        <bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
 	        <bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 		</div>
@@ -49,7 +41,7 @@
 
 	        <tab-item tabId="tab2" :currentTab="currentTab">
 	        	<scroller style="flex : 1;">
-	        		<catalog  @videoSrc="videoSrc"></catalog>
+	        		<catalog :currentIndex="currentIndex"  @videoSrc="videoSrc" @webSrc="webSrc"></catalog>
 	        	</scroller>
 	           
 	        </tab-item>
@@ -62,11 +54,11 @@
 			<button  v-if="!isAttend"  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
 			<div class="operation" v-if="isAttend">
 				<div class="operation-item" @click="evaluate">
-					<icon name="icon-comment" size="40px" class="operation-icon"></icon>
+					<icon @click="evaluate" name="icon-comment" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">评论</text>
 				</div>
 				<div class="operation-item" @click="runTest">
-					<icon name="icon-edit" size="40px" class="operation-icon"></icon>
+					<icon name="icon-edit" @click="runTest" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">测试</text>
 				</div>
 				<button class="learn-continue" type="primary" size="large" value="继续学习" @click="learnContinue"></button>
@@ -145,7 +137,11 @@ import {fixedPic} from '../../js/tool.js';
                 		icon : 'icon-share',
                 		title : '分享到社区'
                 	}
-                ]
+                ],
+                firstVideoSrc : '',
+                firstWebSrc : '',
+                currentIndex : '01',
+                inner : {}
 			}
 		},
 		methods:{
@@ -175,7 +171,7 @@ import {fixedPic} from '../../js/tool.js';
 					try{
 						linkapi.shareToBlog({
 							title : this.detail.name,
-							content : '[OpenApp]\nappCode=com.xxx.weex\nappUrl=micro-class.weex.js',
+							content : '[OpenApp]\nappCode=com.xxx.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+courseId,
 							type : 'action',
 						});
 					}catch(e){
@@ -244,6 +240,9 @@ import {fixedPic} from '../../js/tool.js';
             	
             	
             },
+            webSrc (url){
+
+            },
             attend () {
             	ajax({
             		url : 'ba/api/course/attend',
@@ -272,16 +271,53 @@ import {fixedPic} from '../../js/tool.js';
             },
             learnContinue () {
             	let courseId = buiweex.getPageParams().courseId;
-				storage.getItem(courseId,e=>{
-					let data = e.data;
-					let url = data.split('||')[1];
-					this.src = url;
-					this.videoState = 'start';
-				})
+            	this.currentTab = 'tab2';
+            	// storage.removeItem(courseId);
+            	// try{
+            		storage.getItem(courseId,e=>{
+            			let data = {};
+            			if (e.data != 'undefined') {
+	            			data = JSON.parse(e.data);
+	            			
+            			}else{
+            				data = this.inner;
+
+            				
+            			}
+            			let type = data.type;
+            			this.currentIndex = data.cataIndex;
+            			if (type === 'Video') {
+            				this.src = data.url;
+            				this.isShowPoster = false;
+            				this.videoState = 'start';
+            			}else if (type === 'html'){
+            				buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
+            					url : data.url,
+            					name : this.inner.name || ''
+            				});
+            			}
+            			
+            		})
+            	/*}catch(e){
+
+            	}*/
+				
             },
             posterHandler () {
-            	this.isShowPoster = false;
+            	if (this.firstVideoSrc) {
+            		this.isShowPoster = false;
+            		this.src = this.firstVideoSrc;
+            		this.videoState = 'start';
+
+            	}else if(this.firstWebSrc){
+            		buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
+						url : this.firstWebSrc,
+						name : this.inner.name || ''
+					});
+            	}
+            	
             	this.currentTab = 'tab2';
+            	// this.learnContinue();
             },
             runTest () {
             	try{
@@ -301,7 +337,48 @@ import {fixedPic} from '../../js/tool.js';
             	}catch(e){
 
             	}
-            }
+            },
+            getCatalog() {
+				ajax({
+					url : 'ba/api/course/catalogweex',
+					data : {
+						id : buiweex.getPageParams().courseId,
+					}
+				}).then((res) =>{
+					let flag = true;
+					res.r && res.r.forEach(item=>{
+						if (item.detailList.forEach) {
+							item.detailList.forEach(inner=>{
+								let type = inner.type;
+								
+								if (type === 'Video') {
+									if (flag) {
+										
+										flag = false;
+										this.firstVideoSrc = inner.url;
+										this.inner = inner;
+										
+										
+
+									}
+								}else if (type === 'html'){
+									if (flag) {
+										flag = false;
+										this.firstWebSrc = inner.url;
+										this.inner = inner;
+										
+									}
+								}
+							})
+						}
+						
+					})
+
+					
+				},(errorT,status) =>{
+					
+				})
+			},
 		},
 		created (){
 			
@@ -312,6 +389,7 @@ import {fixedPic} from '../../js/tool.js';
 	    },
 	    mounted (){
 	    	this.getDetail();
+	    	this.getCatalog();
 	    },
 	    computed : {
 	    	itemStyle () {

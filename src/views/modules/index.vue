@@ -8,6 +8,8 @@
 				</refresh>
 
 			<div>
+				<text>{{testPic}}</text>
+				<bui-image width="100px" height="100px" :src="testPic"></bui-image>
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
 						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
@@ -42,9 +44,9 @@
 					</div>
 				</div>
 				
-				<dropdown :value="dropdownValue" @change="dropdownChange" >
+				<!-- <dropdown :value="dropdownValue" @change="dropdownChange" >
 					
-				</dropdown>
+				</dropdown> -->
 				
 				
 				<div class="select-wrap">
@@ -85,6 +87,8 @@
 					<icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
 			</bui-header>
 		</bg>
+		
+		<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
 	</div>
 </template>
 
@@ -96,7 +100,7 @@ var config = weex.config;
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 import linkapi from '../../js/linkapi.js';
-import dropdown from '../components/dropdown.vue';
+import loadingView from '../components/loading-view.vue';
 
 	export default {
 		data () {
@@ -114,9 +118,8 @@ import dropdown from '../components/dropdown.vue';
 				refreshIcon: "icon-todown",
 				refreshText: "下拉刷新...", 
 				dropdownValue : '请选择',
-				refreshIcon: "icon-todown",
-        refreshText: "下拉刷新...",
-				refreshing: false,
+				isLoading : true,
+				testPic : ''
 			}
 		},
 		computed: {
@@ -277,6 +280,24 @@ import dropdown from '../components/dropdown.vue';
 			},
 			fiexedDate (time) {
 				return formatDate(time,'MM-dd hh:mm:ss')
+			},
+			init () {
+				Promise.all([this.getHottestList(),this.getRecommend(),this.getLastact()]).then(()=>{
+					this.isLoading = false;
+				});
+				/*this.getHottestList();
+				this.getRecommend();
+				this.getLastact();*/
+
+				try{
+					linkapi.getLoginInfo((res)=>{
+
+						this.testPic = res.picture;
+					})
+				}catch(e){
+						
+					}
+
 			}
 		},
 		created (){
@@ -286,12 +307,11 @@ import dropdown from '../components/dropdown.vue';
 		},
 		components : {
 			rate,
-			dropdown,
+			loadingView
 		},
 		mounted () {
-			this.getHottestList();
-			this.getRecommend();
-			this.getLastact();
+			this.init();
+			
 		}
 	}
 

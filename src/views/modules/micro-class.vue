@@ -8,7 +8,7 @@
                
                 >
         </bui-header>
-		 <bui-searchbar-left @onSearch="search" placeholder="请输入课程名"></bui-searchbar-left>
+		 <bui-searchbar-left ref="searchbar"  @onSearch="search" placeholder="请输入课程名"></bui-searchbar-left>
 		<filter-bar :filterItems="filterItems" @change="filterChange"></filter-bar>
 		
 		<bui-content class="span1">
@@ -33,7 +33,7 @@
 	   						<rate @change="rateChange" :value="item.score" :disabled="true"></rate>
 	   					</div>
 	   				</div>
-	   				<prompt v-if="pageList.length === 0" text="还没有微课" src="/image/empty-micro.png"></prompt>
+	   				<prompt v-if="isShowPrompt" text="没有更多微课" src="/image/empty-micro.png"></prompt>
 				</cell>
 
 				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import prompt from '../components/prompt.vue';
 import buiweex from "../../js/buiweex.js";
 var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
@@ -93,7 +94,7 @@ import filterBar from '../components/filter-bar.vue';
 import rate from '../components/rate.vue';
 import filterDialog from '../components/filter-dialog.vue';
 import {unicode,fixedPic} from '../../js/tool.js';
-import prompt from '../components/prompt.vue';
+
 
 	export default {
 		data (){
@@ -139,7 +140,8 @@ import prompt from '../components/prompt.vue';
                 rows : 10,
                 filterName : '筛选',
                 keyword : '',
-								isSelected : false
+				isSelected : false,
+				isShowPrompt : false
                 
 			}
 		},
@@ -240,6 +242,11 @@ import prompt from '../components/prompt.vue';
             		}
             	}).then((res) =>{
             		this.pageList = res.r;
+            		if (this.pageList.length ===0) {
+            			this.isShowPrompt = true;
+            		} else {
+            			this.isShowPrompt = false;
+            		}
             		this.refreshIcon = "icon-checkbox-on";
             		this.refreshText = "刷新成功";
 								this.refreshing = false;
@@ -262,6 +269,7 @@ import prompt from '../components/prompt.vue';
             		}
             	}).then((res) =>{
             		this.showLoading = false;
+            		this.isShowPrompt = false;
             		if(res.r.length === 0){
             			this.loadingText = '没有更多数据了';
             			return;

@@ -24,8 +24,8 @@
             }
         },
         props: {
-            width: {default: '50px'},
-            height: {default: '50px'},
+            width: {default: '0px'},
+            height: {default: '0px'},
             src: {
                 type: String
             },

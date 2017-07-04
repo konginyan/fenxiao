@@ -89,3 +89,19 @@
   align-items: center;
   width: 300px;
 }
+
+  .bui-loading{
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  height: 80px;
+  justify-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: $color_background;
+}
+.bui-loading-indicator{
+  font-size: 30px;
+  text-align: center;
+  color: $color_title;
+}
