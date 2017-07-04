@@ -12,13 +12,35 @@
 					@finish="onfinish($event)"
 					@fail="onfail($event)">
 				</bui-video>
+				<bg v-if="bgSrc" :src="bgSrc" :bgStyle="bgStyle">
+					<div class="overlay"></div>
+					<div v-if="liveDetail.liveStatus===0" class="msg-block">
+						<text class="notStart-text">直播未开始</text>
+						<text class="notStart-text">{{getDate(liveDetail.startTime)}}</text>
+					</div>
+					<div v-if="liveDetail.liveStatus===1" class="msg-block">
+						<text class="notStart-text">老师离开</text>
+						<text class="notStart-text">敬请期待</text>						
+					</div>
+					<!--<div v-if="liveDetail.liveStatus===1 && !this.liveFail" class="msg-block">
+						<bui-image class="play-btn" src="/image/play.png" @click="playLive()"></bui-image>
+					</div>-->
+					<div v-if="liveDetail.liveStatus===2 && replays.length===0" class="msg-block">
+						<text class="notStart-text">直播已结束</text>				
+					</div>
+					<div v-if="liveDetail.liveStatus===2 && replays.length>0" class="msg-block">
+						<bui-image class="play-btn" src="/image/play.png" @click="playReplay(1,replays[0].url)"></bui-image>			
+					</div>
+				</bg>
 				<bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
 				<bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 			</div>
 			<scroller>
 				<div class="summary-block">
 					<text class="summary">{{liveDetail.name}}</text>
-					<text class="book-count">{{liveDetail.appointmentCount}}人预约</text>
+					<text v-if="liveDetail.liveStatus===0" class="book-count">{{liveDetail.appointmentCount||0}}人预约</text>
+					<text v-if="liveDetail.liveStatus===1" class="book-count">{{liveDetail.liveCount||0}}人在线</text>
+					<text v-if="liveDetail.liveStatus===2" class="book-count">{{liveDetail.recordingCount||0}}人已学</text>
 				</div>
 				<div>
 					<list class="bobr-bottom">
@@ -34,7 +56,7 @@
 						</cell>
 					</list>
 				</div> 
-				<div v-if="replays.length>0" class="bobr-bottom">
+				<div v-if="replays.length>0 && liveDetail.liveStatus===2" class="bobr-bottom">
 					<text class="rep-title bobr">精彩回放</text>
 					<div class="rep-block">
 						<scroller scroll-direction="horizontal" class="rep-list">
@@ -80,6 +102,7 @@ import buiweex from "../../js/buiweex.js";
 import ajax from '../../js/ajax.js';
 import dropdown from '../../components/bui-dropdown.vue';
 import buiVideo from '../../components/bui-video.vue';
+import {fixedPic,formatDate} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
@@ -90,11 +113,14 @@ var globalEvent = weex.requireModule('globalEvent');
 				},
 				isShow: true,
 				videoSrc: null,
+				bgSrc: null,
 				replayindex: 0,
 				status: 'pause',
+				liveFail: true,
 				liveDetail: {},
 				replays: [],
-				autoplay: 'false',
+				firstin: true,
+				autoplay: 'true',
 				isShowDropdown : false,
 				shareList : [
 					{
@@ -109,17 +135,25 @@ var globalEvent = weex.requireModule('globalEvent');
 			}
 		},
 		mounted(){
-			this.getLiveDetail();
-			this.getReplays();
+			this.refresh();
 		},
 		methods:{
 			back(){
 				buiweex.pop();
 			},
+			refresh () {
+				this.getLiveDetail();
+				this.getReplays();
+				setInterval(()=>{
+					Promise.all([this.getLiveDetail(),this.getReplays()])
+						.then(()=>{
+							
+						})
+				},26000)
+			},
 			action (item) {
 				item = item.title;
 				if (item === '分享给同事') {
-
 					linkapi.shareToMessage({
 						title : '视频',
 						content : 'content',
@@ -151,46 +185,70 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			"onfail": function (event) {
 					this.isShow = true;
+					this.liveFail = true;
+					this.clearLive();
 			},
 			liveErrorHit(){
 				
 			},
 			getLiveDetail(){
 				let liveId = buiweex.getPageParams().liveId;
-				ajax({
+				return ajax({
 					url : 'ba/api/live/show',
 					data : {
 						id: liveId
 					}
 				}).then((res) =>{
 					this.liveDetail = res.r;
-					// if(this.liveDetail.liveStatus===1){
-					// 	buiweex.alert('请下载分晓客户端观看直播')
-					// }
-					if(this.liveDetail.liveStatus===1)
-						this.videoSrc = this.liveDetail.videoHls;
+					if(this.firstin){
+						this.bgSrc = this.getPicture(this.liveDetail.picture);
+						this.playLive();
+						this.firstin = false;
+					}
+					else if(this.liveFail){
+						this.bgSrc = this.getPicture(this.liveDetail.picture);
+						this.testLive();
+					}
 				},(errorT,status) =>{
 				})
 			},
+			testLive(){
+				if(this.liveDetail.liveStatus===1){
+					this.videoSrc = this.liveDetail.videoHls;
+					this.liveFail = false;
+					setTimeout(()=>{
+						if(!this.liveFail)this.playLive();
+					},25000)
+				}		
+			},
+			clearLive(){
+				this.bgSrc = this.getPicture(this.liveDetail.picture);
+				this.videoSrc = null;
+			},
+			playLive(){
+				if(this.liveDetail.liveStatus===1){
+					this.videoSrc = this.liveDetail.videoHls;
+					this.bgSrc = null;
+					this.liveFail = false;
+				}		
+			},
 			getReplays(){
 				let liveId = buiweex.getPageParams().liveId;
-				ajax({
+				return ajax({
 					url : 'ba/api/live/recording/list',
 					data : {
 						liveId: liveId
 					}
 				}).then((res) =>{
-					this.replays = res.r;
-					if(this.replays.length>0){
-						this.playReplay(this.replays[0].rank,this.replays[0].url)
-					}
-				},(errorT,status) =>{
-					
+						this.replays = res.r;
+					},(errorT,status) =>{
 				})
 			},
 			playReplay(index,url) {
 				this.videoSrc = url;
 				this.replayindex = index;
+				this.liveFail = false;
+				this.bgSrc = null;
 			},
 			closeDropdown () {
 				this.isShowDropdown = false;
@@ -203,6 +261,13 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			share (event) {
 				this.openDropdown(event);
+			},
+			getPicture (src) {
+				let field = arguments[1];
+				return fixedPic(src, field) || this.placeholder;
+			},
+			getDate (stamp){
+				return formatDate(stamp,'MM月dd日 hh:mm');
 			}
 		},
 		created (){
@@ -213,7 +278,15 @@ var globalEvent = weex.requireModule('globalEvent');
 		components : {
 			dropdown,
 			buiVideo
-		}
+		},
+		computed: {
+			bgStyle () {
+				return {
+					width: '750px',
+					height: '423px'
+				}
+			}
+		},
 	}
 </script>
 

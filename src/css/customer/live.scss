@@ -145,3 +145,30 @@
 .rep-index-act{
   color: #25AAFE;
 }
+
+.msg-block{
+  align-items: center;
+  margin-top: 148px;
+}
+
+.notStart-text{
+  margin-top: 24px;
+  font-size: 28px;
+  color: #fff;
+}
+
+.play-btn{
+  width: 96px;
+  height: 96px;
+  margin-top: 16px;
+}
+
+.overlay{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 750px;
+  height: 423px;
+  background-color: black;
+  opacity: 0.5;
+}

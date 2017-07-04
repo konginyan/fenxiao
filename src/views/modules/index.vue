@@ -1,6 +1,12 @@
 <template>
 	<div>
 		<scroller class="span1" @scroll="onScroll">
+			<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
+				         :display="refreshing ? 'show' : 'hide'">
+				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
+				    <text class="bui-refresh-indicator">{{refreshText}}</text>
+				</refresh>
+
 			<div>
 				<text>{{testPic}}</text>
 				<bui-image width="100px" height="100px" :src="testPic"></bui-image>
@@ -90,6 +96,7 @@
 import buiweex from "../../js/buiweex.js";
 import rate from '../components/rate.vue';
 var globalEvent = weex.requireModule('globalEvent');
+var config = weex.config;
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 import linkapi from '../../js/linkapi.js';
@@ -160,6 +167,41 @@ import loadingView from '../components/loading-view.vue';
 			"changeHandler": function (e) {
 					this.scrollHnadlerCallCount = 0;
 			},
+			"onRefresh": function (e) {
+					this.refreshing = true;
+					this.refresh();
+			},
+			"onPullingdown": function (e) {
+				this.refreshIcon = "icon-todown";
+				this.refreshText = "下拉刷新...";
+				this.showNav = true;
+				//下拉一定距离时文字与图标
+				if(config.env.platform==='android'){
+					if (e.pullingDistance > 80) {
+						this.showNav = false;
+						this.refreshIcon = "icon-toup";
+						this.refreshText = "松开即可刷新...";
+					}
+				}
+				if(config.env.platform==='iOS'){
+					if (e.pullingDistance < -80) {
+						this.showNav = false;
+						this.refreshIcon = "icon-toup";
+						this.refreshText = "松开即可刷新...";
+					}
+				}
+			},
+			refresh () {
+				this.refreshIcon = "icon-loadding";
+	      this.refreshText = "正在刷新";
+				Promise.all([this.getHottestList(),this.getLastact()])
+					.then(()=>{
+						this.refreshIcon = "icon-checkbox-on";
+						this.refreshText = "刷新成功";
+						this.refreshing = false;
+						this.showNav = true;
+					})
+			},
 			onScroll(e){
 				if(e.contentOffset.y<-60) {
 					this.navColor = '#4ca4fe';
@@ -219,6 +261,7 @@ import loadingView from '../components/loading-view.vue';
 					url : 'ba/api/homepage/recommend',
 				}).then((res) =>{
 					this.recommendList = res.r;
+					console.log(this.recommendList);
 				},(errorT,status) =>{
 					
 				})

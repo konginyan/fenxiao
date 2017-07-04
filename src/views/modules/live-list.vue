@@ -16,7 +16,7 @@
         <cell :key="live" v-for="live in lives">
           <div class="live">
             <div class="live-detail">
-              <bui-image class="live-img" :src="getPicture(live.picture)"></bui-image>
+              <bui-image class="live-img" :src="getPicture(live.picture)" @click="toLive(live)"></bui-image>
               <text class="live-name">{{live.name}}</text>
               <text class="live-book-count">{{getCount(live)}}</text>
             </div>
@@ -26,10 +26,9 @@
                 <text class="live-author-name">{{live.teacher}}</text>
               </div>
               <div style="flex-direction:row; align-items:center;">
-                <bui-image v-if="btnStyle(live)===1" class="onlive" src="/image/onlive.gif"></bui-image>
-                <text class="live-book" v-if="btnStyle(live)===1">正在直播</text>
+                <gif v-if="btnStyle(live)===1" class="onlive" :frames="images" width="80px" height="80px"></gif>
                 <text v-if="!(btnStyle(live)===1)" class="live-time">{{getStartTime(live)}}</text>
-                <div class="live-btn" @click="toLive(live)" :class="[btnStyle(live)===0?'live-book-btn':'',
+                <div class="live-btn" @click="liveTrigger(live)" :class="[btnStyle(live)===0?'live-book-btn':'',
                                                btnStyle(live)===1?'live-enter-btn':'',
                                                btnStyle(live)===2?'live-end-btn':'']">
                   <text :class="[btnStyle(live)===0?'live-book':'',
@@ -56,7 +55,11 @@
 import buiweex from "../../js/buiweex.js";
 import ajax from "../../js/ajax.js";
 import {fixedPic, departUrl, secondToTime, formatDate} from "../../js/tool.js";
+import gif from "../components/gif.vue"
 export default {
+  components:{
+    gif
+  },
   data () {
     return {
       leftItem: {
@@ -71,9 +74,9 @@ export default {
       refreshIcon: "icon-todown",
       refreshText: "下拉刷新...",
       images: [
-        '/image/play1',
-        '/image/play2',
-        '/image/play3'
+        '/dist/image/play1.png',
+        '/dist/image/play2.png',
+        '/dist/image/play3.png'
       ]
     }
   },
@@ -109,19 +112,14 @@ export default {
         else res.r.forEach((live)=>{
           this.lives.push(live);
         })
+        console.log(this.lives);
         this.refreshIcon = "icon-checkbox-on";
         this.refreshText = "刷新成功";
-        setTimeout(()=>{
-          this.refreshing = false;
-          this.refreshIcon = "icon-todown";
-          this.refreshText = "下拉刷新...";
-        },500)
+        this.refreshing = false;
       },(errorT,status) =>{
-        setTimeout(()=>{
-          this.refreshing = false;
-          this.refreshIcon = "icon-todown";
-          this.refreshText = "刷新失败";
-        },500)
+        this.refreshing = false;
+        this.refreshIcon = "icon-todown";
+        this.refreshText = "刷新失败";
       })
     },
     getPicture (src) {
@@ -181,9 +179,16 @@ export default {
       this.showLoading = true;
       this.getLives();
     },
-    toLive (live){
+    liveTrigger (live) {
       if(live.liveStatus===0){
-        if(live.isSignup===0){
+        this.bookLive(live)
+      }
+      else {
+        this.toLive(live);
+      }
+    },
+    bookLive (live) {
+      if(live.isSignup===0){
           ajax({
             url : 'ba/api/live/appointment/attend',
             data : {
@@ -191,6 +196,7 @@ export default {
             }
           }).then((res) =>{
             buiweex.toast('预约成功');
+            live.appointmentCount++;
             live.isSignup = 1;
           },(errorT,status) =>{
             buiweex.toast('预约失败');
@@ -204,23 +210,17 @@ export default {
             }
           }).then((res) =>{
             buiweex.toast('已取消预约');
+            live.appointmentCount--;
             live.isSignup = 0;
           },(errorT,status) =>{
             buiweex.toast('取消预约失败');
           })
-          
         }
-      }
-      else if(live.liveStatus===1){
-        buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
-          liveId : live.infoId
-        })
-      }
-      else if(live.liveStatus===2){
-        if(live.recordingVideo>0) buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
-          liveId : live.infoId
-        })
-      }
+    },
+    toLive (live){
+      buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
+        liveId : live.infoId
+      })
     }
   }
 }
