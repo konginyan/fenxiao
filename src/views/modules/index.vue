@@ -1,75 +1,75 @@
 <template>
 	<div>
-		<scroller class="span1" @scroll="onScroll">
+		<list class="span1" @scroll="onScroll">
 			<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
 				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
 				    <text class="bui-refresh-indicator">{{refreshText}}</text>
 				</refresh>
 
-			<div>
-				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
-								@change="changeHandler" infinite="false" >
-						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
-									<bui-image @click="linkBanner(item)" class="img slider-img" :src="fixedPicture(item.picture)"></bui-image>
+			<cell>
+					<slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
+									@change="changeHandler" infinite="false" >
+							<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
+										<bui-image @click="linkBanner(item)" class="img slider-img" :src="fixedPicture(item.picture)"></bui-image>
+							</div>
+							<indicator class="bui-slider-indicator small"></indicator>
+					</slider>
+
+					<div class="course-menu">
+						<div class="course-item" @click="microClass">
+							<bui-image @click="microClass" class="course-img" src="/image/icon-micro.png" ></bui-image>
+							<text class="course-title">微课</text>
 						</div>
-						<indicator class="bui-slider-indicator small"></indicator>
-				</slider>
-
-				<div class="course-menu">
-					<div class="course-item" @click="microClass">
-						<bui-image @click="microClass" class="course-img" src="/image/icon-micro.png" ></bui-image>
-						<text class="course-title">微课</text>
-					</div>
-					<div class="course-item">
-						<bui-image @click="liveList" class="course-img" src="/image/icon-live.png"></bui-image>
-						<text class="course-title">直播课堂</text>
-					</div>
-					<div class="course-item">
-						<bui-image @click="trainList" class="course-img" src="/image/icon-train.png"></bui-image>
-						<text class="course-title">培训班</text>
-					</div>
-				</div>
-
-				<div :key="item" class="trailer-wrap" v-for="item in lastact">
-					<bui-image @click="linkBanner(item)" src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
-					<div class="trailer-inner">
-						<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
-						<div class="trailer-content">
-							<text class="trailer-title">{{item.name}}</text>
-							<text class="trailer-date">{{fiexedDate(item.created_time)}}</text>
+						<div class="course-item">
+							<bui-image @click="liveList" class="course-img" src="/image/icon-live.png"></bui-image>
+							<text class="course-title">直播课堂</text>
+						</div>
+						<div class="course-item">
+							<bui-image @click="trainList" class="course-img" src="/image/icon-train.png"></bui-image>
+							<text class="course-title">培训班</text>
 						</div>
 					</div>
-				</div>
-				
-				<dropdown :value="dropdownValue" @change="dropdownChange" >
+
+					<div :key="item" class="trailer-wrap" v-for="item in lastact">
+						<bui-image @click="linkBanner(item)" src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
+						<div class="trailer-inner">
+							<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
+							<div class="trailer-content">
+								<text class="trailer-title">{{item.name}}</text>
+								<text class="trailer-date">{{fiexedDate(item.created_time)}}</text>
+							</div>
+						</div>
+					</div>
 					
-				</dropdown>
-				
-				
-				<div class="select-wrap">
-					<div class="h-line"></div>
-					<div class="select-content">
-						<text class="select-title">精选课程</text>
-						<text class="select-title-en">SELECTED COURSES</text>
-					</div>
-					<div class="h-line"></div>
-				</div>
-				<div class="course-list">
-					<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
-						<div class="avatar-wrap">
-							<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
-							<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
+					<dropdown :value="dropdownValue" @change="dropdownChange" >
+						
+					</dropdown>
+					
+					
+					<div class="select-wrap">
+						<div class="h-line"></div>
+						<div class="select-content">
+							<text class="select-title">精选课程</text>
+							<text class="select-title-en">SELECTED COURSES</text>
 						</div>
-						<div class="course-content">				
-							<text class="course-item-title">{{item.name}}</text>
-							<text class="course-item-text">{{item.learnCount}}人学过</text>
-							<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
+						<div class="h-line"></div>
+					</div>
+					<div class="course-list">
+						<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
+							<div class="avatar-wrap">
+								<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
+								<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
+							</div>
+							<div class="course-content">				
+								<text class="course-item-title">{{item.name}}</text>
+								<text class="course-item-text">{{item.learnCount}}人学过</text>
+								<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-    </scroller>	
+			</cell>
+    </list>	
 		<bg :src="navBackground" 
 			:contentStyle="contentStyle"
 			:bgStyle="bgStyle"
@@ -258,7 +258,6 @@ import dropdown from '../components/dropdown.vue';
 					url : 'ba/api/homepage/recommend',
 				}).then((res) =>{
 					this.recommendList = res.r;
-					console.log(this.recommendList);
 				},(errorT,status) =>{
 					
 				})
