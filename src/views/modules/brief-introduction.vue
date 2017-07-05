@@ -64,6 +64,7 @@ import loadingView from '../components/loading-view.vue';
 		methods:{
 			init () {
 				Promise.all([this.getAttendList(),this.getDetail()]).then(()=>{
+					
 					this.isLoading = false;
 				})
 			},
@@ -117,7 +118,7 @@ import loadingView from '../components/loading-view.vue';
 								reject(err);
 							})
 						}catch(e){
-							
+							this.isLoading = false;
 						}
 				});
 
