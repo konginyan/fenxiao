@@ -101,7 +101,7 @@ var common = {
         var paramsStr = "";
         if (params) {
             for (var key in params) {
-                paramsStr += key + "=" + params[key] + "&";
+                paramsStr += key + "=" + encodeURIComponent(params[key]) + "&";
             }
         }
         if (url.indexOf('?') < 0) {
@@ -134,6 +134,7 @@ var common = {
         var params = {};
         var url = weex.config.bundleUrl;
         var index = url.indexOf("?");
+        // this.alert(url);
         if (index > 0) {
             var query = url.substring(index + 1);
             var temp = query.split('&');
@@ -141,7 +142,7 @@ var common = {
             for (var p in temp) {
                 if (temp[p]) {
                     key = temp[p].split('=')[0];
-                    value = temp[p].split('=')[1];
+                    value = decodeURIComponent(temp[p].split('=')[1]);
                     params[key] = value;
                 }
             }
