@@ -164,8 +164,9 @@ import loadingView from '../components/loading-view.vue';
 					this.scrollHnadlerCallCount = 0;
 			},
 			"onRefresh": function (e) {
-					this.refreshing = true;
-					this.refresh();
+				this.showNav = false;
+				this.refreshing = true;
+				this.refresh();
 			},
 			"onPullingdown": function (e) {
 				this.refreshIcon = "icon-todown";
@@ -173,15 +174,13 @@ import loadingView from '../components/loading-view.vue';
 				this.showNav = true;
 				//下拉一定距离时文字与图标
 				if(config.env.platform==='android'){
-					if (e.pullingDistance > 80) {
-						this.showNav = false;
+					if (e.pullingDistance > 150) {
 						this.refreshIcon = "icon-toup";
 						this.refreshText = "松开即可刷新...";
 					}
 				}
 				if(config.env.platform==='iOS'){
-					if (e.pullingDistance < -80) {
-						this.showNav = false;
+					if (e.pullingDistance < -150) {
 						this.refreshIcon = "icon-toup";
 						this.refreshText = "松开即可刷新...";
 					}
@@ -306,7 +305,6 @@ import loadingView from '../components/loading-view.vue';
 		},
 		mounted () {
 			this.init();
-			
 		}
 	}
 

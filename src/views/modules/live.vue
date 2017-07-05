@@ -1,6 +1,18 @@
 <template>
 	<div class="live-wrap">
 		<bui-content class="span1">
+			<div class="video-wrap" style="height:0px">
+				<bui-video class="test-video"
+					v-if="testVideo"
+					:src="testVideo"
+					:playstatus="status"
+					:autoplay= "autoplay"
+					@start="onstart($event)"
+					@pause="onpause($event)"
+					@finish="onfinish($event)"
+					@fail="onfail($event)">
+				</bui-video>
+			</div>
 			<div class="video-wrap" style="height:423px;">
 				<bui-video class="bui-video"
 					v-if="videoSrc"
@@ -32,8 +44,8 @@
 						<bui-image class="play-btn" src="/image/play.png" @click="playReplay(1,replays[0].url)"></bui-image>			
 					</div>
 				</bg>
-				<bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
-				<bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
+				<bui-image width='66px' height='66px' v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
+				<bui-image width='66px' height='66px' v-if="isShow" @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 			</div>
 			<scroller>
 				<div class="summary-block">
@@ -102,7 +114,7 @@ import buiweex from "../../js/buiweex.js";
 import ajax from '../../js/ajax.js';
 import dropdown from '../../components/bui-dropdown.vue';
 import buiVideo from '../../components/bui-video.vue';
-import {fixedPic,formatDate} from "../../js/tool.js";
+import {fixedPic,formatDate,coder} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 
 	export default {
@@ -113,6 +125,7 @@ var globalEvent = weex.requireModule('globalEvent');
 				},
 				isShow: true,
 				videoSrc: null,
+				testVideo: null,
 				bgSrc: null,
 				replayindex: 0,
 				status: 'pause',
@@ -214,19 +227,23 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			testLive(){
 				if(this.liveDetail.liveStatus===1){
-					this.videoSrc = this.liveDetail.videoHls;
+					this.testVideo = this.liveDetail.videoHls;
 					this.liveFail = false;
 					setTimeout(()=>{
-						if(!this.liveFail)this.playLive();
+						if(!this.liveFail){
+							this.playLive();
+						}
 					},25000)
 				}		
 			},
 			clearLive(){
 				this.bgSrc = this.getPicture(this.liveDetail.picture);
 				this.videoSrc = null;
+				this.testVideo = null;
 			},
 			playLive(){
 				if(this.liveDetail.liveStatus===1){
+					this.testVideo = null;
 					this.videoSrc = this.liveDetail.videoHls;
 					this.bgSrc = null;
 					this.liveFail = false;
