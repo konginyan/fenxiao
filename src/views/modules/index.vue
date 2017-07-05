@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
 		<list class="span1" @scroll="onScroll">
 			<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
@@ -84,7 +85,7 @@
 			</bui-header>
 		</bg>
 		
-		<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
+		
 	</div>
 </template>
 

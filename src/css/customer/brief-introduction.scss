@@ -6,7 +6,7 @@
 	padding-left: 25px;
 }
 .course-teacher-title{
-	font-size: 30px;
+	font-size: 32px;
 	lines : 1;
 	text-overflow: ellipsis;
 }
@@ -29,7 +29,7 @@
 	flex : 1;
 	lines : 1;
 	text-overflow: ellipsis;
-	font-size: 26px;
+	font-size: 28px;
 	color: #999;
 
 }
@@ -39,7 +39,7 @@
 
 .learn-title{
 	color :#333;
-	font-size: 24px;
+	font-size: 28px;
 	padding-top: 26px;
 	padding-bottom: 20px;
 	padding-left: 24px;
@@ -51,7 +51,7 @@
 }
 .learn-people{
 	flex-direction: row;
-	align-items: start;
+	align-items: center;
 }
 .learn-people-list{
 	flex : 1;
@@ -62,7 +62,9 @@
 
 .learn-item{
 	width: 100px;
-	margin-right: 38px;
+	// margin-right: 5px;
+	justify-content: center;
+	align-items: center;
 }
 .avatar{
 	// position: relative;
@@ -88,12 +90,16 @@
 	height: 54px;
 	border-radius: 27px;
 	margin-bottom: 12px;
+
 }
 .learn-name{
 	align-items: center;
 	color: #999;
 	font-size: 20px;
 	width: 100px;
+	text-align: center;
+	lines : 1;
+	text-overflow: ellipsis;
 	// padding-top: 12px;
 	// padding-bottom: 30px;
 	// lines : 1;
@@ -105,7 +111,7 @@
 }
 .learn-arrow{
 	color: #ddd;
-	font-size: 60px;
+	font-size: 50px;
 }
 
 .course-desc{
@@ -118,7 +124,7 @@
 .course-desc-title{
 
 	color: #333;
-	font-size: 30px;
+	font-size: 32px;
 	padding-bottom: 12px;
 	border-bottom-width: 1px;
 	border-bottom-color: #dedede;
@@ -129,7 +135,7 @@
 	padding-top: 14px;
 }
 .course-desc-item{
-	font-size: 24px;
+	font-size: 28px;
 	color: #666;
 	margin-bottom: 20px;
 }
@@ -162,7 +168,7 @@
 	color: #999;
 }
 .operation-item-title{
-	font-size: 22px;
+	font-size: 20px;
 	color: #666;
 	
 }

@@ -293,7 +293,7 @@ import {fixedPic} from '../../js/tool.js';
             			}else if (type === 'html'){
             				buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
             					url : data.url,
-            					name : this.inner.name || ''
+            					name : data.name || ''
             				});
             			}
             			

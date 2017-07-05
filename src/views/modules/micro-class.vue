@@ -12,7 +12,7 @@
 		<filter-bar :filterItems="filterItems" @change="filterChange"></filter-bar>
 		
 		<bui-content class="span1">
-			<list class="bui-list p-r">
+			<list class="bui-list p-r" @loadmore="onLoadmore($event)" loadmoreoffset="2">
 				<!--刷新组件-->
 				<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
@@ -20,8 +20,8 @@
 				    <text class="bui-refresh-indicator">{{refreshText}}</text>
 				</refresh>
 				
-				<cell class="course-list">
-				   <div class="course-list-item" :class="[index===0?'no-border':'']" v-for="(item,index) in pageList" @click="linkDetail(item.courseId)">
+				<cell class="course-list" v-for="(item,index) in pageList">
+				   <div class="course-list-item" :class="[index===0?'no-border':'']"  @click="linkDetail(item.courseId)">
 				   		<div class="avatar-wrap">
 				   			<bui-image class="default-pic" src="/image/no-pic.png" @click="linkDetail(item.courseId)"></bui-image>
 	   						<bui-image width="295px" height="164px" @click="linkDetail(item.courseId)" class="course-item-img" :src="fixedPicture(item.picture)"></bui-image>
@@ -36,21 +36,14 @@
 	   				<prompt v-if="isShowPrompt" text="没有更多微课" src="/image/empty-micro.png"></prompt>
 				</cell>
 
-				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
 				    <text class="bui-loading-indicator">{{loadingText}}</text>
-				</loading>
+				</loading> -->
+				<cell class="bui-loading" v-if="showLoading">
+                    <text class="bui-loading-indicator">{{loadingText}}</text>
+                </cell>
 			</list>
-			<!-- <div class="course-list">
-				<div class="course-list-item" v-for="item in pageList">
-					<bui-image class="course-item-img" :src="item.picture"></bui-image>
-					<div class="course-content">
-						<text class="course-item-title">{{item.name}}</text>
-						<text class="course-item-text">{{item.learnCount}}人学过</text>
-						<rate @change="rateChange" :value="item.score" :disabled="true"></rate>
-					</div>
-				</div>
-			</div>
-			 -->
+			
 		</bui-content>
 
 		<filter-dialog v-if="isShow"  top="180px">
@@ -172,6 +165,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	})
 	        },
 	        filterChange (index){
+	        	this.page = 1;
 	        	switch (index){
 	        		case 0 : this.type = 'time'; 
 	        				 this.selectIndex = index;
@@ -269,7 +263,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
             		}
             	}).then((res) =>{
             		this.showLoading = false;
-            		this.isShowPrompt = false;
+            		this.isShowPrompt = false;           		
             		if(res.r.length === 0){
             			this.loadingText = '没有更多数据了';
             			return;
@@ -277,9 +271,10 @@ import {unicode,fixedPic} from '../../js/tool.js';
             			this.loadingText = '正在加载更多数据...';
             		}
             		this.pageList = this.pageList.concat(res.r);
-            		
+            		// buiweex.toast(this.pageList[0]);
             		
             	},(errorT,status) =>{
+
             		this.page -= 1;
             		this.showLoading = false;
             		
@@ -304,6 +299,11 @@ import {unicode,fixedPic} from '../../js/tool.js';
 
             "onLoading": function (e) {
                 this.getMorePageList(this.type,this.categoryId);
+
+            },
+            onLoadmore (e) {
+            	// buiweex.toast("loading");
+            	this.getMorePageList(this.type,this.categoryId);
 
             },
             fixedPicture (source) {

@@ -9,15 +9,15 @@
 		<bui-content class="span1">
 		   
 
-		  <list class="bui-list" >
+		  <list class="bui-list" @loadmore="onLoadmore($event)" loadmoreoffset="2">
 		  		<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
 				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
 				    <text class="bui-refresh-indicator">{{refreshText}}</text>
 				</refresh>
 
-				<cell class="comment-list">
-					<div class="comment-item" v-for="item in commentList">
+				<cell class="comment-list" v-for="item in commentList">
+					<div class="comment-item" >
 						<div class="comment-inner">
 							<bui-image class="avatar" src="/image/icon_kefu.png"></bui-image>
 							<div class="reader-wrap">
@@ -33,10 +33,13 @@
 					</div>
 					<prompt v-if="isShowPrompt" text="还没有评论" src="/image/empty-comment.png"></prompt>
 				</cell>
-
-				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+				
+				<cell class="bui-loading" v-if="showLoading">
+                    <text class="bui-loading-indicator">{{loadingText}}</text>
+                </cell>
+				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
 				    <text class="bui-loading-indicator">{{loadingText}}</text>
-				</loading>
+				</loading> -->
 
 		  </list>
 			<!-- <div class="comment-list">
@@ -170,6 +173,9 @@ import prompt from '../components/prompt.vue';
 			},
 			onLoading () {
 				 this.getMorePageList();
+			},
+			onLoadmore (e) {
+				this.getMorePageList();
 			},
 			getComment () {
 				ajax({

@@ -3,7 +3,7 @@
 		<bui-header title="报名的人" :leftItem="leftItem" @leftClick="back" @centerClick="showDemo">
 		</bui-header>
 		<bui-content class="span1">
-			<list class="bui-list p-r">
+			<list class="bui-list p-r" @loadmore="onLoadmore($event)" loadmoreoffset="2">
 				<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
 				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
@@ -23,9 +23,12 @@
 						</div>
 					</div>	
 				</cell>
-				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+				<cell class="bui-loading" v-if="showLoading">
+                    <text class="bui-loading-indicator">{{loadingText}}</text>
+                </cell>
+				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
 				    <text class="bui-loading-indicator">{{loadingText}}</text>
-				</loading>
+				</loading> -->
 			</list>
 		<!-- 	<list class="bui-list">
 			<cell class="bui-cell-large" v-for="item in list">
@@ -95,6 +98,9 @@ export default {
 			}
 		},
 		onLoading () {
+			this.getMore();
+		},
+		onLoadmore (e) {
 			this.getMore();
 		},
 		getList() {
