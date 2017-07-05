@@ -1,16 +1,14 @@
 <template>
 	<div>
-		<scroller class="span1" @scroll="onScroll">
+		<list class="span1" @scroll="onScroll">
 			<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
 				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
 				    <text class="bui-refresh-indicator">{{refreshText}}</text>
 				</refresh>
 
-			<div>
-				<!-- <text>{{testPic}}</text>
-				<bui-image width="100px" height="100px" :src="testPic"></bui-image> -->
-				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
+			<cell>
+				<slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
 						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
 									<bui-image @click="linkBanner(item)" class="img slider-img" :src="fixedPicture(item.picture)"></bui-image>
@@ -43,12 +41,8 @@
 						</div>
 					</div>
 				</div>
-				
 				<!-- <dropdown :value="dropdownValue" @change="dropdownChange" >
-					
 				</dropdown> -->
-				
-				
 				<div class="select-wrap">
 					<div class="h-line"></div>
 					<div class="select-content">
@@ -58,20 +52,22 @@
 					<div class="h-line"></div>
 				</div>
 				<div class="course-list">
-					<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
-						<div class="avatar-wrap">
-							<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
-							<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
-						</div>
-						<div class="course-content">				
-							<text class="course-item-title">{{item.name}}</text>
-							<text class="course-item-text">{{item.learnCount}}人学过</text>
-							<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
+						<div class="course-list">
+							<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
+								<div class="avatar-wrap">
+									<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
+									<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
+								</div>
+								<div class="course-content">				
+									<text class="course-item-title">{{item.name}}</text>
+									<text class="course-item-text">{{item.learnCount}}人学过</text>
+									<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-    </scroller>	
+			</cell>
+    </list>	
 		<bg :src="navBackground" 
 			:contentStyle="contentStyle"
 			:bgStyle="bgStyle"
@@ -261,7 +257,6 @@ import loadingView from '../components/loading-view.vue';
 					url : 'ba/api/homepage/recommend',
 				}).then((res) =>{
 					this.recommendList = res.r;
-					console.log(this.recommendList);
 				},(errorT,status) =>{
 					
 				})
