@@ -41,30 +41,39 @@
 							</div>
 						</div>
 					</div>
+				
+				<!-- <dropdown :value="dropdownValue" @change="dropdownChange" >
 					
-					<dropdown :value="dropdownValue" @change="dropdownChange" >
-						
-					</dropdown>
-					
-					
-					<div class="select-wrap">
-						<div class="h-line"></div>
-						<div class="select-content">
-							<text class="select-title">精选课程</text>
-							<text class="select-title-en">SELECTED COURSES</text>
+				</dropdown> -->
+				
+				
+				<div class="select-wrap">
+					<div class="h-line"></div>
+					<div class="select-content">
+						<text class="select-title">精选课程</text>
+						<text class="select-title-en">SELECTED COURSES</text>
+					</div>
+					<div class="h-line"></div>
+				</div>
+				<div class="course-list">
+					<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
+						<div class="avatar-wrap">
+							<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
+							<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
 						</div>
 						<div class="h-line"></div>
-					</div>
-					<div class="course-list">
-						<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
-							<div class="avatar-wrap">
-								<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
-								<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
-							</div>
-							<div class="course-content">				
-								<text class="course-item-title">{{item.name}}</text>
-								<text class="course-item-text">{{item.learnCount}}人学过</text>
-								<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
+						</div>
+						<div class="course-list">
+							<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
+								<div class="avatar-wrap">
+									<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
+									<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
+								</div>
+								<div class="course-content">				
+									<text class="course-item-title">{{item.name}}</text>
+									<text class="course-item-text">{{item.learnCount}}人学过</text>
+									<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -85,6 +94,8 @@
 					<icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
 			</bui-header>
 		</bg>
+		
+		<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
 	</div>
 </template>
 
@@ -96,7 +107,7 @@ var config = weex.config;
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 import linkapi from '../../js/linkapi.js';
-import dropdown from '../components/dropdown.vue';
+import loadingView from '../components/loading-view.vue';
 
 	export default {
 		data () {
@@ -114,9 +125,8 @@ import dropdown from '../components/dropdown.vue';
 				refreshIcon: "icon-todown",
 				refreshText: "下拉刷新...", 
 				dropdownValue : '请选择',
-				refreshIcon: "icon-todown",
-        refreshText: "下拉刷新...",
-				refreshing: false,
+				isLoading : true,
+				testPic : ''
 			}
 		},
 		computed: {
@@ -276,6 +286,24 @@ import dropdown from '../components/dropdown.vue';
 			},
 			fiexedDate (time) {
 				return formatDate(time,'MM-dd hh:mm:ss')
+			},
+			init () {
+				Promise.all([this.getHottestList(),this.getRecommend(),this.getLastact()]).then(()=>{
+					this.isLoading = false;
+				});
+				/*this.getHottestList();
+				this.getRecommend();
+				this.getLastact();*/
+
+				try{
+					linkapi.getLoginInfo((res)=>{
+
+						this.testPic = res.picture;
+					})
+				}catch(e){
+						
+					}
+
 			}
 		},
 		created (){
@@ -285,12 +313,11 @@ import dropdown from '../components/dropdown.vue';
 		},
 		components : {
 			rate,
-			dropdown,
+			loadingView
 		},
 		mounted () {
-			this.getHottestList();
-			this.getRecommend();
-			this.getLastact();
+			this.init();
+			
 		}
 	}
 

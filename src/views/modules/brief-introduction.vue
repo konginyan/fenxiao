@@ -27,14 +27,10 @@
 			<div class="course-desc">
 				<text class="course-desc-title">课程简介</text>
 				<div class="course-desc-list">
-					
-						
-						<text class="course-desc-item">{{outline}}
-	</text>
-					
+						<text class="course-desc-item">{{outline}}</text>
 				</div>
 			</div>
-		
+			<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
 	</div>
 </template>
 
@@ -44,7 +40,7 @@ import rate from '../components/rate.vue';
 import ajax from '../../js/ajax.js';
 var globalEvent = weex.requireModule('globalEvent');
 import linkapi from '../../js/linkapi.js';
-
+import loadingView from '../components/loading-view.vue';
 	export default {
 		data () {
 			return {
@@ -53,21 +49,27 @@ import linkapi from '../../js/linkapi.js';
 				courseId : '',
 				outline : '',
 				userList : [],
-				defaultAvatar : buiweex.getContextPath() + '/image/icon-avatar.png'
+				defaultAvatar : buiweex.getContextPath() + '/image/icon-avatar.png',
+				isLoading : true,
+
 			}
 		},
 		mounted(){
 			this.courseId = buiweex.getPageParams().courseId;
-			this.getDetail();
+			this.init();
 			
-			this.getAttendList();
 			
 
 		},
 		methods:{
+			init () {
+				Promise.all([this.getAttendList(),this.getDetail()]).then(()=>{
+					this.isLoading = false;
+				})
+			},
 			getDetail () {
 
-				ajax({
+				return ajax({
 					url : 'ba/api/course/show',
 					data : {
 						id : this.courseId,
@@ -75,7 +77,7 @@ import linkapi from '../../js/linkapi.js';
 
 					}
 				}).then((res) =>{
-
+					
 					this.detail = res.r[0];
 					this.outline = this.detail.outline.replace(/<.*?>/g,'');
 					
@@ -84,33 +86,40 @@ import linkapi from '../../js/linkapi.js';
 				})
 			},
 			getAttendList () {
+				return new Promise((resolve,reject)=>{
 
-				ajax({
-					url : 'ba/api/course/attend/list',
-					data : {
-						id : this.courseId,
-						rows : 5,
-						page : 1
+					ajax({
+						url : 'ba/api/course/attend/list',
+						data : {
+							id : this.courseId,
+							rows : 10,
+							page : 1
 
 
-					}
-				}).then((res) =>{
-					let arrLearnBy = [];
-					res.r.forEach((item) => {
-						arrLearnBy.push(item.learnBy);
-					});
-					linkapi.getUserInfo(arrLearnBy,(res)=> {
-						res.forEach(item=>{
-							let obj = {
-								picture : item.picture,
-								name : item.userName
-							}
-							this.userList.push(obj)
-						})
-						
-					},(err)=>{
-						
-					})
+						}
+					}).then((res) =>{
+						let arrLearnBy = [];
+						res.r.forEach((item) => {
+							arrLearnBy.push(item.learnBy);
+						});
+						try{
+
+							linkapi.getUserInfo(arrLearnBy,(res)=> {
+								res.forEach(item=>{
+									let obj = {
+										picture : item.picture,
+										name : item.userName
+									}
+									this.userList.push(obj)
+								})
+								resolve(this.userList);
+							},(err)=>{
+								reject(err);
+							})
+						}catch(e){
+							
+						}
+				});
 
 					
 					
@@ -139,7 +148,8 @@ import linkapi from '../../js/linkapi.js';
 	        });
 	    },
 	    components : {
-	    	rate
+	    	rate,
+	    	loadingView
 	    }
 	}
 </script>

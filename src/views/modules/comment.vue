@@ -31,7 +31,7 @@
 						</div>
 						<text class="comment-text">{{item.content}}</text>
 					</div>
-					<prompt v-if="commentList.length === 0" text="还没有评论" src="/image/empty-comment.png"></prompt>
+					<prompt v-if="isShowPrompt" text="还没有评论" src="/image/empty-comment.png"></prompt>
 				</cell>
 
 				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
@@ -82,6 +82,7 @@ import prompt from '../components/prompt.vue';
                 refreshIcon: "icon-todown",
                 refreshText: "下拉刷新...",
                 loadingText: "正在加载更多数据...",
+                isShowPrompt : false
 			}
 		},
 		mounted(){
@@ -108,6 +109,11 @@ import prompt from '../components/prompt.vue';
 					}
 				}).then((res) =>{
 					this.commentList = res.r;
+					if (this.commentList.length === 0) {
+						this.isShowPrompt = true;
+					}else{
+						this.isShowPrompt = false;
+					}
 					this.refreshIcon = "icon-checkbox-on";
             		this.refreshText = "刷新成功";
             		this.refreshing = false;
@@ -131,11 +137,14 @@ import prompt from '../components/prompt.vue';
 					}
 				}).then((res) =>{
 					this.showLoading = false;
+					this.isShowPrompt = false;
             		if(res.r.length === 0){
             			this.loadingText = '没有更多数据了';
+
             			return;
             		}else{
             			this.loadingText = '正在加载更多数据...';
+            			
             		}
             		this.commentList = this.commentList.concat(res.r);
 					
