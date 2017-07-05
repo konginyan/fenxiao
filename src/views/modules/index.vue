@@ -8,8 +8,8 @@
 				</refresh>
 
 			<div>
-				<text>{{testPic}}</text>
-				<bui-image width="100px" height="100px" :src="testPic"></bui-image>
+				<!-- <text>{{testPic}}</text>
+				<bui-image width="100px" height="100px" :src="testPic"></bui-image> -->
 				 <slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
 						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >

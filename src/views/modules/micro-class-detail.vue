@@ -233,7 +233,7 @@ import {fixedPic} from '../../js/tool.js';
             	this.isShowPoster = false;
             	setTimeout(()=>{
             		this.videoState = 'play';
-            	},2000)
+            	},500)
             	/*this.$nextTick(()=>{
             		this.videoState = 'play';
             	})*/

@@ -1,14 +1,12 @@
 <template>
-	<div class="web-wrap">
+	<div>
 		<bui-header
 					:title="name"
 					:leftItem="leftItem"
-					@leftClick="back"
-					
-					>
+					@leftClick="back">
 					
 			</bui-header>
-		<web ref="webview" :src="url" style="flex:1;"></web>
+		<web ref="webview" :src="url" style="flex:1;width:750px;"></web>
 	</div>
 </template>
 <script>
@@ -25,15 +23,17 @@ const webview = weex.requireModule('webview');
 				},
 			}
 		},
-		methods : {
+		methods:{
 			back () {
 					buiweex.pop();
 			},
 		},
-		created (){
+
+		mounted (){
+
 			globalEvent.addEventListener("androidback", function (e){
 				buiweex.pop();
 			});
-		},
+		}
 	}
 </script>
