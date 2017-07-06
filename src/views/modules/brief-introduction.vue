@@ -1,5 +1,6 @@
 <template>
 	<div class="brief-introduction-wrap">
+		<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
 			<div class="course-teacher">
 				<text class="course-teacher-title">{{detail.name}}</text>
 			</div>
@@ -15,7 +16,8 @@
 						<div class="learn-item"  v-for="item in userList">
 							<!-- <div class="avatar"> -->
 								<!-- <text class="avatar-name">张</text> -->
-								<bui-image  @click="students" class="avatar-pic" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
+
+								<bui-image width="54px" height="54px"  @click="students" class="avatar-pic" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
 							<!-- </div> -->
 							<text class="learn-name">{{item.name}}</text>
 						</div>
@@ -30,7 +32,7 @@
 						<text class="course-desc-item">{{outline}}</text>
 				</div>
 			</div>
-			<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
+			
 	</div>
 </template>
 
@@ -106,14 +108,17 @@ import loadingView from '../components/loading-view.vue';
 						try{
 
 							linkapi.getUserInfo(arrLearnBy,(res)=> {
+								let tempArr = [];
 								res.forEach(item=>{
 									let obj = {
 										picture : item.picture,
 										name : item.userName
 									}
-									this.userList.push(obj)
+									tempArr.push(obj);
 								})
+								this.userList = tempArr;
 								resolve(this.userList);
+								
 							},(err)=>{
 								reject(err);
 							})

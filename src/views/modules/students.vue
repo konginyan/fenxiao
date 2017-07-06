@@ -3,7 +3,7 @@
 		<bui-header title="报名的人" :leftItem="leftItem" @leftClick="back" @centerClick="showDemo">
 		</bui-header>
 		<bui-content class="span1">
-			<list class="bui-list p-r">
+			<list class="bui-list p-r" @loadmore="onLoadmore($event)" loadmoreoffset="2">
 				<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
 				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
@@ -12,7 +12,7 @@
 				<cell  v-for="item in list">
 					<div class="bui-cell-large" @click="startUserCard(item.userId)">
 						<div class="bui-list-left">
-							<bui-image @click="startUserCard(item.userId)" class="bui-list-thumb" :src="defaultAvatar" radius="50px" :placeholder="defaultAvatar"></bui-image>
+							<bui-image width="54px" height="54px" @click="startUserCard(item.userId)" class="bui-list-thumb" :src="item.url" radius="50px" :placeholder="defaultAvatar"></bui-image>
 						</div>
 						<div class="bui-list-main">
 							<text class="bui-list-title">{{item.name}}</text>
@@ -23,9 +23,12 @@
 						</div>
 					</div>	
 				</cell>
-				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+				<cell class="bui-loading" v-if="showLoading">
+                    <text class="bui-loading-indicator">{{loadingText}}</text>
+                </cell>
+				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
 				    <text class="bui-loading-indicator">{{loadingText}}</text>
-				</loading>
+				</loading> -->
 			</list>
 		<!-- 	<list class="bui-list">
 			<cell class="bui-cell-large" v-for="item in list">
@@ -65,7 +68,7 @@ export default {
             refreshText: "下拉刷新...",
             loadingText: "正在加载更多数据...",
             page : 1,
-            rows : 10,
+            rows : 100,
             defaultAvatar : buiweex.getContextPath() + '/image/icon-avatar.png'
 		}
 	},
@@ -97,6 +100,9 @@ export default {
 		onLoading () {
 			this.getMore();
 		},
+		onLoadmore (e) {
+			this.getMore();
+		},
 		getList() {
 			this.refreshIcon = "icon-loadding";
 			this.refreshText = "正在刷新";
@@ -112,7 +118,7 @@ export default {
 				res.r.forEach(item=> {
 					arrLearnBy.push(item.learnBy);
 				})
-				// buiweex.alert(arrLearnBy)
+
 				try{
 					linkapi.getUserInfo(arrLearnBy,(res)=> {
 

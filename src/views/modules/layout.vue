@@ -1,17 +1,28 @@
 <template>
     <div>
        
-        <div class="tabcontent" style="flex:1">
+       <!--  <div class="tabcontent" style="flex:1">
             <tab-item tabId="tab1" :currentTab="currentTab">
                     <index style="flex:1"></index>
             </tab-item>
-           <!--  <tab-item tabId="tab2" :currentTab="currentTab">
+            <tab-item tabId="tab2" :currentTab="currentTab">
                <course style="flex:1;"></course>
-           </tab-item> -->
+           </tab-item>
              <tab-item tabId="tab3" :currentTab="currentTab">
                 <learning-record style="flex:1;"></learning-record>
             </tab-item>
-        </div>   
+        </div>    -->
+
+       <div style="flex:1">
+            <tab-item index="0" :currentTabIndex="currentTabIndex">
+                 <index style="flex:1;width:750px;"></index>
+            </tab-item>
+
+            <tab-item index="1" :currentTabIndex="currentTabIndex">
+                 <learning-record style="flex:1;width:750px;"></learning-record>
+            </tab-item>
+        </div>
+
 
         <tab :tabItems="tabItems"
             :currentTab="currentTab"
@@ -39,6 +50,7 @@ import course from '../modules/course.vue';
                     icons: 'icon-back',
                 },
                 currentTab : 'tab1',
+                currentTabIndex: '0',
                 tabItems: [
                     {
                         tabId: "tab1",
@@ -85,8 +97,10 @@ import course from '../modules/course.vue';
                 this.currentTab = tabId;
             },
             //选项卡点击事件,必须实现
-            onTabItemClick: function (tabId) {
+            onTabItemClick: function (tabId,index) {
                 this.currentTab = tabId;
+                this.currentTabIndex=index;
+
             },
 
             login () {

@@ -1,8 +1,8 @@
 .catalog-subtitle{
 	background-color: #eee;
 	font-size: 26px;
-	padding-top: 24px;
-	padding-bottom: 24px;
+	padding-top: 32px;
+	padding-bottom: 32px;
 	padding-left: 24px;
 	padding-right: 24px;
 	color: #999;
@@ -11,12 +11,12 @@
 .catalog-item{
 	flex-direction: row;
 	align-items: center;
-	padding-top: 24px;
-	padding-bottom: 24px;
+	padding-top: 32px;
+	padding-bottom: 32px;
 	padding-left: 24px;
 	padding-right: 24px;
-	border-bottom-style: dashed;
-	border-bottom-color: #bdbdbd;
+	border-bottom-style: solid;
+	border-bottom-color: #e5e5e5;
 	border-bottom-width: 1px;
 
 }
@@ -24,7 +24,7 @@
 .catalog-index{
 	color: #999;
 	margin-right: 10px;
-	font-size: 27px;
+	font-size: 28px;
 }
 .catalog-play{
 	color: #999;
@@ -34,12 +34,12 @@
 	margin-right: 10px;
 	flex : 1;
 	color: #999;
-	font-size: 26px;
+	font-size: 28px;
 }
 .catalog-total{
 	margin-right: 10px;
 	color: #999;
-	font-size: 26px;
+	font-size: 28px;
 }
 .catalog-down{
 	color: #25aafe;

@@ -58,8 +58,9 @@
             "oninput": function (event) {
                 console.log("input");
                 console.log(event);
-                this.value = event.value;
-                this.deletestatus = true;
+                this.value = event.value.trim();
+                this.value.length === 0 ? this.deletestatus = false : this.deletestatus = true;
+
             },
             //清除搜索输入值
             "clear": function () {

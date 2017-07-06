@@ -28,7 +28,23 @@
 				:itemStyle = "itemStyle"
                 >
         </tab>
+		<div style="flex:1">
+            <tab-item index="0" :currentTabIndex="currentTabIndex">
+                 <scroller style="flex : 1;">
+	        		<brief-instroduction ></brief-instroduction>
+	        	</scroller>
+            </tab-item>
 
+            <tab-item index="1" :currentTabIndex="currentTabIndex">
+                <scroller style="flex : 1;width:750px;">
+	        		<catalog :currentIndex="currentIndex"  @videoSrc="videoSrc" @webSrc="webSrc"></catalog>
+	        	</scroller>
+            </tab-item>
+            <tab-item index="2" :currentTabIndex="currentTabIndex">
+                 <comment style="flex:1;"></comment>
+            </tab-item>
+        </div>
+<!-- 
 		<div class="item-content" style="flex : 1;">
 			
 	        <tab-item tabId="tab1" :currentTab="currentTab" >
@@ -48,7 +64,7 @@
 	         <tab-item tabId="tab3" :currentTab="currentTab">
 	            <comment style="flex:1;"></comment>
 	        </tab-item>
-		</div>
+		</div> -->
 		
 		<div class="course-footer">
 			<button  v-if="!isAttend"  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
@@ -103,6 +119,7 @@ import {fixedPic} from '../../js/tool.js';
 			return {
 				//当前选择的tab
 				currentTab: "tab1",
+				currentTabIndex: '0',
 				tabItems: [
 				    {
 				        tabId: "tab1",
@@ -186,8 +203,9 @@ import {fixedPic} from '../../js/tool.js';
                 this.currentTab = tabId;
             },
             //选项卡点击事件,必须实现
-            onTabItemClick(tabId) {
+            onTabItemClick(tabId,index) {
                 this.currentTab = tabId;
+                this.currentTabIndex = index;
             },
 			getDetail () {
 				let courseId = buiweex.getPageParams().courseId;
@@ -272,6 +290,7 @@ import {fixedPic} from '../../js/tool.js';
             learnContinue () {
             	let courseId = buiweex.getPageParams().courseId;
             	this.currentTab = 'tab2';
+            	this.currentTabIndex = 1;
             	// storage.removeItem(courseId);
             	// try{
             		storage.getItem(courseId,e=>{
@@ -293,7 +312,7 @@ import {fixedPic} from '../../js/tool.js';
             			}else if (type === 'html'){
             				buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
             					url : data.url,
-            					name : this.inner.name || ''
+            					name : data.name || ''
             				});
             			}
             			
