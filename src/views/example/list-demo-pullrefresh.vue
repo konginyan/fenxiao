@@ -16,36 +16,40 @@
                     <text class="bui-refresh-indicator">{{refreshText}}</text>
                 </refresh>
 
-                <cell class="bui-cell-xlarge" v-for="item in messageList">
-                    <div class="bui-list-left">
-                        <bui-image class="bui-list-thumb" radius="50px" v-bind:src="item['l-icon']"></bui-image>
-                    </div>
+                <!--<cell class="bui-cell-xlarge" v-for="item in messageList">-->
+                    <!--<div class="bui-list-left">-->
+                        <!--<bui-image class="bui-list-thumb" radius="50px" v-bind:src="item['l-icon']"></bui-image>-->
+                    <!--</div>-->
+                    <!--<div class="bui-list-main">-->
+                        <!--<text class="bui-list-title">{{item.title}}</text>-->
+                        <!--<text class="bui-list-subtitle">{{item.subtitle}}</text>-->
+                    <!--</div>-->
+                    <!--<div class="bui-list-right">-->
+                        <!--<bui-icon name="icon-go"></bui-icon>-->
+                    <!--</div>-->
+                <!--</cell>-->
+                <cell class="bui-cell-xlarge" v-for="i in list">
                     <div class="bui-list-main">
-                        <text class="bui-list-title">{{item.title}}</text>
-                        <text class="bui-list-subtitle">{{item.subtitle}}</text>
-                    </div>
-                    <div class="bui-list-right">
-                        <bui-icon name="icon-go"></bui-icon>
+                        <text class="bui-list-title">{{i}}</text>
                     </div>
                 </cell>
                 <!--上拉组件-->
-                <!--<cell class="bui-loading" v-if="showLoading">-->
-                <!--<text class="bui-loading-indicator">{{loadingText}}</text>-->
-                <!--</cell>-->
-                <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+                <cell class="bui-loading" v-if="showLoading">
                     <text class="bui-loading-indicator">{{loadingText}}</text>
-                </loading>
+                </cell>
+                <!--<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">-->
+                    <!--<text class="bui-loading-indicator">{{loadingText}}</text>-->
+                <!--</loading>-->
             </list>
         </bui-content>
     </div>
 
 </template>
-<style src="../../css/layout.css"></style>
-<style src="../../css/list.css"></style>
-<style src="../../css/header.css"></style>
-<style src="../../css/refresh.css"></style>
-<style src="../../css/loading.css"></style>
-<style src="../../css/example.css"></style>
+<style lang="sass" src="../../css/layout.scss"></style>
+<style lang="sass" src="../../css/list.scss"></style>
+<style lang="sass" src="../../css/refresh.scss"></style>
+<style lang="sass" src="../../css/loading.scss"></style>
+<style lang="sass" src="../../css/example.scss"></style>
 <script>
     var iconDev = "/image/icon_dev.png";
     var iconChat = "/image/icon_chat.png";
@@ -58,23 +62,20 @@
                 leftItem: {
                     icons: 'icon-back',
                 },
+                LOADMORE_COUNT: 4,
+                LOADMORE: [7,8,9,9,10],
                 refreshing: false,
                 showLoading: false,
                 refreshIcon: "icon-todown",
                 refreshText: "下拉刷新...",
                 loadingText: "正在加载更多数据...",
+                list: [1,2,3,4,5],
+                newList:  [1,2,3,4,5,6,7,8,9,10],
                 messageList: [
                     {'l-icon': iconKefu, 'title': '在线客服', 'subtitle': '亲,使用过程中有任何问题可以联系我！'},
                     {'l-icon': iconChat, 'title': 'SherryLee', 'subtitle': '请问，我们现在有北京国药的项目吗？'},
                     {'l-icon': iconChat, 'title': 'SherryLee', 'subtitle': '请问，我们现在有北京国药的项目吗？'},
-                    {'l-icon': iconChat, 'title': 'SherryLee', 'subtitle': '请问，我们现在有北京国药的项目吗？'},
                     {'l-icon': iconJifen, 'title': '积分商城', 'subtitle': '品高币积分变动提醒'},
-                    {'l-icon': iconChat, 'title': '吐槽群', 'subtitle': '赵文卓：明天下午吧，上午有个面试!'},
-                    {'l-icon': iconChat, 'title': '吐槽群', 'subtitle': '赵文卓：明天下午吧，上午有个面试!'},
-                    {'l-icon': iconChat, 'title': '吐槽群', 'subtitle': '赵文卓：明天下午吧，上午有个面试!'},
-                    {'l-icon': iconChat, 'title': '吐槽群', 'subtitle': '赵文卓：明天下午吧，上午有个面试!'},
-                    {'l-icon': iconChat, 'title': '吐槽群', 'subtitle': '赵文卓：明天下午吧，上午有个面试!'},
-                    {'l-icon': iconChat, 'title': '吐槽群', 'subtitle': '赵文卓：明天下午吧，上午有个面试!'},
                     {'l-icon': iconChat, 'title': '吐槽群', 'subtitle': '赵文卓：明天下午吧，上午有个面试!'},
                     {'l-icon': iconChat, 'title': '吐槽群', 'subtitle': '赵文卓：明天下午吧，上午有个面试!'},
                     {'l-icon': iconKefu, 'title': '播云客', 'subtitle': '五一特辑 | 劳动节无需劳动 | 优雅地吐槽你地工作还能领劳动节津贴'},
@@ -102,6 +103,7 @@
 
                     setTimeout(() => {
                         this.refreshing = false;
+                        this.list = this.newList;
                     }, 300);
 
                 }, 500);
@@ -122,7 +124,13 @@
             "onLoadmore": function (e) {
                 buiweex.toast("onloadmore");
                 this.showLoading = true;
+
+
+
+
+
                 setTimeout(() => {
+                    this.list = this.list.concat(this.LOADMORE);
                     this.showLoading = false;
                 }, 2000);
             },

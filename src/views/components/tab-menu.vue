@@ -1,13 +1,7 @@
 <template>
-	<div class="tabs">
-		<text class="tabs-item-text" >1</text>
-		<text class="tabs-item-text tabs-item-text-active" >2</text>
-		<!-- <div class="tabs-item">
-			<text class="tabs-item-text">1</text>
-		</div>
-		<div class="tabs-item tabs-item">
-			<text class="tabs-item-text tabs-item-text-active">2</text>
-		</div> -->
+	<div class="tab-menu">
+		<text class="tabs-item-text" @click="change(0)">1</text>
+		<text class="tabs-item-text tabs-item-text-active"@click="change(1)" >2</text>
 	</div>
 </template>
 
@@ -36,13 +30,16 @@ import buiweex from '../../js/buiweex.js'
 			
 		},
 		methods : {
-			
+			change(index){
+				this.$emit('change',index);
+				
+			}
 		}
 	}
 </script>
 
 <style>
-	.tabs{
+	.tab-menu{
 		flex-direction: row;
 	}
 	/*.tabs-item{

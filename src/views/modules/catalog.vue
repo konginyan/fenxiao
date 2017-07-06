@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</div>
-		<prompt v-if="isShowPrompt" text="还没有目录" src="/image/empty-catalog.png"></prompt>
+		<prompt v-if="isShowPrompt" text="还没有目录"  src="/image/empty-catalog.png"></prompt>
 	</div>
 </template>
 
@@ -101,10 +101,12 @@ var globalEvent = weex.requireModule('globalEvent');
 						id : this.courseId,
 					}
 				}).then((res) =>{
-					if (res.r && res.r.length === 0) {
+					if (typeof res.r === 'undefined' ||  res.r.length === 0) {
 						this.isShowPrompt = true;
+
 					}else{
 						this.isShowPrompt = false;
+
 					}
 					res.r && res.r.forEach(item=>{
 						item && item.detailList && item.detailList.forEach(inner=>{

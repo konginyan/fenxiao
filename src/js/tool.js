@@ -1,10 +1,11 @@
 export function unicode(str){
-            var value='';
-	            for (var i = 0; i < str.length; i++) {
-	                value += '\\u' + left_zero_4(parseInt(str.charCodeAt(i)).toString(16));
-	            }
-	            return value;
-	        }
+
+        var value='';
+            for (var i = 0; i < str.length; i++) {
+                value += '\\u' + left_zero_4(parseInt(str.charCodeAt(i)).toString(16));
+            }
+            return value;
+        }
 
 function left_zero_4(str) {
     if (str != null && str != '' && str != 'undefined') {
@@ -14,6 +15,7 @@ function left_zero_4(str) {
     }
     return str;
 }
+
 
 
 	/**

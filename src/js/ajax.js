@@ -1,7 +1,7 @@
 const stream = weex.requireModule('stream');
 const storage = weex.requireModule('storage');
 const url = 'http://ba.depts.bingosoft.net:8088/';
-import buiweex from '../js/buiweex.js'
+// import buiweex from '../js/buiweex.js'
 export default function ajax(option,success,error) {
 	return new Promise(function(resolve,reject) {
 		storage.getItem('token',function(e) {
@@ -14,6 +14,7 @@ export default function ajax(option,success,error) {
 			}else if(option.method === 'POST'){
 				body = option.data;
 			}
+
 			stream.fetch({
 		       method: option.method,
 		       type: option.type || 'json',
@@ -25,12 +26,11 @@ export default function ajax(option,success,error) {
 		    }, function(res){
 		   		
 		   		if(res.ok){
-					// buiweex.alert(res);
 		   			resolve(res.data);
 		   			success && success(res.data)
 		   		}else{
-		   			reject(res.statusText,res.status);
-		   			error && error(res.statusText,res.status);
+		   			reject(res.statusText,res.status,res);
+		   			error && error(res.statusText,res.status,res);
 		   		}
 
 			   
