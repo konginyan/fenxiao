@@ -33,7 +33,7 @@
 	   						<rate @change="rateChange" :value="item.score" :disabled="true"></rate>
 	   					</div>
 	   				</div>
-	   				<prompt v-if="isShowPrompt" text="没有更多微课" src="/image/empty-micro.png"></prompt>
+	   				
 				</cell>
 
 				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
@@ -43,7 +43,7 @@
                     <text class="bui-loading-indicator">{{loadingText}}</text>
                 </cell>
 			</list>
-			
+			<prompt v-if="isShowPrompt" text="没有更多微课" src="/image/empty-micro.png"></prompt>
 		</bui-content>
 
 		<filter-dialog v-if="isShow"  top="180px">
@@ -147,12 +147,15 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
 	        },
 	        search (val) {
-	        	// buiweex.toast(val);
+	        	
 	        	this.keyword = val.trim();
+	        	// buiweex.toast(unicode(this.keyword));
+	        	
+
 	        	ajax({
 	        		url : 'ba/api/course/getpagelist',
 	        		data : {
-	        			keyword : unicode(this.keyword),
+	        			keyword :encodeURIComponent(unicode(this.keyword)),
 	        			type : this.type,
 	        			rows : 100,
 	        			page : 1
@@ -160,7 +163,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        		}
 	        	}).then((res) =>{
 	        		this.pageList = res.r;
-	        	},(errorT,status) =>{
+	        	},(errorT,status,res) =>{
 	        		
 	        	})
 	        },
@@ -262,7 +265,11 @@ import {unicode,fixedPic} from '../../js/tool.js';
             			page : this.page
             		}
             	}).then((res) =>{
-            		this.showLoading = false;
+            		this.$nextTick(()=>{
+            			this.showLoading = false;
+            		});
+
+            		
             		this.isShowPrompt = false;           		
             		if(res.r.length === 0){
             			this.loadingText = '没有更多数据了';
@@ -276,6 +283,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
             	},(errorT,status) =>{
 
             		this.page -= 1;
+
             		this.showLoading = false;
             		
             	})

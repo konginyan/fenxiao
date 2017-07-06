@@ -129,7 +129,7 @@
                     }
                 }
 
-                this.$emit('itemClick', item.tabId);
+                this.$emit('itemClick', item.tabId,index);
             }
         }
     }

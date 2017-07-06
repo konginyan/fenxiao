@@ -19,9 +19,9 @@
 				<cell class="comment-list" v-for="item in commentList">
 					<div class="comment-item" >
 						<div class="comment-inner">
-							<bui-image class="avatar" src="/image/icon_kefu.png"></bui-image>
+							<bui-image class="avatar" :src="item.picture || ''" :placeholder="defaultAvatar"></bui-image>
 							<div class="reader-wrap">
-								<text class="readers">李梅梅</text>
+								<text class="readers">{{item.userName || '跨公司用户'}}</text>
 								<div class="date-wrap">
 									<text class="date">{{fixedDate(item.updatedTime)}}</text>
 									<!-- <text class="delete" @click="deleteComment(item)">删除</text> -->
@@ -31,7 +31,7 @@
 						</div>
 						<text class="comment-text">{{item.content}}</text>
 					</div>
-					<prompt v-if="isShowPrompt" text="还没有评论" src="/image/empty-comment.png"></prompt>
+					
 				</cell>
 				
 				<cell class="bui-loading" v-if="showLoading">
@@ -42,6 +42,7 @@
 				</loading> -->
 
 		  </list>
+		  <prompt v-if="isShowPrompt" resize="contain" text="还没有评论" src="/image/empty-comment.png"></prompt>
 			<!-- <div class="comment-list">
 				<div class="comment-item" v-for="item in commentList">
 					<div class="comment-inner">
@@ -71,6 +72,7 @@ import ajax from '../../js/ajax.js';
 import {formatDate} from '../../js/tool.js';
 var globalEvent = weex.requireModule('globalEvent');
 import prompt from '../components/prompt.vue';
+import linkapi from '../../js/linkapi.js';
 	export default {
 		data () {
 			return {
@@ -85,11 +87,11 @@ import prompt from '../components/prompt.vue';
                 refreshIcon: "icon-todown",
                 refreshText: "下拉刷新...",
                 loadingText: "正在加载更多数据...",
-                isShowPrompt : false
+                isShowPrompt : false,
+                defaultAvatar : buiweex.getContextPath() + '/image/icon-avatar.png',
 			}
 		},
 		mounted(){
-			// buiweex.alert(buiweex.getPageParams().name);
 			this.courseId = buiweex.getPageParams().courseId;
 			this.getComment()
 			this.getCommentList();
@@ -111,21 +113,64 @@ import prompt from '../components/prompt.vue';
 						page : this.page
 					}
 				}).then((res) =>{
-					this.commentList = res.r;
-					if (this.commentList.length === 0) {
-						this.isShowPrompt = true;
-					}else{
-						this.isShowPrompt = false;
+					let arrTemp = res.r;
+					let arrCommentBy = [];
+					res.r.forEach(item=> {
+						arrCommentBy.push(item.commentBy);
+					})
+	
+					try{
+						linkapi.getUserInfo(arrCommentBy,(resp)=> {
+							
+							arrTemp.forEach(item=>{
+								resp.forEach(inner => {
+									if(item.commentBy === inner.userId){
+										item.picture = inner.picture;
+										item.userName = inner.userName;
+										item.orgName = inner.orgName;
+									}else{
+										item.picture = '';
+										item.userName = '跨公司用户';
+										item.orgName = '';
+									}
+								});
+								
+							});
+							this.commentList = arrTemp;
+
+							if (res.r.length === 0) {
+
+								this.isShowPrompt = true;
+
+							}else{
+								this.isShowPrompt = false;
+							}
+							this.refreshIcon = "icon-checkbox-on";
+		            		this.refreshText = "刷新成功";
+		            		this.refreshing = false;
+
+							
+						})
+					}catch(e){
+						this.commentList = res.r;
+						if (this.commentList.length === 0) {
+							this.isShowPrompt = true;
+						}else{
+							this.isShowPrompt = false;
+						}
+						this.refreshIcon = "icon-checkbox-on";
+	            		this.refreshText = "刷新成功";
+	            		this.refreshing = false;
 					}
-					this.refreshIcon = "icon-checkbox-on";
-            		this.refreshText = "刷新成功";
-            		this.refreshing = false;
+
+					
 
 					
 				},(errorT,status) =>{
 					this.refreshIcon = "icon-todown";
             		this.refreshText = "刷新失败";
             		this.refreshing = false;
+            		
 				})
 			},
 			getMorePageList () {
@@ -141,15 +186,59 @@ import prompt from '../components/prompt.vue';
 				}).then((res) =>{
 					this.showLoading = false;
 					this.isShowPrompt = false;
-            		if(res.r.length === 0){
-            			this.loadingText = '没有更多数据了';
+					let arrTemp = res.r;
+					let arrCommentBy = [];
+					res.r.forEach(item=> {
+						arrCommentBy.push(item.commentBy);
+					})
+					
+					try{
+						linkapi.getUserInfo(arrCommentBy,(resp)=> {
+							
+							arrTemp.forEach(item=>{
+								resp.forEach(inner => {
+									if(item.commentBy === inner.userId){
+										item.picture = inner.picture;
+										item.userName = inner.userName;
+										item.orgName = inner.orgName;
+									}else{
+										item.picture = '';
+										item.userName = '跨公司用户';
+										item.orgName = '';
+									}
+								});
+								
+							});
+							if(res.length === 0){
+		            			this.loadingText = '没有更多数据了';
 
-            			return;
-            		}else{
-            			this.loadingText = '正在加载更多数据...';
-            			
-            		}
-            		this.commentList = this.commentList.concat(res.r);
+		            			return;
+		            		}else{
+		            			this.loadingText = '正在加载更多数据...';
+		            			
+		            		}
+							this.commentList = this.commentList.concat(arrTemp);
+							
+
+							
+						})
+					}catch(e){
+						if(res.r.length === 0){
+	            			this.loadingText = '没有更多数据了';
+
+	            			return;
+	            		}else{
+	            			this.loadingText = '正在加载更多数据...';
+	            			
+	            		}
+						this.commentList = this.commentList.concat(res.r);
+
+						
+						
+
+					}
+
+            		
 					
 				},(errorT,status) =>{
 					this.page -= 1;

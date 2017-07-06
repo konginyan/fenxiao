@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
+	<div  @viewappear="onappear">
+		<!-- <loading-view v-if="isLoading" src="/image/gray.png"></loading-view> -->
 		<list class="span1" @scroll="onScroll">
 			<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
@@ -11,6 +11,7 @@
 			<cell>
 				<slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
+						<div v-if="recommendList.length==0"><bui-image width="750px" height="375px" src="/image/banner.png"></bui-image></div>
 						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
 									<bui-image @click="linkBanner(item)" class="img slider-img" :src="fixedPicture(item.picture)"></bui-image>
 						</div>
@@ -19,32 +20,44 @@
 
 				<div class="course-menu">
 					<div class="course-item" @click="microClass">
-						<bui-image @click="microClass" class="course-img" src="/image/icon-micro.png" ></bui-image>
+						<bui-image @click="microClass" width="90px" height="90px" src="/image/icon-micro.png" ></bui-image>
 						<text class="course-title">微课</text>
 					</div>
 					<div class="course-item">
-						<bui-image @click="liveList" class="course-img" src="/image/icon-live.png"></bui-image>
+						<bui-image @click="liveList" width="90px" height="90px" src="/image/icon-live.png"></bui-image>
 						<text class="course-title">直播课堂</text>
 					</div>
 					<div class="course-item">
-						<bui-image @click="trainList" class="course-img" src="/image/icon-train.png"></bui-image>
+						<bui-image @click="trainList" width="90px" height="90px" src="/image/icon-train.png"></bui-image>
 						<text class="course-title">培训班</text>
 					</div>
 				</div>
 
-				<div :key="item" class="trailer-wrap" v-for="item in lastact">
-					<bui-image @click="linkBanner(item)" src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
+				<div class="trailer-wrap" v-if="lastact.length===0">
+					<bui-image  src="/image/trailer1.png" width="702" height="236"></bui-image>
 					<div class="trailer-inner">
-						<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
 						<div class="trailer-content">
-							<text class="trailer-title">{{item.name}}</text>
-							<text class="trailer-date">{{fiexedDate(item.created_time)}}</text>
+							<text class="trailer-title"></text>
+							<text class="trailer-date"></text>
 						</div>
 					</div>
 				</div>
+
+				<div :key="item" class="trailer-wrap" v-for="item in lastact">
+							<bui-image @click="linkBanner(item[0])" src="/image/trailer1.png" width="702" height="236"></bui-image>
+							<div class="trailer-inner">
+								<bui-image @click="linkBanner(item[0])" :src="fixedPicture(item[0].picture)" class="trailer-img"></bui-image>
+								<div class="trailer-content">
+									<text class="trailer-title">{{item[0].name}}</text>
+									<text class="trailer-date">{{fiexedDate(item[0].created_time)}}</text>
+								</div>
+							</div>
+				</div>
+
+			
 				<!-- <dropdown :value="dropdownValue" @change="dropdownChange" >
 				</dropdown> -->
-				<div class="select-wrap">
+				<div class="select-wrap" >
 					<div class="h-line"></div>
 					<div class="select-content">
 						<text class="select-title">精选课程</text>
@@ -99,6 +112,9 @@ import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 import linkapi from '../../js/linkapi.js';
 import loadingView from '../components/loading-view.vue';
 
+import lazyRender from '../../components/bui-lazy-render.vue';
+
+
 	export default {
 		data () {
 			return {
@@ -107,7 +123,7 @@ import loadingView from '../components/loading-view.vue';
 				},
 				recommendList: [],
 				hottestList : [],
-				lastact : {},
+				lastact : [],
 				navBackground : '/image/NavBarBackground.png',
 				navColor : 'transparent',
 				showNav : true,
@@ -116,7 +132,8 @@ import loadingView from '../components/loading-view.vue';
 				refreshText: "下拉刷新...", 
 				dropdownValue : '请选择',
 				isLoading : true,
-				testPic : ''
+				testPic : '',
+				currentIndex : 0
 			}
 		},
 		computed: {
@@ -127,7 +144,7 @@ import loadingView from '../components/loading-view.vue';
 			},
 			contentStyle () {
 				return {
-					position: 'fixed',
+					position: 'absolute',
 					top: 0,
 					width: '750px',
 					height: '100px'
@@ -190,7 +207,7 @@ import loadingView from '../components/loading-view.vue';
 			},
 			refresh () {
 				this.refreshIcon = "icon-loadding";
-	      this.refreshText = "正在刷新";
+	      		this.refreshText = "正在刷新";
 				Promise.all([this.getHottestList(),this.getLastact()])
 					.then(()=>{
 						this.refreshIcon = "icon-checkbox-on";
@@ -266,7 +283,9 @@ import loadingView from '../components/loading-view.vue';
 				return ajax({
 					url : 'ba/api/homepage/lastact',
 				}).then((res) =>{
-					this.lastact = res.r;
+					let tempArr = [];
+					tempArr.push(res.r);
+					this.lastact = tempArr;
 				},(errorT,status) =>{
 
 				})
@@ -279,6 +298,8 @@ import loadingView from '../components/loading-view.vue';
 			},
 			init () {
 				Promise.all([this.getHottestList(),this.getRecommend(),this.getLastact()]).then(()=>{
+					this.isLoading = false;
+				},()=>{
 					this.isLoading = false;
 				});
 				/*this.getHottestList();
@@ -294,6 +315,10 @@ import loadingView from '../components/loading-view.vue';
 						
 					}
 
+			},
+			onappear () {
+				this.getLastact();
+				
 			}
 		},
 		created (){
@@ -303,11 +328,12 @@ import loadingView from '../components/loading-view.vue';
 		},
 		components : {
 			rate,
-			loadingView
+			loadingView,
+			lazyRender
+	
 		},
 		mounted () {
 			this.init();
-			
 		}
 	}
 

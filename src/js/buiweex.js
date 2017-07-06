@@ -155,7 +155,28 @@ var common = {
             queryStr += key + "=" + obj[key] + "&";
         }
         return queryStr;
-    }
+    },
+    "show": function (obj,params) {
+            var id = params.id;
+            var duration = params.duration;
+            var transform = params.transform || 'translate(0, 0)';
+            var transformOrigin = params.transformOrigin || 'center center';
+            var timingFunction = params.timingFunction || 'ease';
+
+            var el = obj.$refs[id];
+            animation.transition(el, {
+                styles: {
+                    opacity: '1',
+                    transform: transform,
+                    transformOrigin: transformOrigin
+                },
+                duration: duration || 0,
+                timingFunction: timingFunction,
+                delay: 0
+            }, function () {
+
+            })
+        }
 }
 
 module.exports = common;
