@@ -11,7 +11,10 @@
 				<slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
 						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
-									<bui-image @click="linkBanner(item)" class="img slider-img" :src="fixedPicture(item.picture)"></bui-image>
+							<div class="slider-wrap">
+								<bui-image class="default-slider" src="/image/no-pic.png" @click="linkBanner(item)"></bui-image>
+								<bui-image @click="linkBanner(item)" class="img slider-item-img" :src="fixedPicture(item.picture)"></bui-image>
+							</div>
 						</div>
 						<indicator class="bui-slider-indicator small"></indicator>
 				</slider>
@@ -34,7 +37,10 @@
 				<div :key="item" class="trailer-wrap" v-for="item in lastact">
 					<bui-image @click="linkBanner(item)" src="/image/trailer.png" style="width: 702px;height:236px;"></bui-image>
 					<div class="trailer-inner">
-						<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="trailer-img"></bui-image>
+						<div class="avatar-wrap">
+							<bui-image class="default-pic" src="/image/no-pic.png" @click="linkBanner(item)"></bui-image>
+							<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="course-item-img"></bui-image>
+						</div>
 						<div class="trailer-content">
 							<text class="trailer-title">{{item.name}}</text>
 							<text class="trailer-date">{{fiexedDate(item.created_time)}}</text>
@@ -169,9 +175,10 @@ import loadingView from '../components/loading-view.vue';
 				this.refresh();
 			},
 			"onPullingdown": function (e) {
-				this.refreshIcon = "icon-todown";
-				this.refreshText = "下拉刷新...";
-				this.showNav = true;
+				if(!this.refreshing){
+					this.refreshIcon = "icon-todown";
+					this.refreshText = "下拉刷新...";
+				}
 				//下拉一定距离时文字与图标
 				if(config.env.platform==='android'){
 					if (e.pullingDistance > 150) {
@@ -193,8 +200,10 @@ import loadingView from '../components/loading-view.vue';
 					.then(()=>{
 						this.refreshIcon = "icon-checkbox-on";
 						this.refreshText = "刷新成功";
-						this.refreshing = false;
-						this.showNav = true;
+						setTimeout(()=>{
+							this.refreshing = false;
+							this.showNav = true;
+						},1000)
 					})
 			},
 			onScroll(e){

@@ -5,7 +5,8 @@
       @leftClick = "back"	
       >
     </bui-header>
-    <bui-content v-if="lives.length>0" class="span1">
+    <progress v-if="loading" @finish="onload" :marginTop="getTop()"></progress>
+    <bui-content v-if="lives.length>0 && !loading" class="span1">
       <list class="bui-list">
         <refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
@@ -44,7 +45,7 @@
         </loading>
       </list>
     </bui-content>
-    <bui-content v-if="lives.length===0" class="null">
+    <bui-content v-if="lives.length===0 && !loading" class="null">
 			<bui-image class="null-pic2" src="/image/no-live.png"></bui-image>
 			<text class="null-text">当前没有直播</text>
 		</bui-content>
@@ -65,6 +66,7 @@ export default {
       leftItem: {
         icons: 'icon-back',
       },
+      loading: true,
       lives:[],
       page: 1,
       rows: 20,
@@ -86,6 +88,10 @@ export default {
   methods:{
     back(){
       buiweex.pop();
+    },
+    getTop (){
+      if(weex.config.env.platform==='iOS') return '117px';
+      else return '100px'
     },
     getLives(){
       this.refreshIcon = "icon-loadding";
@@ -112,10 +118,11 @@ export default {
         else res.r.forEach((live)=>{
           this.lives.push(live);
         })
-        console.log(this.lives);
         this.refreshIcon = "icon-checkbox-on";
         this.refreshText = "刷新成功";
-        this.refreshing = false;
+        setTimeout(()=>{
+          this.refreshing = false;
+        },1000)
       },(errorT,status) =>{
         this.refreshing = false;
         this.refreshIcon = "icon-todown";
@@ -167,13 +174,18 @@ export default {
     },
     //refresh下拉放手前的文字与图标
     "onPullingdown": function (e) {
-      this.refreshIcon = "icon-todown";
-      this.refreshText = "下拉刷新...";
+      if(!this.refreshing){
+        this.refreshIcon = "icon-todown";
+        this.refreshText = "下拉刷新...";
+      }
       //下拉一定距离时文字与图标
       if (Math.abs(e.pullingDistance) > 150) {
           this.refreshIcon = "icon-toup";
           this.refreshText = "松开即可刷新...";
       }
+    },
+    "onload": function (event) {
+      this.loading = false;
     },
     getNextPage () {
       this.showLoading = true;

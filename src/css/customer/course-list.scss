@@ -39,6 +39,23 @@
 	height: 164px;
 }
 
+.slider-wrap{
+	position: relative;
+	width: 750px;
+	height: 375px;
+}
+.default-slider{
+	width: 750px;
+	height: 375px;
+}
+.slider-item-img{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 750px;
+	height: 375px;
+}
+
 .header-wrap{
 	position: relative;
 	width: 114px;
