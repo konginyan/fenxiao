@@ -61,7 +61,7 @@
 				<div class="micro-class-filter-list">
 					
 					<scroller  style="height: 500px;">
-					  <div  class="micro-class-filter">
+					  <div class="micro-class-filter">
 						<div class="micro-class-filter-item" v-for="(item,index) in filterList">
 							<button  @click="filterBtn(item.name,index,item.categoryId)" type="default"  :value="item.name"  class="filter-btn" :class="[index === currentIndex ? 'filter-active' : '']" ></button>
 						</div>

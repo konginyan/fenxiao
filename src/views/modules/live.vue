@@ -215,6 +215,7 @@ var websocket = weex.requireModule('webSocket')
 					}
 				}).then((res) =>{
 					this.liveDetail = res.r;
+					console.log(this.liveDetail.videoHls);
 					this.liveDetail.outline = this.clearDOM(this.liveDetail.outline);
 					if(this.firstin&&this.liveDetail.liveStatus===1){
 						this.playLive();
