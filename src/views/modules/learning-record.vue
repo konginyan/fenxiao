@@ -164,7 +164,6 @@ const animation = weex.requireModule('animation');
 						res=>{	
 							let uid = res.userId;
 							this.avatar = res.picture;
-							buiweex.alert(this.avatar);
 							this.getProfile(uid);
 							this.getRecordStat(uid)
 						},
@@ -180,7 +179,6 @@ const animation = weex.requireModule('animation');
 				}).then((res) =>{
 					this.profile = res.r
 					this.profile.avatar = this.getPicture(this.profile.avatar,'uam');
-					buiweex.alert(this.profile.avatar);
 				},(errorT,status) =>{
 
 				})
