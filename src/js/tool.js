@@ -108,6 +108,6 @@ export function getDateDiff(startDate){
     var endTime = new Date().getTime();     
     var startTime = new Date(Date.parse(startDate.replace(/-/g,   "/"))).getTime();     
     var dates = parseInt(endTime/(1000*60*60*24))-parseInt(startTime/(1000*60*60*24));
-    return  dates;    
+    return dates;    
 }
 

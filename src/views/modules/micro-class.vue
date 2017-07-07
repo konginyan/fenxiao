@@ -54,7 +54,7 @@
 				<div class="micro-class-filter-list">
 					
 					<scroller  style="height: 500px;">
-					  <div  class="micro-class-filter">
+					  <div class="micro-class-filter">
 						<div class="micro-class-filter-item" v-for="(item,index) in filterList">
 							<button  @click="filterBtn(item.name,index,item.categoryId)" type="default"  :value="item.name"  class="filter-btn" :class="[index === currentIndex ? 'filter-active' : '']" ></button>
 						</div>
@@ -299,7 +299,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 							this.refreshIcon = "icon-todown";
       				this.refreshText = "下拉刷新...";
               //下拉一定距离时文字与图标
-							if (Math.abs(e.pullingDistance) > 80) {
+							if (Math.abs(e.pullingDistance) > 150) {
 									this.refreshIcon = "icon-toup";
 									this.refreshText = "松开即可刷新...";
 							}

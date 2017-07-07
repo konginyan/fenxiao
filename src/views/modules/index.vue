@@ -13,7 +13,10 @@
 								@change="changeHandler" infinite="false" >
 						<div v-if="recommendList.length==0"><bui-image width="750px" height="375px" src="/image/banner.png"></bui-image></div>
 						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
-									<bui-image @click="linkBanner(item)" class="img slider-img" :src="fixedPicture(item.picture)"></bui-image>
+							<div class="slider-wrap">
+								<bui-image class="default-slider" src="/image/no-pic.png" @click="linkBanner(item)"></bui-image>
+								<bui-image @click="linkBanner(item)" class="img slider-item-img" :src="fixedPicture(item.picture)"></bui-image>
+							</div>
 						</div>
 						<indicator class="bui-slider-indicator small"></indicator>
 				</slider>
@@ -36,6 +39,10 @@
 				<div class="trailer-wrap" v-if="lastact.length===0">
 					<bui-image  src="/image/trailer1.png" width="702" height="236"></bui-image>
 					<div class="trailer-inner">
+						<div class="avatar-wrap">
+							<bui-image class="default-pic" src="/image/no-pic.png" @click="linkBanner(item)"></bui-image>
+							<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="course-item-img"></bui-image>
+						</div>
 						<div class="trailer-content">
 							<text class="trailer-title"></text>
 							<text class="trailer-date"></text>
@@ -182,24 +189,24 @@ import lazyRender from '../../components/bui-lazy-render.vue';
 					this.scrollHnadlerCallCount = 0;
 			},
 			"onRefresh": function (e) {
-					this.refreshing = true;
-					this.refresh();
+				this.showNav = false;
+				this.refreshing = true;
+				this.refresh();
 			},
 			"onPullingdown": function (e) {
-				this.refreshIcon = "icon-todown";
-				this.refreshText = "下拉刷新...";
-				this.showNav = true;
+				if(!this.refreshing){
+					this.refreshIcon = "icon-todown";
+					this.refreshText = "下拉刷新...";
+				}
 				//下拉一定距离时文字与图标
 				if(config.env.platform==='android'){
-					if (e.pullingDistance > 80) {
-						this.showNav = false;
+					if (e.pullingDistance > 150) {
 						this.refreshIcon = "icon-toup";
 						this.refreshText = "松开即可刷新...";
 					}
 				}
 				if(config.env.platform==='iOS'){
-					if (e.pullingDistance < -80) {
-						this.showNav = false;
+					if (e.pullingDistance < -150) {
 						this.refreshIcon = "icon-toup";
 						this.refreshText = "松开即可刷新...";
 					}
@@ -212,8 +219,10 @@ import lazyRender from '../../components/bui-lazy-render.vue';
 					.then(()=>{
 						this.refreshIcon = "icon-checkbox-on";
 						this.refreshText = "刷新成功";
-						this.refreshing = false;
-						this.showNav = true;
+						setTimeout(()=>{
+							this.refreshing = false;
+							this.showNav = true;
+						},1000)
 					})
 			},
 			onScroll(e){

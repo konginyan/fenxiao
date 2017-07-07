@@ -136,7 +136,9 @@ export default {
 
         this.refreshIcon = "icon-checkbox-on";
         this.refreshText = "刷新成功";
-        this.refreshing = false;
+        setTimeout(()=>{
+          this.refreshing = false;
+        },1000)
       },(errorT,status) =>{
         this.refreshing = false;
         this.refreshIcon = "icon-todown";
@@ -157,10 +159,12 @@ export default {
     },
     //refresh下拉放手前的文字与图标
     "onPullingdown": function (e) {
-      this.refreshIcon = "icon-todown";
-      this.refreshText = "下拉刷新...";
+      if(!this.refreshing){
+        this.refreshIcon = "icon-todown";
+        this.refreshText = "下拉刷新...";
+      }
       //下拉一定距离时文字与图标
-      if (Math.abs(e.pullingDistance) > 80) {
+      if (Math.abs(e.pullingDistance) > 150) {
           this.refreshIcon = "icon-toup";
           this.refreshText = "松开即可刷新...";
       }

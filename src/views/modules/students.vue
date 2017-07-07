@@ -92,7 +92,7 @@ export default {
 			this.refreshIcon = "icon-todown";
 			this.refreshText = "下拉刷新...";
 			//下拉一定距离时文字与图标
-			if (Math.abs(e.pullingDistance) > 80) {
+			if (Math.abs(e.pullingDistance) > 150) {
 			    this.refreshIcon = "icon-toup";
 			    this.refreshText = "松开即可刷新...";
 			}

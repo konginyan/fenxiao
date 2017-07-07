@@ -1,6 +1,19 @@
 <template>
 	<div class="live-wrap">
-		<bui-content class="span1">
+		<progress v-if="loading" @finish="onload($event)"></progress>
+		<bui-content v-else class="span1">
+			<div class="video-wrap" style="height:0px">
+				<bui-video class="test-video"
+					v-if="testVideo"
+					:src="testVideo"
+					:playstatus="status"
+					:autoplay= "autoplay"
+					@start="onstart($event)"
+					@pause="onpause($event)"
+					@finish="onfinish($event)"
+					@fail="onfail($event)">
+				</bui-video>
+			</div>
 			<div class="video-wrap" style="height:423px;">
 				<bui-video class="bui-video"
 					v-if="videoSrc"
@@ -22,9 +35,6 @@
 						<text class="notStart-text">老师离开</text>
 						<text class="notStart-text">敬请期待</text>						
 					</div>
-					<!--<div v-if="liveDetail.liveStatus===1 && !this.liveFail" class="msg-block">
-						<bui-image class="play-btn" src="/image/play.png" @click="playLive()"></bui-image>
-					</div>-->
 					<div v-if="liveDetail.liveStatus===2 && replays.length===0" class="msg-block">
 						<text class="notStart-text">直播已结束</text>				
 					</div>
@@ -32,8 +42,8 @@
 						<bui-image class="play-btn" src="/image/play.png" @click="playReplay(1,replays[0].url)"></bui-image>			
 					</div>
 				</bg>
-				<bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
-				<bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
+				<bui-image width='66px' height='66px' v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
+				<bui-image width='66px' height='66px' v-if="isShow" @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 			</div>
 			<scroller>
 				<div class="summary-block">
@@ -102,8 +112,10 @@ import buiweex from "../../js/buiweex.js";
 import ajax from '../../js/ajax.js';
 import dropdown from '../../components/bui-dropdown.vue';
 import buiVideo from '../../components/bui-video.vue';
-import {fixedPic,formatDate} from "../../js/tool.js";
+import linkapi from '../../js/linkapi.js';
+import {fixedPic,formatDate,coder} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
+var websocket = weex.requireModule('webSocket')
 
 	export default {
 		data () {
@@ -111,35 +123,35 @@ var globalEvent = weex.requireModule('globalEvent');
 				leftItem: {
 					icons: 'icon-back',
 				},
+				loading: true,
 				isShow: true,
 				videoSrc: null,
+				testVideo: null,
 				bgSrc: null,
 				replayindex: 0,
-				status: 'pause',
+				status: 'play',
 				liveFail: true,
 				liveDetail: {},
 				replays: [],
 				firstin: true,
 				autoplay: 'true',
 				isShowDropdown : false,
-				shareList : [
-					{
-						icon : 'icon-share',
-						title : '分享给同事'
-					},
-					{
-						icon : 'icon-share',
-						title : '分享到社区'
-					}
+				shareList: [
+					{icon: 'icon-share', title: '分享给同事'},
+					{icon: 'icon-share', title: '分享到社区'}
 				]
 			}
 		},
 		mounted(){
 			this.refresh();
+			// this.connect();
 		},
 		methods:{
 			back(){
 				buiweex.pop();
+			},
+			clearDOM (html) {
+				return html?html.replace(/<[\w\/\s]*>/g, ''):'';
 			},
 			refresh () {
 				this.getLiveDetail();
@@ -160,8 +172,6 @@ var globalEvent = weex.requireModule('globalEvent');
 						url : 'http://www.baidu.com',
 						type : 'WEBSITE',
 					});
-
-
 				}else if(item === '分享到社区'){
 					linkapi.shareToBlog({
 						title : '视频',
@@ -177,6 +187,8 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			"onpause": function (event) {
 					this.isShow = true;
+					this.liveFail = true;
+					this.clearLive();
 			},
 			"onfinish": function (event) {
 					this.isShow = true;
@@ -187,6 +199,9 @@ var globalEvent = weex.requireModule('globalEvent');
 					this.isShow = true;
 					this.liveFail = true;
 					this.clearLive();
+			},
+			"onload": function (event) {
+				this.loading = false;
 			},
 			liveErrorHit(){
 				
@@ -200,8 +215,9 @@ var globalEvent = weex.requireModule('globalEvent');
 					}
 				}).then((res) =>{
 					this.liveDetail = res.r;
-					if(this.firstin){
-						this.bgSrc = this.getPicture(this.liveDetail.picture);
+					console.log(this.liveDetail.videoHls);
+					this.liveDetail.outline = this.clearDOM(this.liveDetail.outline);
+					if(this.firstin&&this.liveDetail.liveStatus===1){
 						this.playLive();
 						this.firstin = false;
 					}
@@ -214,19 +230,23 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			testLive(){
 				if(this.liveDetail.liveStatus===1){
-					this.videoSrc = this.liveDetail.videoHls;
+					this.testVideo = this.liveDetail.videoHls;
 					this.liveFail = false;
 					setTimeout(()=>{
-						if(!this.liveFail)this.playLive();
+						if(!this.liveFail){
+							this.playLive();
+						}
 					},25000)
 				}		
 			},
 			clearLive(){
 				this.bgSrc = this.getPicture(this.liveDetail.picture);
 				this.videoSrc = null;
+				this.testVideo = null;
 			},
 			playLive(){
 				if(this.liveDetail.liveStatus===1){
+					this.testVideo = null;
 					this.videoSrc = this.liveDetail.videoHls;
 					this.bgSrc = null;
 					this.liveFail = false;
@@ -268,6 +288,16 @@ var globalEvent = weex.requireModule('globalEvent');
 			},
 			getDate (stamp){
 				return formatDate(stamp,'MM月dd日 hh:mm');
+			},
+			connect: function(){
+				websocket.WebSocket('ws://echo.websocket.org','');
+				buiweex.alert('socket');
+				websocket.onopen = function(e){
+          buiweex.alert('网络已链接');
+        }
+				websocket.onclose = function(e){
+					buiweex.alert('网络已断开');
+				}
 			}
 		},
 		created (){

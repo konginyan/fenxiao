@@ -13,6 +13,7 @@ var mixins = {
         'icon' :  require('../components/icon.vue'),
         'button' : require('../views/components/button.vue'),
         'bg' : require('../views/components/bg.vue'),    
+        'progress' : require('../views/components/progress.vue'),
     }
 }
 
