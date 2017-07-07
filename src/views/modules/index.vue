@@ -234,7 +234,6 @@ import lazyRender from '../../components/bui-lazy-render.vue';
 				}
 			},
 			linkBanner (item){
-				console.log(item);
 				let type = this.getRecordType(item);
 				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
 					liveId : this.getMainId(item)

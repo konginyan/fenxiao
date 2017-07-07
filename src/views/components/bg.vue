@@ -15,7 +15,7 @@
 	</div>
 </template>
 <script>
-import buiweex from '../../js/buiweex.js'
+// import buiweex from '../../js/buiweex.js'
 	export default {
 		props : {
 			src: {

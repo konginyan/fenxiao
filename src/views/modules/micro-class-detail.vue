@@ -229,6 +229,7 @@ import {fixedPic} from '../../js/tool.js';
 			},
 			"onstart": function () {
                 this.isShow = false;
+                buiweex.alert('start')
                 // buiweex.alert(this.isShow);
             },
             "onpause": function (event) {
