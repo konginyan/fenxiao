@@ -13,7 +13,7 @@
 			<div class="learning-record-row" ref="profile">
 				<div class="header-wrap">
 					<bui-image class="header-img" width="114px" height="114px"
-					 :src="profile.avatar" placeholder="/dist/image/icon_kefu.png" radius="57px"></bui-image>
+					 :src="avatar" placeholder="/dist/image/icon_kefu.png" radius="57px"></bui-image>
 				</div>
 				<div class="learning-record-col">
 					<text class="record-font-36 learning-record-author">{{profile.name}}</text>
@@ -99,6 +99,7 @@ const animation = weex.requireModule('animation');
 					orgName: '',
 					postDescription: ''
 				},
+				avatar: '',
 				records: [],
 				courses: [],
 				trains: [],
@@ -162,6 +163,8 @@ const animation = weex.requireModule('animation');
 				linkapi.getLoginInfo(
 						res=>{	
 							let uid = res.userId;
+							this.avatar = res.picture;
+							buiweex.alert(this.avatar);
 							this.getProfile(uid);
 							this.getRecordStat(uid)
 						},
@@ -177,6 +180,7 @@ const animation = weex.requireModule('animation');
 				}).then((res) =>{
 					this.profile = res.r
 					this.profile.avatar = this.getPicture(this.profile.avatar,'uam');
+					buiweex.alert(this.profile.avatar);
 				},(errorT,status) =>{
 
 				})
@@ -304,14 +308,21 @@ const animation = weex.requireModule('animation');
 }
 
 .learning-record-author{
+	text-align: left;
 	color: white;
 	margin-bottom: 10px;
+	width: 150px;
+	lines: 1;
+	text-overflow: ellipsis;
 }
 
 .learning-record-detail{
-	text-align: center;
+	text-align: left;
 	color: white;
 	margin-top: 5px;
+	width: 150px;
+	lines: 1;
+	text-overflow: ellipsis;
 }
 
 .learning-record-time-block{

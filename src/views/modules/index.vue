@@ -1,6 +1,6 @@
 <template>
 	<div  @viewappear="onappear">
-		<!-- <loading-view v-if="isLoading" src="/image/gray.png"></loading-view> -->
+		 <!--<loading-view v-if="isLoading" src="/image/gray.png"></loading-view> -->
 		<list class="span1" @scroll="onScroll">
 			<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
@@ -36,24 +36,13 @@
 					</div>
 				</div>
 
-				<div class="trailer-wrap" v-if="lastact.length===0">
-					<bui-image  src="/image/trailer1.png" width="702" height="236"></bui-image>
-					<div class="trailer-inner">
-						<div class="avatar-wrap">
-							<bui-image class="default-pic" src="/image/no-pic.png" @click="linkBanner(item)"></bui-image>
-							<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="course-item-img"></bui-image>
-						</div>
-						<div class="trailer-content">
-							<text class="trailer-title"></text>
-							<text class="trailer-date"></text>
-						</div>
-					</div>
-				</div>
-
 				<div :key="item" class="trailer-wrap" v-for="item in lastact">
 							<bui-image @click="linkBanner(item[0])" src="/image/trailer1.png" width="702" height="236"></bui-image>
 							<div class="trailer-inner">
-								<bui-image @click="linkBanner(item[0])" :src="fixedPicture(item[0].picture)" class="trailer-img"></bui-image>
+								<div class="avatar-wrap">
+									<bui-image class="default-pic" src="/image/no-pic.png" @click="linkBanner(item[0])"></bui-image>
+									<bui-image @click="linkBanner(item[0])" :src="fixedPicture(item[0].picture)" class="trailer-img"></bui-image>
+								</div>
 								<div class="trailer-content">
 									<text class="trailer-title">{{item[0].name}}</text>
 									<text class="trailer-date">{{fiexedDate(item[0].created_time)}}</text>
