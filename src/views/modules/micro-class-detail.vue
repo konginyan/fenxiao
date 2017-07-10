@@ -177,7 +177,7 @@ import {fixedPic} from '../../js/tool.js';
 					try{
 						linkapi.shareToMessage({
 							title : this.detail.name,
-							content : '[OpenApp]\nappCode=com.xxx.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+courseId,
+							content : '[OpenApp]\nappCode=com.ba.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+courseId,
 							type : 'action',
 						});
 					}catch(e){
@@ -190,7 +190,7 @@ import {fixedPic} from '../../js/tool.js';
 					try{
 						linkapi.shareToBlog({
 							title : this.detail.name,
-							content : '[OpenApp]\nappCode=com.xxx.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+courseId,
+							content : '[OpenApp]\nappCode=com.ba.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+courseId,
 							type : 'action',
 						});
 					}catch(e){

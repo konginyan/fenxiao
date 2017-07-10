@@ -1,3 +1,6 @@
+// const url = 'http://ba.depts.bingosoft.net:8088/';
+// const url = 'https://ba1.bingocc.com/';
+import {url} from './config.js';
 export function unicode(str){
 
         var value='';
@@ -59,11 +62,11 @@ export function fixedPic(source,dir='ba'){
 
     if (dataReg.test(source) ) {
         source = source.replace(decodeReg,'%2F').replace(/\|\|.*/,'');
-        return 'http://ba.depts.bingosoft.net:8088/'+dir+'/ui/download?filepath=' + source;
+        return url+dir+'/ui/download?filepath=' + source;
     } else if(isHttp.test(source)){
         return source;
     }else{
-         return 'http://ba.depts.bingosoft.net:8088/'+dir+'/ui/download?filepath=' + source;
+         return url+dir+'/ui/download?filepath=' + source;
     }
 
 }

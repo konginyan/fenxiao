@@ -1,6 +1,8 @@
 const stream = weex.requireModule('stream');
 const storage = weex.requireModule('storage');
-const url = 'http://ba.depts.bingosoft.net:8088/';
+import {url} from './config.js';
+// const url = 'http://ba.depts.bingosoft.net:8088/';
+// const url = 'https://ba1.bingocc.com/';
 // import buiweex from '../js/buiweex.js'
 export default function ajax(option,success,error) {
 	return new Promise(function(resolve,reject) {

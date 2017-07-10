@@ -125,6 +125,7 @@ import linkapi from '../../js/linkapi.js';
 							})
 						}catch(e){
 							this.isLoading = false;
+							
 						}
 				});
 
