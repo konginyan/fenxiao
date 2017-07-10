@@ -1,6 +1,6 @@
 <template>
     <image v-bind:src="imagePath"
-           v-bind:placeholder="placeholder"
+           v-bind:placeholder="placeholderPath"
            v-bind:style="{'border-radius':radius, 'width': width, 'height': height}"
            v-bind:resize="resize"
            @click="_click($event)"
@@ -14,13 +14,25 @@
                 if (this.src.indexOf("http") >= 0) {
                     return this.src;
                 }
-
                 var bundleUrl = weex.config.bundleUrl;
                 var url = bundleUrl.split('/').slice(0, -1).join('/');
                 if (bundleUrl.indexOf("weex.html") > 0) {
                     url += "/dist/";
                 }
                 return url + this.src;
+            },
+            "placeholderPath": function () {
+                if (this.placeholder!="") {
+                    if (this.placeholder.indexOf("http") >= 0) {
+                        return this.placeholder;
+                    }
+                    var bundleUrl = weex.config.bundleUrl;
+                    var url = bundleUrl.split('/').slice(0, -1).join('/');
+                    if (bundleUrl.indexOf("weex.html") > 0) {
+                        url += "/dist/";
+                    }
+                    return url + this.placeholder;
+                }
             }
         },
         props: {
@@ -34,19 +46,19 @@
                 default: "stretch"
             },
             placeholder: {
-                type: String
+                type: String,
+                default: ""
             },
             radius: {
                 default: "0px"
             }
         },
-        data: function(){
-            return {
-            }
+        data: function () {
+            return {}
         },
         methods: {
-            "_click": function (e) {
-                this.$emit('click',e);
+            "_click": function (event) {
+                this.$emit('click', event);
             },
             "_load": function () {
                 this.$emit('load');

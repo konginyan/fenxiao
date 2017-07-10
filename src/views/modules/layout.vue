@@ -36,6 +36,7 @@
     var buiweex = require("../../js/buiweex.js");
     var globalEvent = weex.requireModule('globalEvent');
     const storage = weex.requireModule('storage')
+import {username,password} from '../../js/config.js';    
 import sso from '../../js/sso.js';
 import linkapi from '../../js/linkapi.js';
 import tab from '../../components/tab.vue';
@@ -109,7 +110,7 @@ import course from '../modules/course.vue';
                         storage.setItem('token', e.accessToken);
                     });
                 }catch(e){
-                    sso.login('13751876401','123456',function(res) {
+                    sso.login(username,password,function(res) {
                         var token = res['ex.oauth_access_token'];
                         storage.setItem('token', token);
                     },function(err) {

@@ -118,6 +118,7 @@ export default {
         else res.r.forEach((live)=>{
           this.lives.push(live);
         })
+        this.loading=false;
         this.refreshIcon = "icon-checkbox-on";
         this.refreshText = "刷新成功";
         setTimeout(()=>{

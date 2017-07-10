@@ -4,8 +4,6 @@
                 title="微课"
                 :leftItem="leftItem"
                 @leftClick = "back"
-                @centerClick="showDemo"
-               
                 >
         </bui-header>
 		 <bui-searchbar-left ref="searchbar"  @onSearch="search" placeholder="请输入课程名"></bui-searchbar-left>
@@ -143,9 +141,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 			back () {
 	            buiweex.pop();
 	        },	
-	        showDemo (){
-	        	buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
-	        },
+	        
 	        search (val) {
 	        	
 	        	this.keyword = val.trim();

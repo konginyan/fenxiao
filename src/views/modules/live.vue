@@ -154,8 +154,12 @@ var websocket = weex.requireModule('webSocket')
 				return html?html.replace(/<[\w\/\s]*>/g, ''):'';
 			},
 			refresh () {
-				this.getLiveDetail();
-				this.getReplays();
+				// this.getLiveDetail();
+				// this.getReplays();
+				Promise.all([this.getLiveDetail(),this.getReplays()])
+					.then(()=>{
+						this.loading = false;
+					})
 				setInterval(()=>{
 					Promise.all([this.getLiveDetail(),this.getReplays()])
 						.then(()=>{

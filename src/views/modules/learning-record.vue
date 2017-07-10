@@ -13,7 +13,7 @@
 			<div class="learning-record-row" ref="profile">
 				<div class="header-wrap">
 					<bui-image class="header-img" width="114px" height="114px"
-					 :src="avatar" placeholder="/dist/image/icon_kefu.png" radius="57px"></bui-image>
+					 :src="avatar" placeholder="/image/icon-avatar.png" radius="57px"></bui-image>
 				</div>
 				<div class="learning-record-col">
 					<text class="record-font-36 learning-record-author">{{profile.name}}</text>

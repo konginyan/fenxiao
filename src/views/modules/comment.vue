@@ -137,7 +137,7 @@ import linkapi from '../../js/linkapi.js';
 								
 							});
 							this.commentList = arrTemp;
-
+							
 							if (res.r.length === 0) {
 
 								this.isShowPrompt = true;

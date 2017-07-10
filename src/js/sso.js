@@ -1,7 +1,8 @@
 var stream = weex.requireModule('stream');
+import {ssoUrl} from './config.js';
 // var ssoEndpoint="https://ba.depts.bingosoft.net:20140/sso";
-const ssoEndpoint="https://10.201.76.141/sso/";
-
+// const ssoEndpoint="https://10.201.76.141/sso/";
+// const ssoEndpoint="https://www.bingolink.biz/sso";
 
 module.exports = {
     //对象转成url查询参数 key=value&key=value
@@ -45,11 +46,11 @@ module.exports = {
         var headers = {
             "X-Requested-With": "XMLHttpRequest"
         }
-        var temp = ssoEndpoint + "/v2?" + that.obj2QueryStr(data);
+        var temp = ssoUrl + "/v2?" + that.obj2QueryStr(data);
         stream.fetch({
             method: 'GET',
             headers: headers,
-            url: ssoEndpoint + "/v2?" + that.obj2QueryStr(data)
+            url: ssoUrl + "/v2?" + that.obj2QueryStr(data)
         }, function (resp) {
             if (resp.ok) {
                 var auth = that.parseAuthData(resp.data);
@@ -66,7 +67,7 @@ module.exports = {
     },
     //刷新AccessToken
     "refreshAccessToken": function (token,success,fail) {
-        var refreshUrl = ssoEndpoint + "/oauth/2/token?client_id=clientId&grant_type=refresh_token&refresh_token=" + token;
+        var refreshUrl = ssoUrl + "/oauth/2/token?client_id=clientId&grant_type=refresh_token&refresh_token=" + token;
         var headers = {
             "X-Requested-With": "XMLHttpRequest"
         }

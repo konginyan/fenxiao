@@ -17,18 +17,18 @@ export default {
     },
     weight : {
       type : String,
-      default : '6px'
+      default : '8px'
     },
     color: {
       type: String,
-      default: '#B6EAFE'
+      default: '#21b24b'
     },
     config: {
       type: Array,
       default: [
-        {each: 5, time: 10, limit: 40},
-        {each: 1, time: 10, limit: 60},
-        {each: 3, time: 10, limit: 100}
+        {each: 20, time: 15, limit: 40},
+        {each: 5, time: 15, limit: 60},
+        {each: 1, time: 15, limit: 100}
       ]
     },
     marginTop: {
@@ -59,7 +59,7 @@ export default {
             clearInterval(this.timer);
             resolve();
           }
-        }, time)
+        }, this.time)
       })
     },
     next (index){

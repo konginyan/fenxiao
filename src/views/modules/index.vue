@@ -35,13 +35,15 @@
 						<text class="course-title">培训班</text>
 					</div>
 				</div>
-
+				<div class="trailer-wrap" v-if="lastact.length === 0">
+					<bui-image src="/image/trailer.png" width="702" height="236"></bui-image>
+				</div>
 				<div :key="item" class="trailer-wrap" v-for="item in lastact">
 							<bui-image @click="linkBanner(item[0])" src="/image/trailer1.png" width="702" height="236"></bui-image>
 							<div class="trailer-inner">
 								<div class="avatar-wrap">
 									<bui-image class="default-pic" src="/image/no-pic.png" @click="linkBanner(item[0])"></bui-image>
-									<bui-image @click="linkBanner(item[0])" :src="fixedPicture(item[0].picture)" class="trailer-img"></bui-image>
+									<bui-image @click="linkBanner(item[0])" :src="fixedPicture(item[0].picture)" class="course-item-img"></bui-image>
 								</div>
 								<div class="trailer-content">
 									<text class="trailer-title">{{item[0].name}}</text>
@@ -51,8 +53,6 @@
 				</div>
 
 			
-				<!-- <dropdown :value="dropdownValue" @change="dropdownChange" >
-				</dropdown> -->
 				<div class="select-wrap" >
 					<div class="h-line"></div>
 					<div class="select-content">
@@ -61,21 +61,27 @@
 					</div>
 					<div class="h-line"></div>
 				</div>
+
+				<div class="course-list" v-if="hottestList.length === 0">
+					<div class="course-list-item" v-for="item in 2">
+						<bui-image width="750px" height="180px" src="/image/default-item.png" ></bui-image>
+					</div>
+				</div>
+
 				<div class="course-list">
-						<div class="course-list">
-							<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
-								<div class="avatar-wrap">
-									<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
-									<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
-								</div>
-								<div class="course-content">				
-									<text class="course-item-title">{{item.name}}</text>
-									<text class="course-item-text">{{item.learnCount}}人学过</text>
-									<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
-								</div>
-							</div>
+					<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
+						<div class="avatar-wrap">
+							<bui-image class="default-pic" src="/image/no-pic.png" @click="hottestLink(item.courseId)"></bui-image>
+							<bui-image class="course-item-img" :src="fixedPicture(item.picture)" @click="hottestLink(item.courseId)"></bui-image>
+						</div>
+						<div class="course-content">				
+							<text class="course-item-title">{{item.name}}</text>
+							<text class="course-item-text">{{item.learnCount}}人学过</text>
+							<rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
 						</div>
 					</div>
+				</div>
+
 			</cell>
     </list>	
 		<bg :src="navBackground" 
@@ -87,7 +93,7 @@
 					title="分晓"
 					:leftItem="leftItem"
 					@leftClick="back"
-					@centerClick="showDemo"
+					
 					:backgroundColor = 'navColor'
 					>
 					<icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
@@ -106,9 +112,9 @@ var config = weex.config;
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 import linkapi from '../../js/linkapi.js';
-import loadingView from '../components/loading-view.vue';
+// import loadingView from '../components/loading-view.vue';
 
-import lazyRender from '../../components/bui-lazy-render.vue';
+// import lazyRender from '../../components/bui-lazy-render.vue';
 
 
 	export default {
@@ -159,14 +165,12 @@ import lazyRender from '../../components/bui-lazy-render.vue';
 				this.dropdownValue = val;
 				console.log(val);
 			},
-			showDemo (){
-				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
-			},
+			
 			scan () {
 				linkapi.scanCodeHandle({},function(res) {
-					buiweex.toast(res)
+					// buiweex.toast(res)
 				},function(err) {
-					buiweex.toast(err)
+					// buiweex.toast(err)
 				});
 				// buiweex.push(buiweex.getContextPath() + "/video.weex.js");
 			},
@@ -223,7 +227,6 @@ import lazyRender from '../../components/bui-lazy-render.vue';
 				}
 			},
 			linkBanner (item){
-				console.log(item);
 				let type = this.getRecordType(item);
 				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
 					liveId : this.getMainId(item)
@@ -326,8 +329,8 @@ import lazyRender from '../../components/bui-lazy-render.vue';
 		},
 		components : {
 			rate,
-			loadingView,
-			lazyRender
+			// loadingView,
+			// lazyRender
 	
 		},
 		mounted () {

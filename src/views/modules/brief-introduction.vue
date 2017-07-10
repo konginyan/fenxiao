@@ -1,6 +1,6 @@
 <template>
 	<div class="brief-introduction-wrap">
-		<loading-view v-if="isLoading" src="/image/gray.png"></loading-view>
+		<!-- <loading-view v-if="isLoading" src="/image/gray.png"></loading-view> -->
 			<div class="course-teacher">
 				<text class="course-teacher-title">{{detail.name}}</text>
 			</div>
@@ -42,7 +42,7 @@ import rate from '../components/rate.vue';
 import ajax from '../../js/ajax.js';
 var globalEvent = weex.requireModule('globalEvent');
 import linkapi from '../../js/linkapi.js';
-import loadingView from '../components/loading-view.vue';
+// import loadingView from '../components/loading-view.vue';
 	export default {
 		data () {
 			return {
@@ -51,7 +51,7 @@ import loadingView from '../components/loading-view.vue';
 				courseId : '',
 				outline : '',
 				userList : [],
-				defaultAvatar : buiweex.getContextPath() + '/image/icon-avatar.png',
+				defaultAvatar : '/image/icon-avatar.png',
 				isLoading : true,
 
 			}
@@ -65,9 +65,10 @@ import loadingView from '../components/loading-view.vue';
 		},
 		methods:{
 			init () {
-				Promise.all([this.getAttendList(),this.getDetail()]).then(()=>{
+				Promise.race([this.getAttendList(),this.getDetail()]).then(()=>{
 					
 					this.isLoading = false;
+					this.$emit('canLoad',true);
 				})
 			},
 			getDetail () {
@@ -124,6 +125,7 @@ import loadingView from '../components/loading-view.vue';
 							})
 						}catch(e){
 							this.isLoading = false;
+							
 						}
 				});
 
@@ -155,7 +157,7 @@ import loadingView from '../components/loading-view.vue';
 	    },
 	    components : {
 	    	rate,
-	    	loadingView
+	    	// loadingView
 	    }
 	}
 </script>
