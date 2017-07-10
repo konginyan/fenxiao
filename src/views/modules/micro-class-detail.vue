@@ -6,13 +6,14 @@
                         :src="src"
                         :playstatus="videoState"
                         autoplay="false"
+                       
                         @start="onstart($event)"
 	                    @pause="onpause($event)"
 	                    @finish="onfinish($event)"
 	                    @fail="onfail($event)">
                         	
              </bui-video>
-			 <bui-image v-if="isShowPoster" :src="poster" class="poster" width="750px" height="418px" @click="posterHandler" placeholder="/dist/image/no-pic.png"></bui-image>
+			 <bui-image v-if="isShowPoster" :src="poster" class="poster" width="750px" height="418px" @click="posterHandler" placeholder="/image/no-pic.png"></bui-image>
 	        <bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
 	        <bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 		</div>
@@ -31,7 +32,7 @@
 		<div style="flex:1">
             <tab-item index="0" :currentTabIndex="currentTabIndex">
                  <scroller style="flex : 1;">
-	        		<brief-instroduction ></brief-instroduction>
+	        		<brief-instroduction  @canLoad="canLoad"></brief-instroduction>
 	        	</scroller>
             </tab-item>
 
@@ -67,8 +68,8 @@
 		</div> -->
 		
 		<div class="course-footer">
-			<button  v-if="!isAttend"  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
-			<div class="operation" v-if="isAttend">
+			<button  v-if="!isAttend && isLoad"  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
+			<div class="operation" v-if="isAttend && isLoad">
 				<div class="operation-item" @click="evaluate">
 					<icon @click="evaluate" name="icon-comment" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">评论</text>
@@ -158,16 +159,17 @@ import {fixedPic} from '../../js/tool.js';
                 firstVideoSrc : '',
                 firstWebSrc : '',
                 currentIndex : '01',
-                inner : {}
+                inner : {},
+                timer : null,
+                isStart : false,
+                isLoad : false
 			}
 		},
 		methods:{
 			back(){
 				buiweex.pop();
 			},
-			showDemo (){
-				buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
-			},
+
 			action (item) {
 				let courseId = buiweex.getPageParams().courseId;
 				item = item.title;
@@ -228,19 +230,22 @@ import {fixedPic} from '../../js/tool.js';
 				})
 			},
 			"onstart": function () {
+				this.isStart = true;
                 this.isShow = false;
-                buiweex.alert('start')
+                
                 // buiweex.alert(this.isShow);
             },
             "onpause": function (event) {
                 this.isShow = true;
-                // buiweex.alert(this.isShow);
             },
             "onfinish": function (event) {
                 this.isShow = true;
             },
             "onfail": function (event) {
                 this.isShow = true;
+            },
+            canLoad(isLoad){
+            	this.isLoad = isLoad;
             },
             evaluate () {
             	buiweex.push(buiweex.getContextPath() + "/evaluate.weex.js",{
@@ -250,9 +255,15 @@ import {fixedPic} from '../../js/tool.js';
             videoSrc (url) {
             	this.src = url;
             	this.isShowPoster = false;
-            	setTimeout(()=>{
-            		this.videoState = 'play';
-            	},500)
+            	this.videoState = 'play';
+            	/*clearInterval(this.timer);
+            	this.timer = setInterval(()=>{
+            		if (this.isStart) {
+            			clearInterval(this.timer);
+            		}else{
+            			this.videoState = 'play';
+            		}
+            	},500)*/
             	/*this.$nextTick(()=>{
             		this.videoState = 'play';
             	})*/
@@ -337,6 +348,7 @@ import {fixedPic} from '../../js/tool.js';
             	}
             	
             	this.currentTab = 'tab2';
+            	this.currentTabIndex = 1;
             	// this.learnContinue();
             },
             runTest () {

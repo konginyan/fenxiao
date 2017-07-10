@@ -1,6 +1,6 @@
 <template>
 	<div class="students-wrap">
-		<bui-header title="报名的人" :leftItem="leftItem" @leftClick="back" @centerClick="showDemo">
+		<bui-header title="报名的人" :leftItem="leftItem" @leftClick="back">
 		</bui-header>
 		<bui-content class="span1">
 			<list class="bui-list p-r" @loadmore="onLoadmore($event)" loadmoreoffset="2">
@@ -69,7 +69,7 @@ export default {
             loadingText: "正在加载更多数据...",
             page : 1,
             rows : 100,
-            defaultAvatar : buiweex.getContextPath() + '/image/icon-avatar.png'
+            defaultAvatar : '/image/icon-avatar.png'
 		}
 	},
 	mounted() {
@@ -78,9 +78,6 @@ export default {
 	methods: {
 		back() {
 			buiweex.pop();
-		},
-		showDemo() {
-			buiweex.push(buiweex.getContextPath() + "/app-view.weex.js");
 		},
 		onRefresh () {
 			 this.refreshing = true;
