@@ -1,7 +1,6 @@
 <template>
 	<div class="live-wrap">
-		<progress v-if="loading" @finish="onload($event)"></progress>
-		<bui-content v-else class="span1">
+		<bui-content v-if="!loading" class="span1">
 			<div class="video-wrap" style="height:0px">
 				<bui-video class="test-video"
 					v-if="testVideo"
@@ -103,7 +102,8 @@
 								</div>
 						</div>
 				</div>
-		</dropdown>	
+		</dropdown>
+		<progress ref="progress"></progress>	
 	</div>
 </template>
 
@@ -113,7 +113,7 @@ import ajax from '../../js/ajax.js';
 import dropdown from '../../components/bui-dropdown.vue';
 import buiVideo from '../../components/bui-video.vue';
 import linkapi from '../../js/linkapi.js';
-import {fixedPic,formatDate,coder} from "../../js/tool.js";
+import {fixedPic,formatDate,coder,extend} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 var websocket = weex.requireModule('webSocket')
 
@@ -154,11 +154,10 @@ var websocket = weex.requireModule('webSocket')
 				return html?html.replace(/<[\w\/\s]*>/g, ''):'';
 			},
 			refresh () {
-				// this.getLiveDetail();
-				// this.getReplays();
 				Promise.all([this.getLiveDetail(),this.getReplays()])
 					.then(()=>{
 						this.loading = false;
+						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
 					})
 				setInterval(()=>{
 					Promise.all([this.getLiveDetail(),this.getReplays()])
@@ -203,9 +202,6 @@ var websocket = weex.requireModule('webSocket')
 					this.isShow = true;
 					this.liveFail = true;
 					this.clearLive();
-			},
-			"onload": function (event) {
-				this.loading = false;
 			},
 			liveErrorHit(){
 				
