@@ -226,14 +226,23 @@ import linkapi from '../../js/linkapi.js';
 				}
 			},
 			linkBanner (item){
-				let type = this.getRecordType(item);
-				if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
-					liveId : this.getMainId(item)
-				});
-				else if(type === 'Course') buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js",{
-								courseId : this.getMainId(item)
-							});
-				else buiweex.push(buiweex.getContextPath() + "/train.weex.js");
+				try{
+					let type = this.getRecordType(item);
+					if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
+						liveId : this.getMainId(item)
+					});
+					else if(type === 'Course') buiweex.push(buiweex.getContextPath() + "/micro-class-detail.weex.js",{
+									courseId : this.getMainId(item)
+								});
+					else if(type === 'Train') buiweex.push(buiweex.getContextPath() + "/train.weex.js");
+					else buiweex.alert('打开失败')
+				}
+				catch (e){
+					buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
+						url : item.url,
+						name : item.name
+					});
+				}
 			},
 			rateChange (val){
 				buiweex.toast(val);
