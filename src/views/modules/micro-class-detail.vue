@@ -32,14 +32,14 @@
 		<div style="flex:1">
             <tab-item index="0" :currentTabIndex="currentTabIndex">
                  <scroller style="flex : 1;">
-	        		<brief-instroduction  @canLoad="canLoad"></brief-instroduction>
+	        		<brief-instroduction></brief-instroduction>
 	        	</scroller>
             </tab-item>
 
             <tab-item index="1" :currentTabIndex="currentTabIndex">
                 <scroller style="flex : 1;width:750px;">
-	        		<catalog :currentIndex="currentIndex"  @videoSrc="videoSrc" @webSrc="webSrc"></catalog>
-	        	</scroller>
+               	        		<catalog :currentIndex="currentIndex"  @videoSrc="videoSrc" @webSrc="webSrc"></catalog>
+               	        	</scroller>
             </tab-item>
             <tab-item index="2" :currentTabIndex="currentTabIndex">
                  <comment style="flex:1;"></comment>
@@ -120,7 +120,7 @@ import {fixedPic} from '../../js/tool.js';
 			return {
 				//当前选择的tab
 				currentTab: "tab1",
-				currentTabIndex: '0',
+				currentTabIndex: 0,
 				tabItems: [
 				    {
 				        tabId: "tab1",

@@ -162,6 +162,7 @@ var common = {
             var transform = params.transform || 'translate(0, 0)';
             var transformOrigin = params.transformOrigin || 'center center';
             var timingFunction = params.timingFunction || 'ease';
+            var delay = params.delay || 0
 
             var el = obj.$refs[id];
             animation.transition(el, {
@@ -172,7 +173,7 @@ var common = {
                 },
                 duration: duration || 0,
                 timingFunction: timingFunction,
-                delay: 0
+                delay: delay
             }, function () {
 
             })
