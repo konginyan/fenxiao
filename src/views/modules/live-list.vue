@@ -128,6 +128,7 @@ export default {
         this.refreshing = false;
         this.refreshIcon = "icon-todown";
         this.refreshText = "刷新失败";
+        this.loading=false;
       })
     },
     getPicture (src) {

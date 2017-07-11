@@ -70,11 +70,11 @@
 					<text class="rep-title bobr">精彩回放</text>
 					<div class="rep-block">
 						<scroller scroll-direction="horizontal" class="rep-list">
-							<div :key="item" v-for="item in replays">
-								<div @click="playReplay(item.rank,item.url)"
+							<div :key="(item,index)" v-for="(item,index) in replays">
+								<div @click="playReplay(index+1,item.url)"
 								class="rep-circle"
-								:class="[item.rank===replayindex?'rep-circle-act':'']">
-									<text class="rep-index" :class="[item.rank===replayindex?'rep-index-act':'']">{{item.rank}}</text>
+								:class="[index+1===replayindex?'rep-circle-act':'']">
+									<text class="rep-index" :class="[index+1===replayindex?'rep-index-act':'']">{{index+1}}</text>
 								</div>
 							</div>
 						</scroller>
