@@ -1,10 +1,11 @@
 <template>
   <div :style="wrapStyle">
-    <div :style="progressStyle"></div>
+    <div ref="progress" :style="progressStyle"></div>
   </div>
 </template>
 
 <script>
+import {extend} from '../../js/tool.js';
 export default {
   props : {
     max : {
@@ -23,14 +24,6 @@ export default {
       type: String,
       default: '#21b24b'
     },
-    config: {
-      type: Array,
-      default: [
-        {each: 20, time: 15, limit: 40},
-        {each: 5, time: 15, limit: 60},
-        {each: 1, time: 15, limit: 100}
-      ]
-    },
     marginTop: {
       type : String,
       default : '0px'
@@ -45,36 +38,9 @@ export default {
       }
   },
   methods : {
-    load () {
-      this.next(0);
+    start(){
+      extend(this, {id:'progress', width:350, duration:1000})
     },
-    run (each, time, limit) {
-      this.each = each;
-      this.time = time;
-      this.limit = limit;
-      return new Promise((resolve,reject)=>{
-        this.timer = setInterval(()=>{
-          this.progress += this.each;
-          if(this.progress>=this.limit) {
-            clearInterval(this.timer);
-            resolve();
-          }
-        }, this.time)
-      })
-    },
-    next (index){
-      if(index<this.config.length){
-        this.run(this.config[index].each,this.config[index].time,this.config[index].limit)
-          .then(()=>{
-            this.timer = null;
-            if(this.progress>=this.max) {
-              this.$emit('finish',this.max);
-              console.log('finish')
-            }
-            else this.next(index+1);
-          })
-      }
-    }
   },
   computed : {
     progressStyle () {
@@ -88,22 +54,15 @@ export default {
       return {
         'flex': 1,
         'position': 'absolute',
+        'width': '750px',
         'top': this.marginTop
       }
     }
   },
   mounted () {
-    this.load();
+    this.start();
   }
 }
 </script>
-
-<style>
-.progress-wrap{
-  flex: 1;
-  position: absolute;
-  top: 0;
-}
-</style>
 
 
