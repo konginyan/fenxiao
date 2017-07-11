@@ -114,3 +114,26 @@ export function getDateDiff(startDate){
     return dates;    
 }
 
+export function extend(obj, params, callback){
+    var animation = weex.requireModule('animation');
+    var id = params.id;
+    var duration = params.duration;
+    var width = params.width;
+    var opacity = params.opacity || '1';
+    var delay = params.delay;
+    var transformOrigin = params.transformOrigin || 'left center';
+    var timingFunction = params.timingFunction || 'ease';
+    var el = obj.$refs[id];
+
+    animation.transition(el, {
+        styles: {
+            opacity: opacity,
+            width: width
+        },
+        duration: duration || 0,
+        timingFunction: timingFunction,
+        delay: delay || 0
+    }, function () {
+        callback && callback();
+    });
+}

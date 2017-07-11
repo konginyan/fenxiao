@@ -5,7 +5,7 @@
       @leftClick = "back"	
       >
     </bui-header>
-    <progress v-if="loading" @finish="onload" :marginTop="getTop()"></progress>
+    <progress ref="progress" :marginTop="getTop()"></progress>
     <bui-content v-if="lives.length>0 && !loading" class="span1">
       <list class="bui-list">
         <refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
@@ -55,7 +55,7 @@
 <script>
 import buiweex from "../../js/buiweex.js";
 import ajax from "../../js/ajax.js";
-import {fixedPic, departUrl, secondToTime, formatDate} from "../../js/tool.js";
+import {fixedPic, departUrl, secondToTime, formatDate, extend} from "../../js/tool.js";
 import gif from "../components/gif.vue"
 export default {
   components:{
@@ -118,9 +118,10 @@ export default {
         else res.r.forEach((live)=>{
           this.lives.push(live);
         })
-        this.loading=false;
         this.refreshIcon = "icon-checkbox-on";
         this.refreshText = "刷新成功";
+        this.loading = false;
+        extend(this.$refs.progress,{id:'progress', width:750, duration:1000, opacity:'0'});
         setTimeout(()=>{
           this.refreshing = false;
         },1000)
@@ -128,7 +129,8 @@ export default {
         this.refreshing = false;
         this.refreshIcon = "icon-todown";
         this.refreshText = "刷新失败";
-        this.loading=false;
+        this.loading = false;
+        extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
       })
     },
     getPicture (src) {
@@ -165,9 +167,6 @@ export default {
                 else return 2;
       }
     },
-    "onLoading": function (e) {
-      this.getNextPage();
-    },
     //refresh下拉放手后的文字与图标
     "onRefresh": function (e) {
         this.refreshing = true;
@@ -185,9 +184,6 @@ export default {
           this.refreshIcon = "icon-toup";
           this.refreshText = "松开即可刷新...";
       }
-    },
-    "onload": function (event) {
-      this.loading = false;
     },
     getNextPage () {
       this.showLoading = true;
