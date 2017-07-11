@@ -1,6 +1,6 @@
 <template>
 	<div  @viewappear="onappear">
-		 <!--<loading-view v-if="isLoading" src="/image/gray.png"></loading-view> -->
+		 <loading-view v-if="isLoading" src="/image/gray.png"></loading-view> 
 		<list class="span1" @scroll="onScroll">
 			<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
@@ -9,7 +9,7 @@
 				</refresh>
 
 			<cell>
-				<div v-if="recommendList.length===0"><bui-image width="750px" height="375px" src="/image/banner.png"></bui-image></div>
+				<!-- <div v-if="recommendList.length===0"><bui-image width="750px" height="375px" src="/image/banner.png"></bui-image></div> -->
 				<slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
 						
@@ -35,9 +35,9 @@
 						<text class="course-title">培训班</text>
 					</div>
 				</div>
-				<div class="trailer-wrap" v-if="lastact.length === 0">
+				<!-- <div class="trailer-wrap" v-if="lastact.length === 0">
 					<bui-image src="/image/trailer.png" width="702px" height="236px"></bui-image>
-				</div>
+				</div> -->
 				<div :key="item" class="trailer-wrap" v-for="item in lastact">
 							<bui-image @click="linkBanner(item)" src="/image/trailer1.png" width="702px" height="236px"></bui-image>
 							<div class="trailer-inner">
@@ -51,8 +51,8 @@
 								</div>
 							</div>
 				</div>
-
-			
+				
+							
 				<div class="select-wrap" style="width:750px;height:100px;">
 					<div class="h-line"></div>
 					<div class="select-content">
@@ -61,13 +61,13 @@
 					</div>
 					<div class="h-line"></div>
 				</div>
-
-				<div class="course-list" v-if="hottestList.length === 0">
+				
+				<!-- <div class="course-list" v-if="hottestList.length === 0">
 					<div class="course-list-item" v-for="item in 2">
 						<bui-image width="750px" height="180px" src="/image/default-item.png" ></bui-image>
 					</div>
-				</div>
-
+				</div> -->
+				
 				<div class="course-list">
 					<div :key="item" class="course-list-item" v-for="item in hottestList" @click="hottestLink(item.courseId)">
 						<div class="avatar-wrap">
@@ -112,7 +112,7 @@ var config = weex.config;
 import ajax from '../../js/ajax.js';
 import {fixedPic,formatDate,departUrl} from '../../js/tool.js';
 import linkapi from '../../js/linkapi.js';
-// import loadingView from '../components/loading-view.vue';
+import loadingView from '../components/loading-view.vue';
 
 // import lazyRender from '../../components/bui-lazy-render.vue';
 
@@ -321,7 +321,7 @@ import linkapi from '../../js/linkapi.js';
 		},
 		components : {
 			rate,
-			// loadingView,
+			loadingView,
 			// lazyRender
 	
 		},
