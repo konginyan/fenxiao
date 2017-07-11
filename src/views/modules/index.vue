@@ -9,9 +9,10 @@
 				</refresh>
 
 			<cell>
+				<div v-if="recommendList.length===0"><bui-image width="750px" height="375px" src="/image/banner.png"></bui-image></div>
 				<slider class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1" @scroll="scrollHandler"
 								@change="changeHandler" infinite="false" >
-						<div v-if="recommendList.length==0"><bui-image width="750px" height="375px" src="/image/banner.png"></bui-image></div>
+						
 						<div :key="item" class="bui-slider-pages" v-for="item in recommendList" >
 							<div class="slider-wrap">
 								<bui-image class="default-slider" src="/image/no-pic.png" @click="linkBanner(item)"></bui-image>
@@ -20,8 +21,7 @@
 						</div>
 						<indicator class="bui-slider-indicator small"></indicator>
 				</slider>
-
-				<div class="course-menu">
+				<div class="course-menu" style="width:750px;height:200px;">
 					<div class="course-item" @click="microClass">
 						<bui-image @click="microClass" width="90px" height="90px" src="/image/icon-micro.png" ></bui-image>
 						<text class="course-title">微课</text>
@@ -36,24 +36,24 @@
 					</div>
 				</div>
 				<div class="trailer-wrap" v-if="lastact.length === 0">
-					<bui-image src="/image/trailer.png" width="702" height="236"></bui-image>
+					<bui-image src="/image/trailer.png" width="702px" height="236px"></bui-image>
 				</div>
 				<div :key="item" class="trailer-wrap" v-for="item in lastact">
-							<bui-image @click="linkBanner(item[0])" src="/image/trailer1.png" width="702" height="236"></bui-image>
+							<bui-image @click="linkBanner(item)" src="/image/trailer1.png" width="702px" height="236px"></bui-image>
 							<div class="trailer-inner">
 								<div class="avatar-wrap">
-									<bui-image class="default-pic" src="/image/no-pic.png" @click="linkBanner(item[0])"></bui-image>
-									<bui-image @click="linkBanner(item[0])" :src="fixedPicture(item[0].picture)" class="course-item-img"></bui-image>
+									<bui-image class="default-pic" src="/image/no-pic.png" @click="linkBanner(item)"></bui-image>
+									<bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="course-item-img"></bui-image>
 								</div>
 								<div class="trailer-content">
-									<text class="trailer-title">{{item[0].name}}</text>
-									<text class="trailer-date">{{fiexedDate(item[0].created_time)}}</text>
+									<text class="trailer-title">{{item.name}}</text>
+									<text class="trailer-date">{{fiexedDate(item.created_time)}}</text>
 								</div>
 							</div>
 				</div>
 
 			
-				<div class="select-wrap" >
+				<div class="select-wrap" style="width:750px;height:100px;">
 					<div class="h-line"></div>
 					<div class="select-content">
 						<text class="select-title">精选课程</text>
@@ -134,7 +134,6 @@ import linkapi from '../../js/linkapi.js';
 				refreshText: "下拉刷新...", 
 				dropdownValue : '请选择',
 				isLoading : true,
-				testPic : '',
 				currentIndex : 0
 			}
 		},
@@ -284,9 +283,9 @@ import linkapi from '../../js/linkapi.js';
 				return ajax({
 					url : 'ba/api/homepage/lastact',
 				}).then((res) =>{
-					let tempArr = [];
-					tempArr.push(res.r);
-					this.lastact = tempArr;
+					/*let tempArr = [];
+					tempArr.push(res.r);*/
+					this.lastact = res.r;
 				},(errorT,status) =>{
 
 				})
@@ -307,14 +306,7 @@ import linkapi from '../../js/linkapi.js';
 				this.getRecommend();
 				this.getLastact();*/
 
-				try{
-					linkapi.getLoginInfo((res)=>{
-
-						this.testPic = res.picture;
-					})
-				}catch(e){
-						
-					}
+				
 
 			},
 			onappear () {
