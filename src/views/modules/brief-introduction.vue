@@ -1,5 +1,5 @@
 <template>
-	<div class="brief-introduction-wrap">
+	<div class="brief-introduction-wrap" ref="brief-introduction-wrap" style="opacity:0;">
 		<!-- <loading-view v-if="isLoading" src="/image/gray.png"></loading-view> -->
 			<div class="course-teacher">
 				<text class="course-teacher-title">{{detail.name}}</text>
@@ -65,10 +65,11 @@ import linkapi from '../../js/linkapi.js';
 		},
 		methods:{
 			init () {
-				Promise.race([this.getAttendList(),this.getDetail()]).then(()=>{
-					
+				Promise.all([this.getAttendList(),this.getDetail()]).then(()=>{
+					buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
 					this.isLoading = false;
-					this.$emit('canLoad',true);
+				},()=>{
+					buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
 				})
 			},
 			getDetail () {
@@ -105,9 +106,10 @@ import linkapi from '../../js/linkapi.js';
 						let arrLearnBy = [];
 						res.r.forEach((item) => {
 							arrLearnBy.push(item.learnBy);
-						});
-						try{
 
+						});
+
+						try{
 							linkapi.getUserInfo(arrLearnBy,(res)=> {
 								let tempArr = [];
 								res.forEach(item=>{
@@ -120,12 +122,15 @@ import linkapi from '../../js/linkapi.js';
 								this.userList = tempArr;
 								resolve(this.userList);
 								
+								
 							},(err)=>{
-								reject(err);
+								this.userList = [];
+								reject(this.userList);
+								
 							})
 						}catch(e){
 							this.isLoading = false;
-							
+
 						}
 				});
 
