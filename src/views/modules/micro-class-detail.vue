@@ -67,9 +67,9 @@
 	        </tab-item>
 		</div> -->
 		
-		<div class="course-footer">
-			<button  v-if="!isAttend && isLoad"  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
-			<div class="operation" v-if="isAttend && isLoad">
+		<div class="course-footer" ref="course-footer" style="opacity:0;">
+			<button  v-if="!isAttend "  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
+			<div class="operation" v-if="isAttend ">
 				<div class="operation-item" @click="evaluate">
 					<icon @click="evaluate" name="icon-comment" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">评论</text>
@@ -162,7 +162,7 @@ import {fixedPic} from '../../js/tool.js';
                 inner : {},
                 timer : null,
                 isStart : false,
-                isLoad : false
+
 			}
 		},
 		methods:{
@@ -211,7 +211,7 @@ import {fixedPic} from '../../js/tool.js';
             },
 			getDetail () {
 				let courseId = buiweex.getPageParams().courseId;
-				ajax({
+				return ajax({
 					url : 'ba/api/course/show',
 					data : {
 						id : courseId,
@@ -244,9 +244,7 @@ import {fixedPic} from '../../js/tool.js';
             "onfail": function (event) {
                 this.isShow = true;
             },
-            canLoad(isLoad){
-            	this.isLoad = isLoad;
-            },
+
             evaluate () {
             	buiweex.push(buiweex.getContextPath() + "/evaluate.weex.js",{
             		courseId : buiweex.getPageParams().courseId
@@ -371,7 +369,7 @@ import {fixedPic} from '../../js/tool.js';
             	}
             },
             getCatalog() {
-				ajax({
+				return ajax({
 					url : 'ba/api/course/catalogweex',
 					data : {
 						id : buiweex.getPageParams().courseId,
@@ -411,6 +409,16 @@ import {fixedPic} from '../../js/tool.js';
 					
 				})
 			},
+			init(){
+				Promise.all([this.getDetail(),this.getCatalog()]).then(()=>{
+					buiweex.show(this, {id: 'course-footer', duration: '300'});
+
+				},()=>{
+					buiweex.show(this, {id: 'course-footer', duration: '300'});
+				});
+				/*this.getDetail();
+	    		this.getCatalog();*/
+			}
 		},
 		created (){
 			
@@ -420,8 +428,8 @@ import {fixedPic} from '../../js/tool.js';
 	        });
 	    },
 	    mounted (){
-	    	this.getDetail();
-	    	this.getCatalog();
+	    	this.init();
+	    	
 	    },
 	    computed : {
 	    	itemStyle () {

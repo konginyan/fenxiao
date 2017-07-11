@@ -33,7 +33,9 @@
 	   				</div>
 	   				
 				</cell>
-
+				<cell>
+					<prompt v-if="isShowPrompt" text="没有更多微课" src="/image/empty-micro.png"></prompt>
+				</cell>
 				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
 				    <text class="bui-loading-indicator">{{loadingText}}</text>
 				</loading> -->
@@ -41,7 +43,7 @@
                     <text class="bui-loading-indicator">{{loadingText}}</text>
                 </cell>
 			</list>
-			<prompt v-if="isShowPrompt" text="没有更多微课" src="/image/empty-micro.png"></prompt>
+			
 		</bui-content>
 
 		<filter-dialog v-if="isShow"  top="180px">

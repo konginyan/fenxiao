@@ -5,9 +5,9 @@ let url,ssoUrl,username,password;
 
 if (debug) {
 	url = 'http://ba.depts.bingosoft.net:8088/';
-	ssoUrl = 'https://10.201.76.141/sso/';
-	username = '13751876401';
-	password = '123456';
+	ssoUrl = 'https://link.bingocc.cc:5443/sso';
+	username = '13640427907';
+	password = 'bingo@123';
 } else {
 	url = 'https://ba1.bingocc.com:18088/';
 	ssoUrl = 'https://www.bingolink.biz/sso';
