@@ -19,12 +19,11 @@
 				<cell class="comment-list" v-for="item in commentList">
 					<div class="comment-item" >
 						<div class="comment-inner">
-							<bui-image class="avatar" :src="item.picture || ''" :placeholder="defaultAvatar"></bui-image>
+							<bui-image class="avatar" width="74" height="74" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
 							<div class="reader-wrap">
-								<text class="readers">{{item.userName || '跨公司用户'}}</text>
+								<text class="readers">{{item.userName}}</text>
 								<div class="date-wrap">
 									<text class="date">{{fixedDate(item.updatedTime)}}</text>
-									<!-- <text class="delete" @click="deleteComment(item)">删除</text> -->
 								</div>
 							</div>
 							<rate :disabled="true" :value="item.score"></rate>
@@ -88,7 +87,7 @@ import linkapi from '../../js/linkapi.js';
                 refreshText: "下拉刷新...",
                 loadingText: "正在加载更多数据...",
                 isShowPrompt : false,
-                defaultAvatar : buiweex.getContextPath() + '/image/icon-avatar.png',
+                defaultAvatar : '/image/icon-avatar.png',
 			}
 		},
 		mounted(){
@@ -121,21 +120,26 @@ import linkapi from '../../js/linkapi.js';
 	
 					try{
 						linkapi.getUserInfo(arrCommentBy,(resp)=> {
-							
+
 							arrTemp.forEach(item=>{
 								resp.forEach(inner => {
+
 									if(item.commentBy === inner.userId){
-										item.picture = inner.picture;
-										item.userName = inner.userName;
-										item.orgName = inner.orgName;
+										item.picture = inner.picture || '';
+										item.userName = inner.userName || '';
+										item.orgName = inner.orgName || '';
 									}else{
 										item.picture = '';
 										item.userName = '跨公司用户';
 										item.orgName = '';
 									}
+									if (!item.content) {
+										item.content ='未作出评论';
+									}
 								});
 								
 							});
+							
 							this.commentList = arrTemp;
 							
 							if (res.r.length === 0) {
@@ -152,7 +156,9 @@ import linkapi from '../../js/linkapi.js';
 							
 						})
 					}catch(e){
-						this.commentList = res.r;
+						buiweex.alert('ff')
+						this.commentList = res.r || [];
+
 						if (this.commentList.length === 0) {
 							this.isShowPrompt = true;
 						}else{
@@ -197,15 +203,17 @@ import linkapi from '../../js/linkapi.js';
 							
 							arrTemp.forEach(item=>{
 								resp.forEach(inner => {
+
 									if(item.commentBy === inner.userId){
-										item.picture = inner.picture;
-										item.userName = inner.userName;
-										item.orgName = inner.orgName;
+										item.picture = inner.picture || '';
+										item.userName = inner.userName || '';
+										item.orgName = inner.orgName || '';
 									}else{
 										item.picture = '';
 										item.userName = '跨公司用户';
 										item.orgName = '';
 									}
+									item.content = item.content ? item.content : '未作出评论';
 								});
 								
 							});

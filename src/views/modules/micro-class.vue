@@ -313,6 +313,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 
             },
             fixedPicture (source) {
+            	console.log(fixedPic(source));
             	return fixedPic(source);
             },
             linkDetail (courseId) {

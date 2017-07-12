@@ -45,7 +45,7 @@
             </cell>
 
             <cell ref="temp2" class="trailer-wrap" v-if="lastact.length == 0">
-               <bui-image src="/image/trailer.png" width="702px" height="236px"></bui-image>
+               <bui-image src="/image/trailer.png" width="702px" height="260px"></bui-image>
            </cell>
 
             <cell>
@@ -80,8 +80,8 @@
                     <div class="h-line"></div>
                 </div>
             </cell>
-			<cell ref="temp3" v-for="item in 2" v-if="hottestList.length === 0">
-				<bui-image class="course-list-item" width="750px" height="220px" src="/image/default-item.png" style="padding:20px;"></bui-image>
+			<cell  ref="temp3" v-for="item in 2" v-if="hottestList.length === 0">
+				<bui-image  width="702px" height="164px" src="/image/default-item.png" style="margin-left:24px;margin-right:24px;margin-bottom:24px;"></bui-image>
 			</cell>
             <cell >
                 <div class="course-list" ref="course" >
@@ -91,7 +91,7 @@
                             <bui-image class="default-pic" src="/image/no-pic.png"
                                        @click="hottestLink(item.courseId)"></bui-image>
                             <bui-image class="course-item-img" :src="fixedPicture(item.picture)"
-                                       @click="hottestLink(item.courseId)"></bui-image>
+                                       @click="hottestLink(item.courseId)"></bui-image>           
                         </div>
                         <div class="course-content">
                             <text class="course-item-title">{{item.name}}</text>
@@ -273,10 +273,9 @@
                 return ajax({
                     url: 'ba/api/course/gethottestlist'
                 }).then((res) => {
-                    
                     this.hottestList = res.r;
                 }, (errorT, status) => {
-
+                	
                 })
             },
             hottestLink (couseId) {
@@ -296,10 +295,10 @@
                 return ajax({
                     url: 'ba/api/homepage/recommend',
                 }).then((res) => {
-                   
+  
                     this.recommendList = res.r;
                 }, (errorT, status) => {
-
+                	 
                 })
             },
             getLastact () {
