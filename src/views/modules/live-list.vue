@@ -17,7 +17,10 @@
         <cell :key="live" v-for="live in lives">
           <div class="live">
             <div class="live-detail">
-              <bui-image class="live-img" :src="getPicture(live.picture)" @click="toLive(live)"></bui-image>
+              <div class="live-wrap">
+                <bui-image class="default-live" src="/image/no-pic.png" @click="toLive(live)"></bui-image>
+                <bui-image class="live-pic" :src="getPicture(live.picture)" @click="toLive(live)"></bui-image>
+              </div>
               <text class="live-name">{{live.name}}</text>
               <text class="live-book-count">{{getCount(live)}}</text>
             </div>
@@ -167,11 +170,14 @@ export default {
                 else return 2;
       }
     },
+    "onLoading": function(e) {
+      this.getNextPage();
+    },
     //refresh下拉放手后的文字与图标
     "onRefresh": function (e) {
-        this.refreshing = true;
-        this.page = 1;
-        this.getLives();
+      this.refreshing = true;
+      this.page = 1;
+      this.getLives();
     },
     //refresh下拉放手前的文字与图标
     "onPullingdown": function (e) {

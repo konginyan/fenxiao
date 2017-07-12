@@ -18,7 +18,7 @@
 				    <text class="bui-refresh-indicator">{{refreshText}}</text>
 				</refresh>
 				
-				<cell class="course-list" v-for="(item,index) in pageList">
+				<cell class="course-list" :key="(item,index)" v-for="(item,index) in pageList">
 				   <div class="course-list-item" :class="[index===0?'no-border':'']"  @click="linkDetail(item.courseId)">
 				   		<div class="avatar-wrap">
 				   			<bui-image class="default-pic" src="/image/no-pic.png" @click="linkDetail(item.courseId)"></bui-image>
@@ -55,7 +55,7 @@
 					
 					<scroller  style="height: 500px;">
 					  <div class="micro-class-filter">
-						<div class="micro-class-filter-item" v-for="(item,index) in filterList">
+						<div class="micro-class-filter-item" :key="(item,index)" v-for="(item,index) in filterList">
 							<button  @click="filterBtn(item.name,index,item.categoryId)" type="default"  :value="item.name"  class="filter-btn" :class="[index === currentIndex ? 'filter-active' : '']" ></button>
 						</div>
 						</div>
