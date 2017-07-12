@@ -26,6 +26,12 @@
 				</bui-video>
 				<bg v-if="bgSrc" :src="bgSrc" :bgStyle="bgStyle">
 					<div class="overlay"></div>
+					<div v-if="errorShow" class="msg-block">
+						<text class="notStart-text">网络出现异常</text>
+					</div>
+					<div v-if="flvErr" class="msg-block">
+						<text class="notStart-text">ios 暂不支持 flv 格式视频播放</text>
+					</div>
 					<div v-if="liveDetail.liveStatus===0" class="msg-block">
 						<text class="notStart-text">直播未开始</text>
 						<text class="notStart-text">{{getDate(liveDetail.startTime)}}</text>
@@ -37,7 +43,7 @@
 					<div v-if="liveDetail.liveStatus===2 && replays.length===0" class="msg-block">
 						<text class="notStart-text">直播已结束</text>				
 					</div>
-					<div v-if="liveDetail.liveStatus===2 && replays.length>0" class="msg-block">
+					<div v-if="liveDetail.liveStatus===2 && replays.length>0 && !flvErr" class="msg-block">
 						<bui-image class="play-btn" src="/image/play.png" @click="playReplay(1,replays[0].url)"></bui-image>			
 					</div>
 				</bg>
@@ -125,6 +131,8 @@ var websocket = weex.requireModule('webSocket')
 				},
 				loading: true,
 				isShow: true,
+				errorShow: false,
+				flvErr: false,
 				videoSrc: null,
 				testVideo: null,
 				bgSrc: null,
@@ -158,6 +166,8 @@ var websocket = weex.requireModule('webSocket')
 					.then(()=>{
 						this.loading = false;
 						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
+					},()=>{
+						
 					})
 				setInterval(()=>{
 					Promise.all([this.getLiveDetail(),this.getReplays()])
@@ -215,7 +225,6 @@ var websocket = weex.requireModule('webSocket')
 					}
 				}).then((res) =>{
 					this.liveDetail = res.r;
-					console.log(this.liveDetail.videoHls);
 					this.liveDetail.outline = this.clearDOM(this.liveDetail.outline);
 					if(this.firstin&&this.liveDetail.liveStatus===1){
 						this.playLive();
@@ -226,6 +235,8 @@ var websocket = weex.requireModule('webSocket')
 						this.testLive();
 					}
 				},(errorT,status) =>{
+					this.bgSrc = this.getPicture(this.liveDetail.picture);
+					this.errorShow = true;
 				})
 			},
 			testLive(){
@@ -265,10 +276,14 @@ var websocket = weex.requireModule('webSocket')
 				})
 			},
 			playReplay(index,url) {
-				this.videoSrc = url;
-				this.replayindex = index;
-				this.liveFail = false;
-				this.bgSrc = null;
+				if(url.slice(-4)==='.flv'&&weex.config.env.platform === 'iOS') this.flvErr = true;
+				else {
+					this.flvErr = false;
+					this.videoSrc = url;
+					this.replayindex = index;
+					this.liveFail = false;
+					this.bgSrc = null;
+				}
 			},
 			closeDropdown () {
 				this.isShowDropdown = false;
