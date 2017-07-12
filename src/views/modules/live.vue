@@ -278,6 +278,7 @@ var websocket = weex.requireModule('webSocket')
 			playReplay(index,url) {
 				if(url.slice(-4)==='.flv'&&weex.config.env.platform === 'iOS') this.flvErr = true;
 				else {
+					this.flvErr = false;
 					this.videoSrc = url;
 					this.replayindex = index;
 					this.liveFail = false;
