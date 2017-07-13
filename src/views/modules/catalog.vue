@@ -119,6 +119,7 @@ var globalEvent = weex.requireModule('globalEvent');
 					this.catalogList = res.r || [];
 					// console.log(this.catalogList);
 					
+					
 				},(errorT,status) =>{
 					
 				})

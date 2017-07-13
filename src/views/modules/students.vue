@@ -122,9 +122,9 @@ export default {
 						let tempArr = [];
 						res.forEach(item => {
 							let obj = {
-								url : item.picture,
-								name : item.userName,
-								userId : item.userId,
+								url : item.picture || '',
+								name : item.userName || '',
+								userId : item.userId || '',
 								orgName  : item.orgName || ''
 							}
 							tempArr.push(obj);
@@ -175,9 +175,9 @@ export default {
 						// buiweex.alert(arrLearnBy)
 						res.forEach(item => {
 							let obj = {
-								url : item.picture,
-								name : item.userName,
-								userId : item.userId
+								url : item.picture || '',
+								name : item.userName || '',
+								userId : item.userId || ''
 							}
 							tempArr.push(obj);
 						})

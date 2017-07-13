@@ -9,7 +9,8 @@
             </refresh>
 
             <cell>
-                <slider ref="recommend" style="opacity: 0; width: 750px;height: 375px;" class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1"
+            	<bui-image ref="temp1" v-if="recommendList.length === 0"  src="/image/banner.png"  style="width: 750px;height: 375px;"></bui-image>
+                <slider ref="recommend"  v-if="recommendList.length !== 0"  style="width: 750px;height: 375px;" class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1"
                         @scroll="scrollHandler"
                         @change="changeHandler" infinite="false">
                     <div :key="item" class="bui-slider-pages" v-for="item in recommendList">
@@ -25,7 +26,7 @@
             </cell>
 
             <cell>
-                <div class="course-menu" ref="course-menu" style="width:750px;height:200px;opacity: 0;">
+                <div class="course-menu" ref="course-menu" style="width:750px;height:200px;opacity:1;">
                     <div class="course-item" @click="microClass">
                         <bui-image @click="microClass" width="90px" height="90px"
                                    src="/image/icon-micro.png"></bui-image>
@@ -43,12 +44,13 @@
                 </div>
             </cell>
 
-           <!--  <cell class="trailer-wrap" v-if="lastact.length == 0">
-               <bui-image src="/image/trailer.png" width="702px" height="236px"></bui-image>
-           </cell> -->
+            <cell ref="temp2" class="trailer-wrap" v-if="lastact.length == 0">
+               <bui-image src="/image/trailer.png" width="702px" height="260px"></bui-image>
+           </cell>
 
             <cell>
-                <div ref="lastact" style="opacity: 0; height: 260px;">
+
+                <div ref="lastact" v-if="lastact.length !== 0" style=" height: 260px;">
                     <div :key="item" class="trailer-wrap" v-for="item in lastact">
                         <bui-image @click="linkBanner(item)" src="/image/trailer1.png" width="702px"
                                    height="236px"></bui-image>
@@ -69,7 +71,7 @@
             </cell>
 
             <cell>
-                <div ref="select-wrap" class="select-wrap" style="width:750px;height:100px;opacity:0;">
+                <div ref="select-wrap" class="select-wrap" style="width:750px;height:100px;">
                     <div class="h-line"></div>
                     <div class="select-content">
                         <text class="select-title">精选课程</text>
@@ -78,16 +80,18 @@
                     <div class="h-line"></div>
                 </div>
             </cell>
-
-            <cell>
-                <div class="course-list" ref="course" style="opacity: 0">
+			<cell  ref="temp3" v-for="item in 2" v-if="hottestList.length === 0">
+				<bui-image  width="702px" height="164px" src="/image/default-item.png" style="margin-left:24px;margin-right:24px;margin-bottom:24px;"></bui-image>
+			</cell>
+            <cell >
+                <div class="course-list" ref="course" >
                     <div :key="item" class="course-list-item" v-for="item in hottestList"
                          @click="hottestLink(item.courseId)">
                         <div class="avatar-wrap">
                             <bui-image class="default-pic" src="/image/no-pic.png"
                                        @click="hottestLink(item.courseId)"></bui-image>
                             <bui-image class="course-item-img" :src="fixedPicture(item.picture)"
-                                       @click="hottestLink(item.courseId)"></bui-image>
+                                       @click="hottestLink(item.courseId)"></bui-image>           
                         </div>
                         <div class="course-content">
                             <text class="course-item-title">{{item.name}}</text>
@@ -269,10 +273,9 @@
                 return ajax({
                     url: 'ba/api/course/gethottestlist'
                 }).then((res) => {
-                    
                     this.hottestList = res.r;
                 }, (errorT, status) => {
-
+                	
                 })
             },
             hottestLink (couseId) {
@@ -292,10 +295,10 @@
                 return ajax({
                     url: 'ba/api/homepage/recommend',
                 }).then((res) => {
-                   
+  
                     this.recommendList = res.r;
                 }, (errorT, status) => {
-
+                	 
                 })
             },
             getLastact () {
@@ -317,11 +320,21 @@
             },
             init () {
             	Promise.all([this.getRecommend(),this.getLastact(),this.getHottestList()]).then(()=>{
-            		buiweex.show(this, {id: 'course', duration: '300'});
-            		buiweex.show(this, {id: 'recommend', duration: '300'});
-            		buiweex.show(this, {id: 'lastact', duration: '300'});
-            		buiweex.show(this, {id: 'course-menu', duration: '300'});
-            		buiweex.show(this, {id: 'select-wrap', duration: '300'});
+            		/*buiweex.show(this, {id: 'temp1',opacity:'0'});
+            		buiweex.show(this, {id: 'temp2',opacity:'0'});
+            		buiweex.show(this, {id: 'temp3',opacity:'0'});
+            		buiweex.show(this, {id: 'select-wrap',opacity:'0'});
+            		buiweex.show(this, {id: 'course-menu',opacity:'0'});
+
+
+
+            		buiweex.show(this, {id: 'recommend',duration:300, delay: 0});
+ 					buiweex.show(this, {id: 'course-menu',duration:300, delay: 200});
+            		buiweex.show(this, {id: 'lastact',duration:300, delay: 300});
+            		buiweex.show(this, {id: 'select-wrap',duration:300, delay: 400});
+            		buiweex.show(this, {id: 'course',duration:300, delay: 500});*/
+            		
+            	},()=>{
             		
             	});
                 /*this.getRecommend();

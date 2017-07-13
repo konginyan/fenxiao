@@ -14,11 +14,11 @@
 				<div class="learn-people" @click="students">
 					<scroller style="height:100px;" scroll-direction="horizontal" show-scrollbar=false class="learn-people-list" >
 						<div class="learn-item"  v-for="item in userList">
-							<!-- <div class="avatar"> -->
+							<div class="avatar">
 								<!-- <text class="avatar-name">张</text> -->
-
+								
 								<bui-image width="54px" height="54px"  @click="students" class="avatar-pic" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
-							<!-- </div> -->
+							</div>
 							<text class="learn-name">{{item.name}}</text>
 						</div>
 					</scroller>
@@ -114,8 +114,8 @@ import linkapi from '../../js/linkapi.js';
 								let tempArr = [];
 								res.forEach(item=>{
 									let obj = {
-										picture : item.picture,
-										name : item.userName
+										picture : item.picture || '',
+										name : item.userName || ''
 									}
 									tempArr.push(obj);
 								})
