@@ -10,7 +10,7 @@
 		<filter-bar :filterItems="filterItems" @change="filterChange"></filter-bar>
 		
 		<bui-content class="span1">
-			<list class="bui-list p-r" @loadmore="onLoadmore($event)" loadmoreoffset="2">
+			<list class="bui-list p-r">
 				<!--刷新组件-->
 				<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
@@ -36,12 +36,11 @@
 				<cell>
 					<prompt v-if="isShowPrompt" text="没有更多微课" src="/image/empty-micro.png"></prompt>
 				</cell>
-				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
-				    <text class="bui-loading-indicator">{{loadingText}}</text>
-				</loading> -->
-				<cell class="bui-loading" v-if="showLoading">
-                    <text class="bui-loading-indicator">{{loadingText}}</text>
-                </cell>
+
+                <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+                    <text class="bui-loading-indicator" v-if="showLoading">{{loadingText}}</text>
+                    <loading-indicator class="bui-indicator"></loading-indicator>
+                </loading>
 			</list>
 			
 		</bui-content>
@@ -215,7 +214,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	this.filterName = name;
 	        	this.currentIndex = index;
 	        	this.categoryId = categoryId;
-						this.isSelected = true;
+				this.isSelected = true;
 	        },
 	        resetFilter(){
 	        	this.filterName = '筛选';
@@ -243,12 +242,16 @@ import {unicode,fixedPic} from '../../js/tool.js';
             			this.isShowPrompt = false;
             		}
             		this.refreshIcon = "icon-checkbox-on";
-            		this.refreshText = "刷新成功";
-								this.refreshing = false;
+	            	this.refreshText = "刷新成功";
+            		setTimeout(()=>{
+            			
+						this.refreshing = false;
+            		},500)
+            		
             	},(errorT,status) =>{
-								this.refreshing = false;
-								this.refreshIcon = "icon-todown";
-								this.refreshText = "刷新失败";
+					this.refreshing = false;
+					this.refreshIcon = "icon-todown";
+					this.refreshText = "刷新失败";
             	})
             },
             getMorePageList (type='time',categoryId=''){
@@ -263,9 +266,9 @@ import {unicode,fixedPic} from '../../js/tool.js';
             			page : this.page
             		}
             	}).then((res) =>{
-            		this.$nextTick(()=>{
+            		// this.$nextTick(()=>{
             			this.showLoading = false;
-            		});
+            		// });
 
             		
             		this.isShowPrompt = false;           		
@@ -294,24 +297,28 @@ import {unicode,fixedPic} from '../../js/tool.js';
             },
             //refresh下拉放手前的文字与图标
             "onPullingdown": function (e) {
-							this.refreshIcon = "icon-todown";
-      				this.refreshText = "下拉刷新...";
+            	if (!this.refreshing) {
+                    this.refreshIcon = "icon-todown";
+                    this.refreshText = "下拉刷新...";
+                }
+				// this.refreshIcon = "icon-todown";
+  		// 		this.refreshText = "下拉刷新...";
               //下拉一定距离时文字与图标
-							if (Math.abs(e.pullingDistance) > 150) {
-									this.refreshIcon = "icon-toup";
-									this.refreshText = "松开即可刷新...";
-							}
+				if (Math.abs(e.pullingDistance) > 150) {
+						this.refreshIcon = "icon-toup";
+						this.refreshText = "松开即可刷新...";
+				}
             },
 
             "onLoading": function (e) {
                 this.getMorePageList(this.type,this.categoryId);
 
             },
-            onLoadmore (e) {
-            	// buiweex.toast("loading");
-            	this.getMorePageList(this.type,this.categoryId);
+            // onLoadmore (e) {
+            // 	// buiweex.toast("loading");
+            // 	this.getMorePageList(this.type,this.categoryId);
 
-            },
+            // },
             fixedPicture (source) {
             	console.log(fixedPic(source));
             	return fixedPic(source);
@@ -352,6 +359,4 @@ import {unicode,fixedPic} from '../../js/tool.js';
 <style src="../../css/customer/course-list.css"></style>
 <style src="../../css/customer/micro-class.css"></style>
 
-
-<style src="../../css/refresh.css"></style>
-<style src="../../css/loading.css"></style>
+<style src="../../css/list.css"></style>

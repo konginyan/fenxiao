@@ -226,7 +226,7 @@
                         setTimeout(() => {
                             this.refreshing = false;
                             this.showNav = true;
-                        }, 1000)
+                        }, 500)
                     })
             },
             onScroll(e){
@@ -318,20 +318,11 @@
                 return formatDate(time, 'MM-dd hh:mm:ss')
             },
             init () {
+            	
             	Promise.all([this.getRecommend(),this.getLastact(),this.getHottestList()]).then(()=>{
-            		/*buiweex.show(this, {id: 'temp1',opacity:'0'});
-            		buiweex.show(this, {id: 'temp2',opacity:'0'});
-            		buiweex.show(this, {id: 'temp3',opacity:'0'});
-            		buiweex.show(this, {id: 'select-wrap',opacity:'0'});
-            		buiweex.show(this, {id: 'course-menu',opacity:'0'});
 
-
-
-            		buiweex.show(this, {id: 'recommend',duration:300, delay: 0});
- 					buiweex.show(this, {id: 'course-menu',duration:300, delay: 200});
-            		buiweex.show(this, {id: 'lastact',duration:300, delay: 300});
-            		buiweex.show(this, {id: 'select-wrap',duration:300, delay: 400});
-            		buiweex.show(this, {id: 'course',duration:300, delay: 500});*/
+            		
+            		
             		
             	},()=>{
             		
@@ -365,7 +356,7 @@
 
 <style src="../../css/customer/index.css"></style>
 <style src="../../css/slider.css"></style>
-<style src="../../css/refresh.css"></style>
+<style src="../../css/list.css"></style>
 <style src="../../css/customer/course-list.css"></style>
 <style>
     .span1 {

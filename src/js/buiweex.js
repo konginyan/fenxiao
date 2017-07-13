@@ -157,27 +157,43 @@ var common = {
         return queryStr;
     },
     "show": function (obj,params) {
-            var id = params.id;
-            var duration = params.duration;
-            var transform = params.transform || 'translate(0, 0)';
-            var transformOrigin = params.transformOrigin || 'center center';
-            var timingFunction = params.timingFunction || 'ease';
-            var delay = params.delay || 0
-            var opacity = params.opacity || 1;
-            var el = obj.$refs[id];
-            animation.transition(el, {
-                styles: {
-                    opacity: opacity,
-                    transform: transform,
-                    transformOrigin: transformOrigin
-                },
-                duration: duration || 0,
-                timingFunction: timingFunction,
-                delay: delay
-            }, function () {
+        var id = params.id;
+        var duration = params.duration;
+        var transform = params.transform || 'translate(0, 0)';
+        var transformOrigin = params.transformOrigin || 'center center';
+        var timingFunction = params.timingFunction || 'ease';
+        var delay = params.delay || 0
+        var opacity = params.opacity || 1;
+        var el = obj.$refs[id];
+        animation.transition(el, {
+            styles: {
+                opacity: opacity,
+                transform: transform,
+                transformOrigin: transformOrigin
+            },
+            duration: duration || 0,
+            timingFunction: timingFunction,
+            delay: delay
+        }, function () {
 
-            })
+        })
+    },
+    animate (el = '',options = {},fn=function(){}) {
+
+        let defaultOptions = {
+            styles : {
+
+            },
+            duration : 500,
+            timingFunction : 'ease',
+            delay : 0,
         }
+
+        let opt = Object.assign({},defaultOptions,options);
+        animation.transition(el, opt, function () {
+            fn && fn();
+        })
+    }
 }
 
 module.exports = common;

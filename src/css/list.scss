@@ -90,18 +90,52 @@
   width: 300px;
 }
 
-  .bui-loading{
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  height: 80px;
+.bui-loading{
+  width: 750px;
+  height: 150px;
+  flex-direction: column;
+  display: -ms-flex;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
   justify-content: center;
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: $color_background;
+}
+.bui-refresh{
+  //position: absolute;
+  //left: 0px;
+  //right: 0px;
+  //height: 100px;
+  justify-content: center;
+  flex-direction: row;
+  width: 750px;
+  height: 100px;
+  display: -ms-flex;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.bui-refresh-indicator{
+  font-size: 30px;
+  text-align: center;
+  color: $color_subtitle;
 }
 .bui-loading-indicator{
   font-size: 30px;
   text-align: center;
-  color: $color_title;
+  color: $color_subtitle;
+}
+.bui-indicator {
+  height: 60px;
+  width: 60px;
+  color: $color_subtitle;
 }
