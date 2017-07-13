@@ -2,10 +2,10 @@
     <div @viewappear="onappear">
         <!--<loading-view v-if="isLoading" src="/image/gray.png"></loading-view> -->
         <list class="span1" @scroll="onScroll">
-            <refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
+            <refresh class="index-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
                      :display="refreshing ? 'show' : 'hide'">
                 <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
-                <text class="bui-refresh-indicator">{{refreshText}}</text>
+                <text class="index-refresh-indicator">{{refreshText}}</text>
             </refresh>
 
             <cell>
@@ -45,21 +45,19 @@
             </cell>
 
             <cell ref="temp2" class="trailer-wrap" v-if="lastact.length == 0">
-               <bui-image src="/image/trailer.png" width="702px" height="260px"></bui-image>
+               <bui-image src="/image/trailer.png" width="702px" height="236px"></bui-image>
            </cell>
 
             <cell>
 
-                <div ref="lastact" v-if="lastact.length !== 0" style=" height: 260px;">
-                    <div :key="item" class="trailer-wrap" v-for="item in lastact">
-                        <bui-image @click="linkBanner(item)" src="/image/trailer1.png" width="702px"
+                <div ref="lastact" v-if="lastact.length !== 0" style=" height: 284px;">
+                    <div :key="item" class="trailer-wrap" v-for="item in lastact" @click="linkBanner(item)">
+                        <bui-image src="/image/trailer1.png" width="702px"
                                    height="236px"></bui-image>
                         <div class="trailer-inner">
                             <div class="avatar-wrap">
-                                <bui-image class="default-pic" src="/image/no-pic.png"
-                                           @click="linkBanner(item)"></bui-image>
-                                <bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)"
-                                           class="course-item-img"></bui-image>
+                                <bui-image class="default-pic" src="/image/no-pic.png"></bui-image>
+                                <bui-image :src="fixedPicture(item.picture)" class="course-item-img"></bui-image>
                             </div>
                             <div class="trailer-content">
                                 <text class="trailer-title">{{item.name}}</text>
@@ -106,7 +104,7 @@
             :contentStyle="contentStyle"
             :bgStyle="bgStyle"
             v-if="showNav"
-        >
+            >
             <bui-header
                     title="分晓"
                     :leftItem="leftItem"
@@ -152,6 +150,8 @@
         computed: {
             bgStyle () {
                 return {
+                    position: 'absolute',
+                    top: 0,
                     height: '100px'
                 }
             },
@@ -193,7 +193,6 @@
                 this.scrollHnadlerCallCount = 0;
             },
             "onRefresh": function (e) {
-                this.showNav = false;
                 this.refreshing = true;
                 this.refresh();
             },
@@ -219,6 +218,7 @@
             refresh () {
                 this.refreshIcon = "icon-loadding";
                 this.refreshText = "正在刷新";
+                this.showNav = false;
                 Promise.all([this.getHottestList(), this.getLastact()])
                     .then(() => {
                         this.refreshIcon = "icon-checkbox-on";
@@ -230,7 +230,7 @@
                     })
             },
             onScroll(e){
-                if (e.contentOffset.y < -60) {
+                if (e.contentSize.height>2450) {
                     this.navColor = '#4ca4fe';
                 }
                 else {
@@ -365,5 +365,20 @@
 
     .small {
         item-size: 15px;
+    }
+
+    .index-refresh {
+        left: 0px;
+        right: 0px;
+        height: 100px;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        background-color: #4ca4fe;
+    }
+    .index-refresh-indicator{
+        font-size: 30px;
+        text-align: center;
+        color: white;
     }
 </style>

@@ -1,6 +1,6 @@
 <template>
 	<div class="live-wrap">
-		<bui-content v-if="!loading" class="span1">
+		<bui-content v-if="!loading && !returnMsg" class="span1">
 			<div class="video-wrap" style="height:0px">
 				<bui-video class="test-video"
 					v-if="testVideo"
@@ -94,10 +94,10 @@
 			</scroller>
 		</bui-content>
 		<dropdown
-						:showArrow=true
-						:show="isShowDropdown"
-						@close="closeDropdown"
-						ref="dropdowns">
+				:showArrow="true"
+				:show="isShowDropdown"
+				@close="closeDropdown"
+				ref="dropdowns">
 				<div class="bui-list">
 						<div class="bui-cell" :key="item" v-for="item in shareList" @click="action(item)">
 								<div class="bui-list-left">
@@ -109,7 +109,15 @@
 						</div>
 				</div>
 		</dropdown>
-		<progress ref="progress"></progress>	
+		<progress ref="progress"></progress>
+		<div style="flex:1;width:750px;" v-if="returnMsg">
+			<bui-header title=""
+				:leftItem="leftItem"
+				@leftClick = "back"			
+				>
+			</bui-header>
+			<prompt src="/image/null.png" :text="returnMsg"></prompt>
+		</div>
 	</div>
 </template>
 
@@ -119,7 +127,8 @@ import ajax from '../../js/ajax.js';
 import dropdown from '../../components/bui-dropdown.vue';
 import buiVideo from '../../components/bui-video.vue';
 import linkapi from '../../js/linkapi.js';
-import {fixedPic,formatDate,coder,extend} from "../../js/tool.js";
+import prompt from '../components/prompt.vue';
+import {fixedPic,formatDate,coder, extend} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 var websocket = weex.requireModule('webSocket')
 
@@ -130,6 +139,7 @@ var websocket = weex.requireModule('webSocket')
 					icons: 'icon-back',
 				},
 				loading: true,
+				returnMsg: null,
 				isShow: true,
 				errorShow: false,
 				flvErr: false,
@@ -167,7 +177,8 @@ var websocket = weex.requireModule('webSocket')
 						this.loading = false;
 						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
 					},()=>{
-						
+						this.loading = false;
+						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
 					})
 				setInterval(()=>{
 					Promise.all([this.getLiveDetail(),this.getReplays()])
@@ -224,19 +235,24 @@ var websocket = weex.requireModule('webSocket')
 						id: liveId
 					}
 				}).then((res) =>{
-					this.liveDetail = res.r;
-					this.liveDetail.outline = this.clearDOM(this.liveDetail.outline);
-					if(this.firstin&&this.liveDetail.liveStatus===1){
-						this.playLive();
-						this.firstin = false;
+					if(res.s===-20099){
+						this.returnMsg = res.m;
 					}
-					else if(this.liveFail){
-						this.bgSrc = this.getPicture(this.liveDetail.picture);
-						this.testLive();
+					else{
+						this.liveDetail = res.r;
+						this.liveDetail.outline = this.clearDOM(this.liveDetail.outline);
+						if(this.firstin&&this.liveDetail.liveStatus===1){
+							this.playLive();
+							this.firstin = false;
+						}
+						else if(this.liveFail){
+							this.bgSrc = this.getPicture(this.liveDetail.picture);
+							this.testLive();
+						}
 					}
 				},(errorT,status) =>{
 					this.bgSrc = this.getPicture(this.liveDetail.picture);
-					this.errorShow = true;
+					this.errorShow = true;			
 				})
 			},
 			testLive(){
@@ -271,8 +287,9 @@ var websocket = weex.requireModule('webSocket')
 						liveId: liveId
 					}
 				}).then((res) =>{
-						this.replays = res.r;
-					},(errorT,status) =>{
+					this.replays = res.r;
+				},(errorT,status) =>{
+						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
 				})
 			},
 			playReplay(index,url) {
@@ -322,7 +339,8 @@ var websocket = weex.requireModule('webSocket')
 		},
 		components : {
 			dropdown,
-			buiVideo
+			buiVideo,
+			prompt
 		},
 		computed: {
 			bgStyle () {

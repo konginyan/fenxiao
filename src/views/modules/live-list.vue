@@ -5,7 +5,6 @@
       @leftClick = "back"	
       >
     </bui-header>
-    <progress ref="progress" :marginTop="getTop()"></progress>
     <bui-content v-if="lives.length>0 && !loading" class="span1">
       <list class="bui-list">
         <refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
@@ -53,6 +52,7 @@
 			<bui-image class="null-pic2" src="/image/no-live.png"></bui-image>
 			<text class="null-text">当前没有直播</text>
 		</bui-content>
+    <progress ref="progress" :marginTop="getTop()"></progress>
   </div>
 </template>
 
