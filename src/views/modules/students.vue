@@ -3,7 +3,7 @@
 		<bui-header title="报名的人" :leftItem="leftItem" @leftClick="back">
 		</bui-header>
 		<bui-content class="span1">
-			<list class="bui-list p-r" @loadmore="onLoadmore($event)" loadmoreoffset="2">
+			<list class="bui-list p-r">
 				<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
 				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
@@ -23,27 +23,15 @@
 						</div>
 					</div>	
 				</cell>
-				<cell class="bui-loading" v-if="showLoading">
+				<!-- <cell class="bui-loading" v-if="showLoading">
                     <text class="bui-loading-indicator">{{loadingText}}</text>
-                </cell>
+                </cell> -->
 				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
-				    <text class="bui-loading-indicator">{{loadingText}}</text>
-				</loading> -->
+                    <text class="bui-loading-indicator" v-if="showLoading">{{loadingText}}</text>
+                    <loading-indicator class="bui-indicator"></loading-indicator>
+                </loading> -->
 			</list>
-		<!-- 	<list class="bui-list">
-			<cell class="bui-cell-large" v-for="item in list">
-				<div class="bui-list-left">
-					<bui-image class="bui-list-thumb" :src="getPicture(item.url,'uam')" radius="50px"></bui-image>
-				</div>
-				<div class="bui-list-main">
-					<text class="bui-list-title">{{item.name}}</text>
-					<text class="bui-list-subtitle">{{item.orgName}}</text>
-				</div>
-				<div class="bui-list-right">
-					<bui-icon name="icon-go"></bui-icon>
-				</div>
-			</cell>
-		</list> -->
+
 		</bui-content>
 	
 	</div>
@@ -86,8 +74,10 @@ export default {
 		},
 		onPullingdown (e) {
 			//默认refresh文字与图标
-			this.refreshIcon = "icon-todown";
-			this.refreshText = "下拉刷新...";
+			 if (!this.refreshing) {
+                    this.refreshIcon = "icon-todown";
+                    this.refreshText = "下拉刷新...";
+                }
 			//下拉一定距离时文字与图标
 			if (Math.abs(e.pullingDistance) > 150) {
 			    this.refreshIcon = "icon-toup";
@@ -97,9 +87,7 @@ export default {
 		onLoading () {
 			this.getMore();
 		},
-		onLoadmore (e) {
-			this.getMore();
-		},
+
 		getList() {
 			this.refreshIcon = "icon-loadding";
 			this.refreshText = "正在刷新";
@@ -133,7 +121,9 @@ export default {
 						this.list = tempArr;
 						this.refreshIcon = "icon-checkbox-on";
 		        		this.refreshText = "刷新成功";
-		        		this.refreshing = false;
+		        		setTimeout(()=>{
+		            			this.refreshing = false;
+		            		},500)
 						
 					},(err)=>{
 						this.refreshIcon = "icon-todown";
@@ -206,25 +196,7 @@ export default {
 				this.showLoading = false;
 			})
 		},
-		/*getProfile(id1) {
-			ajax({
-				url: 'uam/api/user/getUserById',
-				data: {
-					id: id1
-				}
-			}).then((res) => {
-				buiweex.toast(res);
-				this.users.push(res.r);
 
-			}, (errorT, status) => {
-				
-			})
-		},
-		getUsers() {
-			for (let i = 0; i < this.list.length; i++) {
-				this.getProfile(this.list[i].learnBy);
-			}
-		},*/
 		startUserCard (userId) {
 			linkapi.startUserCard(userId);
 		},
@@ -241,7 +213,5 @@ export default {
 }
 </script>
 <style src="../../css/layout.css"></style>
-<style src="../../css/refresh.css"></style>
-<style src="../../css/loading.css"></style>
 <style src="../../css/list.css"></style>
 <style src="../../css/customer/students.css"></style>

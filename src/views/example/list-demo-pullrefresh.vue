@@ -34,21 +34,26 @@
                     </div>
                 </cell>
                 <!--上拉组件-->
-                <cell class="bui-loading" v-if="showLoading">
-                    <text class="bui-loading-indicator">{{loadingText}}</text>
-                </cell>
-                <!--<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">-->
-                    <!--<text class="bui-loading-indicator">{{loadingText}}</text>-->
-                <!--</loading>-->
+                <!--<cell class="bui-loading" v-if="showLoading">-->
+                    <!--<loading class="">-->
+                        <!--<text class="bui-loading-indicator">{{loadingText}}</text>-->
+                        <!--<loading-indicator class="indicator"></loading-indicator>-->
+                    <!--</loading>-->
+                <!--</cell>-->
+                <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+                    <text class="bui-loading-indicator" v-if="showLoading">{{loadingText}}</text>
+                    <loading-indicator class="bui-indicator"></loading-indicator>
+                </loading>
             </list>
         </bui-content>
     </div>
 
 </template>
+<style>
+
+</style>
 <style lang="sass" src="../../css/layout.scss"></style>
 <style lang="sass" src="../../css/list.scss"></style>
-<style lang="sass" src="../../css/refresh.scss"></style>
-<style lang="sass" src="../../css/loading.scss"></style>
 <style lang="sass" src="../../css/example.scss"></style>
 <script>
     var iconDev = "/image/icon_dev.png";
@@ -68,7 +73,7 @@
                 showLoading: false,
                 refreshIcon: "icon-todown",
                 refreshText: "下拉刷新...",
-                loadingText: "正在加载更多数据...",
+                loadingText: "加载更多数据...",
                 list: [1,2,3,4,5],
                 newList:  [1,2,3,4,5,6,7,8,9,10],
                 messageList: [
@@ -121,24 +126,42 @@
                 }
             },
             //list滚动到底部触发事件
-            "onLoadmore": function (e) {
-                buiweex.toast("onloadmore");
-                this.showLoading = true;
-
-
-
-
-
-                setTimeout(() => {
-                    this.list = this.list.concat(this.LOADMORE);
-                    this.showLoading = false;
-                }, 2000);
-            },
+//            "onLoadmore": function (e) {
+//                buiweex.toast("onloadmore");
+//                this.showLoading = true;
+//                setTimeout(() => {
+//                    const length = this.list.length;
+//                    this.showLoading = false;
+//                    if(length > 60 ){
+//                        this.loadingText = '没有更多数据了'
+//                        return
+//                    }else{
+//                        for (let i = length; i < length + this.LOADMORE_COUNT; ++i) {
+//                            this.list.push(i + 1)
+//                        }
+//                    }
+////                    this.list = this.list.concat(this.LOADMORE);
+//
+//                }, 2000);
+//            },
             "onLoading": function (e) {
                 buiweex.toast("loading");
                 this.showLoading = true;
                 setTimeout(() => {
+                    const length = this.list.length;
                     this.showLoading = false;
+                    if(length > 60 ){
+                        this.loadingText = '没有更多数据了'
+                        return
+                    }else{
+                        this.loadingText = '加载更多数据...'
+                        for (let i = length; i < length + this.LOADMORE_COUNT; ++i) {
+                            this.list.push(i + 1)
+                        }
+                    }
+
+//                    this.list = this.list.concat(this.LOADMORE);
+
                 }, 2000);
             }
         }

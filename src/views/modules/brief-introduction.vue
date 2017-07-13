@@ -44,6 +44,12 @@ var globalEvent = weex.requireModule('globalEvent');
 import linkapi from '../../js/linkapi.js';
 // import loadingView from '../components/loading-view.vue';
 	export default {
+		props : {
+			increase : {
+				type : Boolean,
+				default : false
+			}
+		},
 		data () {
 			return {
 				detail : {},
@@ -59,17 +65,16 @@ import linkapi from '../../js/linkapi.js';
 		mounted(){
 			this.courseId = buiweex.getPageParams().courseId;
 			this.init();
-			
-			
-
 		},
 		methods:{
 			init () {
 				Promise.all([this.getAttendList(),this.getDetail()]).then(()=>{
 					buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
 					this.isLoading = false;
+
 				},()=>{
 					buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
+
 				})
 			},
 			getDetail () {
@@ -163,6 +168,14 @@ import linkapi from '../../js/linkapi.js';
 	    components : {
 	    	rate,
 	    	// loadingView
+	    },
+	    watch : {
+	    	increase :function (val) {
+	    		if (val) {
+	    			this.detail.learnCount += 1;
+	    		}
+
+	    	}
 	    }
 	}
 </script>

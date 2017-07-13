@@ -33,9 +33,10 @@
           </div>
         </div>
       </cell>
-      <loading class="bui-loading white-bg" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
-        <text class="bui-loading-indicator">{{loadingText}}</text>
-      </loading>
+       <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+                    <text class="bui-loading-indicator" v-if="showLoading">{{loadingText}}</text>
+                    <loading-indicator class="bui-indicator"></loading-indicator>
+                </loading>
     </list>
   </div>
 </template>
@@ -226,6 +227,5 @@ export default {
 </style>
 
 <style src="../../css/layout.css"></style>
-<style src="../../css/loading.css"></style>
-<style src="../../css/refresh.css"></style>
+<style src="../../css/list.css"></style>
 <style src="../../css/customer/course-list.css"></style>

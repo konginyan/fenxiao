@@ -56,6 +56,7 @@
 <style>
 	.prompt-wrap{
 		flex : 1;
+		width: 750px;
 		justify-content: center;
 		align-items: center;
 		padding-top: 100px;

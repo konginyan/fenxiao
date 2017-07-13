@@ -32,7 +32,7 @@
 		<div style="flex:1">
             <tab-item index="0" :currentTabIndex="currentTabIndex">
                  <scroller style="flex : 1;">
-	        		<brief-instroduction></brief-instroduction>
+	        		<brief-instroduction :increase="increase"></brief-instroduction>
 	        	</scroller>
             </tab-item>
 
@@ -45,27 +45,7 @@
                  <comment style="flex:1;"></comment>
             </tab-item>
         </div>
-<!-- 
-		<div class="item-content" style="flex : 1;">
-			
-	        <tab-item tabId="tab1" :currentTab="currentTab" >
-	        	<scroller style="flex : 1;">
-	        		<brief-instroduction ></brief-instroduction>
-	        	</scroller>
-	        	
-	        	
-	        </tab-item>
 
-	        <tab-item tabId="tab2" :currentTab="currentTab">
-	        	<scroller style="flex : 1;">
-	        		<catalog :currentIndex="currentIndex"  @videoSrc="videoSrc" @webSrc="webSrc"></catalog>
-	        	</scroller>
-	           
-	        </tab-item>
-	         <tab-item tabId="tab3" :currentTab="currentTab">
-	            <comment style="flex:1;"></comment>
-	        </tab-item>
-		</div> -->
 		
 		<div class="course-footer" ref="course-footer" style="opacity:0;">
 			<button  v-if="!isAttend "  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
@@ -162,6 +142,7 @@ import {fixedPic} from '../../js/tool.js';
                 inner : {},
                 timer : null,
                 isStart : false,
+                increase : false
 
 			}
 		},
@@ -281,6 +262,7 @@ import {fixedPic} from '../../js/tool.js';
             	}).then((res) =>{
             		this.isAttend = true;
             		buiweex.toast('报名成功');
+            		this.increase = true;
             	},(errorT,status) =>{
             		buiweex.toast('报名失败');
             	})

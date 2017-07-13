@@ -9,7 +9,7 @@
 		<bui-content class="span1">
 		   
 
-		  <list class="bui-list" @loadmore="onLoadmore($event)" loadmoreoffset="2">
+		  <list class="bui-list">
 		  		<refresh class="bui-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
 				         :display="refreshing ? 'show' : 'hide'">
 				    <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
@@ -32,16 +32,16 @@
 					</div>
 					
 				</cell>
-				
-				<cell class="bui-loading" v-if="showLoading">
-                    <text class="bui-loading-indicator">{{loadingText}}</text>
-                </cell>
-				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
-				    <text class="bui-loading-indicator">{{loadingText}}</text>
-				</loading> -->
+				<cell>
+					<prompt v-if="isShowPrompt" resize="contain" text="还没有评论" src="/image/empty-comment.png"></prompt>
+				</cell>
+				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+                    <text class="bui-loading-indicator" v-if="showLoading">{{loadingText}}</text>
+                    <loading-indicator class="bui-indicator"></loading-indicator>
+                </loading>
 
 		  </list>
-		  <prompt v-if="isShowPrompt" resize="contain" text="还没有评论" src="/image/empty-comment.png"></prompt>
+		 
 			<!-- <div class="comment-list">
 				<div class="comment-item" v-for="item in commentList">
 					<div class="comment-inner">
@@ -151,12 +151,13 @@ import linkapi from '../../js/linkapi.js';
 							}
 							this.refreshIcon = "icon-checkbox-on";
 		            		this.refreshText = "刷新成功";
-		            		this.refreshing = false;
+		            		setTimeout(()=>{
+		            			this.refreshing = false;
+		            		},500)
 
 							
 						})
 					}catch(e){
-						buiweex.alert('ff')
 						this.commentList = res.r || [];
 
 						if (this.commentList.length === 0) {
@@ -166,7 +167,10 @@ import linkapi from '../../js/linkapi.js';
 						}
 						this.refreshIcon = "icon-checkbox-on";
 	            		this.refreshText = "刷新成功";
-	            		this.refreshing = false;
+	            		setTimeout(()=>{
+	            			this.refreshing = false;
+	            		},500)
+	            		
 					}
 
 					
@@ -217,12 +221,14 @@ import linkapi from '../../js/linkapi.js';
 								});
 								
 							});
-							if(res.length === 0){
-		            			this.loadingText = '没有更多数据了';
 
+							if(res.r.length === 0){
+		            			this.loadingText = '没有更多数据了';
+		            			this.isShowPrompt = true;
 		            			return;
 		            		}else{
 		            			this.loadingText = '正在加载更多数据...';
+		            			this.isShowPrompt = false;
 		            			
 		            		}
 							this.commentList = this.commentList.concat(arrTemp);
@@ -233,11 +239,11 @@ import linkapi from '../../js/linkapi.js';
 					}catch(e){
 						if(res.r.length === 0){
 	            			this.loadingText = '没有更多数据了';
-
+	            			this.isShowPrompt = true;
 	            			return;
 	            		}else{
 	            			this.loadingText = '正在加载更多数据...';
-	            			
+	            			this.isShowPrompt = false;
 	            		}
 						this.commentList = this.commentList.concat(res.r);
 
@@ -260,8 +266,12 @@ import linkapi from '../../js/linkapi.js';
 			},
 			onPullingdown (e) {
 				 //默认refresh文字与图标
-                this.refreshIcon = "icon-todown";
-                this.refreshText = "下拉刷新...";
+				 if (!this.refreshing) {
+                    this.refreshIcon = "icon-todown";
+                    this.refreshText = "下拉刷新...";
+                }
+                // this.refreshIcon = "icon-todown";
+                // this.refreshText = "下拉刷新...";
                 //下拉一定距离时文字与图标
                 if (Math.abs(e.pullingDistance) > 150) {
                     this.refreshIcon = "icon-toup";
@@ -270,9 +280,6 @@ import linkapi from '../../js/linkapi.js';
 			},
 			onLoading () {
 				 this.getMorePageList();
-			},
-			onLoadmore (e) {
-				this.getMorePageList();
 			},
 			getComment () {
 				ajax({
@@ -309,7 +316,6 @@ import linkapi from '../../js/linkapi.js';
 		flex: 1;
 	}
 </style>
-<style src="../../css/refresh.css"></style>
-<style src="../../css/loading.css"></style>
+<style src="../../css/list.css"></style>
 <style src="../../css/customer/comment.css"></style>
 
