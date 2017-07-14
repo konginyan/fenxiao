@@ -1,5 +1,5 @@
 
-let debug = true;
+let debug = false;
 let url,ssoUrl,username,password;
 
 
@@ -11,7 +11,7 @@ if (debug) {
 } else {
 	url = 'http://ba1.bingocc.com:18088/';
 	ssoUrl = 'https://www.bingolink.biz/sso';
-	username = '13527139636';
+	username = '13640427907';
 	password = 'bingo@123';
 }
 

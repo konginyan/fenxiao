@@ -4,7 +4,7 @@
         <list class="span1" @scroll="onScroll">
             <refresh class="index-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
                      :display="refreshing ? 'show' : 'hide'">
-                <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;"></bui-icon>
+                <bui-icon :name="refreshIcon" size="40px" style="margin-right: 5px;" color="#fff"></bui-icon>
                 <text class="index-refresh-indicator">{{refreshText}}</text>
             </refresh>
 
@@ -272,6 +272,7 @@
                 return ajax({
                     url: 'ba/api/course/gethottestlist'
                 }).then((res) => {
+
                     this.hottestList = res.r;
                 }, (errorT, status) => {
                 	
@@ -294,7 +295,7 @@
                 return ajax({
                     url: 'ba/api/homepage/recommend',
                 }).then((res) => {
-  
+  					
                     this.recommendList = res.r;
                 }, (errorT, status) => {
                 	 

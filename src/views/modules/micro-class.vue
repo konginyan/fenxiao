@@ -159,6 +159,11 @@ import {unicode,fixedPic} from '../../js/tool.js';
 
 	        		}
 	        	}).then((res) =>{
+	        		if (res.r.length === 0) {
+	        			this.isShowPrompt = true;
+	        		}else{
+	        			this.isShowPrompt = false;
+	        		}
 	        		this.pageList = res.r;
 	        	},(errorT,status,res) =>{
 	        		
@@ -198,7 +203,7 @@ import {unicode,fixedPic} from '../../js/tool.js';
 	        	
 	        },
 	        rateChange (val){
-	        	buiweex.toast(val);
+	        	// buiweex.toast(val);
 	        },
 	        getFilterList () {
 	        	
@@ -271,12 +276,17 @@ import {unicode,fixedPic} from '../../js/tool.js';
             		// });
 
             		
-            		this.isShowPrompt = false;           		
-            		if(res.r.length === 0){
+            		         		
+            		if(res.r.length === 0 && this.pageList.length===0){
+            			this.isShowPrompt = true;  
             			this.loadingText = '没有更多数据了';
             			return;
+            		}else if(res.r.length === 0){
+            			this.isShowPrompt = false;  
+            			this.loadingText = '没有更多数据了';
             		}else{
             			this.loadingText = '正在加载更多数据...';
+            			this.isShowPrompt = false;  
             		}
             		this.pageList = this.pageList.concat(res.r);
             		// buiweex.toast(this.pageList[0]);

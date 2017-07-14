@@ -221,10 +221,12 @@ import linkapi from '../../js/linkapi.js';
 								});
 								
 							});
-
-							if(res.r.length === 0){
+							if(res.r.length === 0 && this.commentList.length === 0){
+								this.loadingText = '没有更多数据了';
+								this.isShowPrompt = true;
+							}else if(res.r.length === 0  ){
 		            			this.loadingText = '没有更多数据了';
-		            			this.isShowPrompt = true;
+		            			this.isShowPrompt = false;
 		            			return;
 		            		}else{
 		            			this.loadingText = '正在加载更多数据...';
@@ -237,14 +239,18 @@ import linkapi from '../../js/linkapi.js';
 							
 						})
 					}catch(e){
-						if(res.r.length === 0){
-	            			this.loadingText = '没有更多数据了';
-	            			this.isShowPrompt = true;
-	            			return;
-	            		}else{
-	            			this.loadingText = '正在加载更多数据...';
-	            			this.isShowPrompt = false;
-	            		}
+						if(res.r.length === 0 && this.commentList.length === 0){
+								this.loadingText = '没有更多数据了';
+								this.isShowPrompt = true;
+							}else if(res.r.length === 0  ){
+		            			this.loadingText = '没有更多数据了';
+		            			this.isShowPrompt = false;
+		            			return;
+		            		}else{
+		            			this.loadingText = '正在加载更多数据...';
+		            			this.isShowPrompt = false;
+		            			
+		            		}
 						this.commentList = this.commentList.concat(res.r);
 
 						
