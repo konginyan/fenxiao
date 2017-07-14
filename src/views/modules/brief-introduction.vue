@@ -69,6 +69,7 @@ import linkapi from '../../js/linkapi.js';
 		methods:{
 			init () {
 				Promise.all([this.getAttendList(),this.getDetail()]).then(()=>{
+
 					buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
 					this.isLoading = false;
 
@@ -134,6 +135,8 @@ import linkapi from '../../js/linkapi.js';
 								
 							})
 						}catch(e){
+							this.userList = [];
+							reject(this.userList);
 							this.isLoading = false;
 
 						}

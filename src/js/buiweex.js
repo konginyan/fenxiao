@@ -45,7 +45,7 @@ var common = {
             callback && callback(value);
         });
     },
-    "show": function (params, callback) {
+    /*"show": function (params, callback) {
         var el = params.id;
         if (!el) {
             return;
@@ -67,7 +67,7 @@ var common = {
         }, function () {
             callback && callback();
         });
-    },
+    },*/
     "hide": function (params, callback) {
         var el = params.id;
         if (!el) {
