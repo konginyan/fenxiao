@@ -110,6 +110,8 @@ export default {
         this.page += 1;
         if(res.r.length === 0){
           this.loadingText = '没有更多数据了';
+          this.loading = false;
+          extend(this.$refs.progress,{id:'progress', width:750, duration:1000, opacity:'0'});
           setTimeout(()=>{
             this.showLoading = false;
           },500)

@@ -52,12 +52,11 @@
 
                 <div ref="lastact" v-if="lastact.length !== 0" style=" height: 284px;">
                     <div :key="item" class="trailer-wrap" v-for="item in lastact" @click="linkBanner(item)">
-                        <bui-image src="/image/trailer1.png" width="702px"
-                                   height="236px"></bui-image>
+                        <bui-image src="/image/trailer1.png" width="702px" height="236px" @click="linkBanner(item)"></bui-image>
                         <div class="trailer-inner">
                             <div class="avatar-wrap">
-                                <bui-image class="default-pic" src="/image/no-pic.png"></bui-image>
-                                <bui-image :src="fixedPicture(item.picture)" class="course-item-img"></bui-image>
+                                <bui-image @click="linkBanner(item)" class="default-pic" src="/image/no-pic.png"></bui-image>
+                                <bui-image @click="linkBanner(item)" :src="fixedPicture(item.picture)" class="course-item-img"></bui-image>
                             </div>
                             <div class="trailer-content">
                                 <text class="trailer-title">{{item.name}}</text>
@@ -239,6 +238,7 @@
             },
             linkBanner (item){
                 try{
+                    console.log(0)
                     let type = this.getRecordType(item);
                     if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
                         liveId : this.getMainId(item)
@@ -250,6 +250,7 @@
                     else buiweex.alert('打开失败')
                 }
                 catch (e){
+                    console.log(1)
                     buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
                         url : item.url,
                         name : item.name
