@@ -109,7 +109,6 @@
                     title="分晓"
                     :leftItem="leftItem"
                     @leftClick="back"
-
                     :backgroundColor='navColor'
             >
                 <icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
@@ -223,10 +222,10 @@
                     .then(() => {
                         this.refreshIcon = "icon-checkbox-on";
                         this.refreshText = "刷新成功";
-                        setTimeout(() => {
+ 
                             this.refreshing = false;
                             this.showNav = true;
-                        }, 500)
+    
                     })
             },
             onScroll(e){

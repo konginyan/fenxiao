@@ -23,13 +23,11 @@
 						</div>
 					</div>	
 				</cell>
-				<!-- <cell class="bui-loading" v-if="showLoading">
-                    <text class="bui-loading-indicator">{{loadingText}}</text>
-                </cell> -->
-				<!-- <loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
+
+				<loading class="bui-loading" @loading="onLoading" :display="showLoading ? 'show' : 'hide'">
                     <text class="bui-loading-indicator" v-if="showLoading">{{loadingText}}</text>
                     <loading-indicator class="bui-indicator"></loading-indicator>
-                </loading> -->
+                </loading>
 			</list>
 
 		</bui-content>
@@ -56,7 +54,7 @@ export default {
             refreshText: "下拉刷新...",
             loadingText: "正在加载更多数据...",
             page : 1,
-            rows : 100,
+            rows : 10,
             defaultAvatar : '/image/icon-avatar.png'
 		}
 	},
@@ -83,6 +81,7 @@ export default {
 			    this.refreshIcon = "icon-toup";
 			    this.refreshText = "松开即可刷新...";
 			}
+
 		},
 		onLoading () {
 			this.getMore();
