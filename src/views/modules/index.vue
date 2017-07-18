@@ -93,7 +93,7 @@
                         <div class="course-content">
                             <text class="course-item-title">{{item.name}}</text>
                             <text class="course-item-text">{{item.learnCount}}人学过</text>
-                            <rate @change="rateChange" :value="Math.round(item.score)" :disabled="true"></rate>
+                            <rate @change="rateChange" :value="item.score" :disabled="true"></rate>
                         </div>
                     </div>
                 </div>
@@ -113,6 +113,7 @@
                 <icon @click="scan" slot="right" name="icon-scan" size="45px" color="#ffffff" class="pdl10"></icon>
             </bui-header>
         </bg>
+        
     </div>
 </template>
 
@@ -321,10 +322,6 @@
             init () {
             	
             	Promise.all([this.getRecommend(),this.getLastact(),this.getHottestList()]).then(()=>{
-
-            		
-            		
-            		
             	},()=>{
             		
             	});

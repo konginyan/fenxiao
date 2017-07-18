@@ -31,9 +31,9 @@
         </tab>
 		<div style="flex:1">
             <tab-item index="0" :currentTabIndex="currentTabIndex">
-                 <scroller style="flex : 1;">
-	        		<brief-instroduction :increase="increase"></brief-instroduction>
-	        	</scroller>
+                 <!-- <scroller style="flex : 1;"> -->
+	        		<brief-instroduction :increase="increase" :goTop="goTop"></brief-instroduction>
+	        	<!-- </scroller> -->
             </tab-item>
 
             <tab-item index="1" :currentTabIndex="currentTabIndex">
@@ -142,7 +142,8 @@ import {fixedPic} from '../../js/tool.js';
                 inner : {},
                 timer : null,
                 isStart : false,
-                increase : false
+                increase : false,
+
 
 			}
 		},
@@ -205,7 +206,7 @@ import {fixedPic} from '../../js/tool.js';
 
 					this.poster = fixedPic(this.detail.picture);
 					this.isAttend = !!this.detail.isAttend;
-					
+					// buiweex.alert(res)
 				},(errorT,status) =>{
 					
 				})
@@ -344,7 +345,7 @@ import {fixedPic} from '../../js/tool.js';
             		},()=>{
 
             		},(err)=>{
-            			buiweex.alert(err);
+            			// buiweex.alert(err);
             		});
             	}catch(e){
 

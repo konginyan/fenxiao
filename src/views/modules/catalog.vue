@@ -14,6 +14,7 @@
 				</div>
 			</div>
 		</div>
+		
 		<prompt v-if="isShowPrompt" text="还没有目录"  src="/image/empty-catalog.png"></prompt>
 	</div>
 </template>

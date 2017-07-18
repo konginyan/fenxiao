@@ -115,15 +115,13 @@ import linkapi from '../../js/linkapi.js';
 					let arrTemp = res.r;
 					let arrCommentBy = [];
 					res.r.forEach(item=> {
-						arrCommentBy.push(item.commentBy);
+						arrCommentBy.push(item.commentBy || '');
 					})
 	
 					try{
 						linkapi.getUserInfo(arrCommentBy,(resp)=> {
-
 							arrTemp.forEach(item=>{
 								resp.forEach(inner => {
-
 									if(item.commentBy === inner.userId){
 										item.picture = inner.picture || '';
 										item.userName = inner.userName || '';
@@ -139,7 +137,13 @@ import linkapi from '../../js/linkapi.js';
 								});
 								
 							});
-							
+							// 当arrTemp为空的时候
+							arrTemp.forEach(item=>{
+								item.picture = item.picture ? item.picture : '';
+								item.userName = item.userName ? item.userName : '跨公司用户';
+								item.orgName = item.orgName ? item.orgName : '';
+								
+							});
 							this.commentList = arrTemp;
 							
 							if (res.r.length === 0) {
@@ -199,7 +203,7 @@ import linkapi from '../../js/linkapi.js';
 					let arrTemp = res.r;
 					let arrCommentBy = [];
 					res.r.forEach(item=> {
-						arrCommentBy.push(item.commentBy);
+						arrCommentBy.push(item.commentBy || '');
 					})
 					
 					try{
@@ -218,6 +222,7 @@ import linkapi from '../../js/linkapi.js';
 										item.orgName = '';
 									}
 									item.content = item.content ? item.content : '未作出评论';
+									item.score = item.score || 0;
 								});
 								
 							});

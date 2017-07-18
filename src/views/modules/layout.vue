@@ -81,7 +81,7 @@ import course from '../modules/course.vue';
             learningRecord
         },
         created: function () {
-   
+            this.login();
 
         },
         methods: {
@@ -124,7 +124,7 @@ import course from '../modules/course.vue';
             
         },
         mounted () {
-            this.login();
+            
         },
         
     }

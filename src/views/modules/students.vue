@@ -100,7 +100,7 @@ export default {
 			}).then((res) => {
 				let arrLearnBy = [];
 				res.r.forEach(item=> {
-					arrLearnBy.push(item.learnBy);
+					arrLearnBy.push(item.learnBy || '');
 				})
 
 				try{
@@ -154,9 +154,9 @@ export default {
 			}).then((res) => {
 				let arrLearnBy = [];
 				res.r.forEach(item=> {
-					arrLearnBy.push(item.learnBy);
+					arrLearnBy.push(item.learnBy || '');
 				})
-				
+
 				try{
 					linkapi.getUserInfo(arrLearnBy,(res)=> {
 						let tempArr = [];
