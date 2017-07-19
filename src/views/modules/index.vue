@@ -238,7 +238,6 @@
             },
             linkBanner (item){
                 try{
-                    console.log(0)
                     let type = this.getRecordType(item);
                     if(type === 'Live') buiweex.push(buiweex.getContextPath() + "/live.weex.js",{
                         liveId : this.getMainId(item)
@@ -250,7 +249,6 @@
                     else buiweex.alert('打开失败')
                 }
                 catch (e){
-                    console.log(1)
                     buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
                         url : item.url,
                         name : item.name
