@@ -50,6 +50,11 @@
 				// buiweex.toast(this.value);
 				this.$emit('change', value);
 			}
+		},
+		watch : {
+			value (val){
+				this.selectValue(val);
+			}
 		}
 		
 	}
