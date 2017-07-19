@@ -169,7 +169,7 @@ var websocket = weex.requireModule('webSocket')
 				buiweex.pop();
 			},
 			clearDOM (html) {
-				return html?html.replace(/<[\w\/\s]*>/g, ''):'';
+				return html?html.replace(/<.*?>/g, ''):'';
 			},
 			refresh () {
 				Promise.all([this.getLiveDetail(),this.getReplays()])
@@ -211,8 +211,6 @@ var websocket = weex.requireModule('webSocket')
 			},
 			"onpause": function (event) {
 					this.isShow = true;
-					this.liveFail = true;
-					this.clearLive();
 			},
 			"onfinish": function (event) {
 					this.isShow = true;
@@ -293,14 +291,17 @@ var websocket = weex.requireModule('webSocket')
 				})
 			},
 			playReplay(index,url) {
-				if(url.slice(-4)==='.flv'&&weex.config.env.platform === 'iOS') this.flvErr = true;
+				if(url.slice(-4)==='.flv'&&weex.config.env.platform === 'iOS'){
+					this.flvErr = true;
+					this.bgSrc = this.getPicture(this.liveDetail.picture);
+				} 
 				else {
 					this.flvErr = false;
 					this.videoSrc = url;
-					this.replayindex = index;
 					this.liveFail = false;
 					this.bgSrc = null;
 				}
+				this.replayindex = index;
 			},
 			closeDropdown () {
 				this.isShowDropdown = false;
