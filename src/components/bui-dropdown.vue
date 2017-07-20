@@ -17,7 +17,7 @@
     module.exports = {
         data: function () {
             return {
-                widthDrop: "260px",
+                widthDrop: "280px",
                 left: "0px",
                 top: "0px",
                 sanjiaoLeft: "40px",
@@ -78,9 +78,9 @@
                 var el = _this.$refs.dropdownBox;
                 // console.log(data);
                 _this.position = data.position;
-                //showArrow为false,宽度按触发元素宽度自适应,如果控制宽度可设置为true,默认宽度为260px,也可自传宽度
+                //showArrow为false,宽度按触发元素宽度自适应,如果控制宽度可设置为true,默认宽度为280px,也可自传宽度
                 if(!_this.showArrow){
-                    if(_this.position.width >= 260) {
+                    if(_this.position.width >= 280) {
                         _this.widthDrop = _this.position.width;
                     }
                     if(_this.center){
@@ -88,9 +88,9 @@
                         _this.sanjiaoLeft = _this.position.x + _this.position.width/2-20;
                         _this.left = _this.position.x;
                     }else{
-                        if((750 - _this.position.x) < 260){
-                            _this.left = _this.position.x - (260 - (750 - _this.position.x))-20;
-                            _this.sanjiaoLeft = 260 - 80;
+                        if((750 - _this.position.x) < 280){
+                            _this.left = _this.position.x - (280 - (750 - _this.position.x))-20;
+                            _this.sanjiaoLeft = 280 - 80;
                         }else{
                             _this.left = _this.position.x + "px";
                         }
@@ -101,16 +101,16 @@
                         // console.log(_this.position.x);
                         // console.log(_this.widthDrop);
 
-//                        _this.sanjiaoLeft = _this.position.x + 260/2 -40;
-                        _this.sanjiaoLeft = 260/2 - 20;
+//                        _this.sanjiaoLeft = _this.position.x + 280/2 -40;
+                        _this.sanjiaoLeft = 280/2 - 20;
                         _this.left = _this.position.x + _this.position.width/2 - 130;
                     }else{
                         if(_this.position.x == 0) {
                             _this.left = _this.position.x+20;
                         }
-                        if((750 - _this.position.x) <= 260){
-                            _this.left = _this.position.x - (260 - (750 - _this.position.x))-20;
-                            _this.sanjiaoLeft = 260 - 80;
+                        if((750 - _this.position.x) <= 280){
+                            _this.left = _this.position.x - (280 - (750 - _this.position.x))-20;
+                            _this.sanjiaoLeft = 280 - 80;
                         }
                     }
 

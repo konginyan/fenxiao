@@ -1,5 +1,5 @@
 
-let debug = true;
+let debug = false;
 let url,ssoUrl,username,password;
 
 

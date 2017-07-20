@@ -45,7 +45,7 @@
 			<web style="width:750px;height:200px;" src="http://10.200.52.28:8090/ba/api/training/outline?id=14de0867-4f62-4d49-b402-e785c7a7544c&type=1&module=live"></web>
 			
 		</div> -->
-		
+		<progress ref="progress"></progress>
 		</div>
 
 </template>
@@ -56,6 +56,7 @@ import rate from '../components/rate.vue';
 import ajax from '../../js/ajax.js';
 var globalEvent = weex.requireModule('globalEvent');
 import linkapi from '../../js/linkapi.js';
+import {extend} from "../../js/tool.js";
 const dom = weex.requireModule('dom');
 // import loadingView from '../components/loading-view.vue';
 	export default {
@@ -81,22 +82,31 @@ const dom = weex.requireModule('dom');
 			this.courseId = buiweex.getPageParams().courseId;
 			this.init();
 			// this.getWeb();
+
+			/*linkapi.getUserInfo('972eb5ee-9b5b-43a0-8ced-cda3f33391a1',res=>{
+				buiweex.alert(res)
+			},err=>{
+				buiweex.alert(err);
+			})*/
 			
 
 		},
 		methods:{
+
 			init () {
 				Promise.all([this.getAttendList(),this.getDetail()]).then(()=>{
 					
 					buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
 					this.isLoading = false;
-
+					extend(this.$refs.progress,{id:'progress', width:750, duration:1000, opacity:'0'});
 				},()=>{
 
 					buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
+					extend(this.$refs.progress,{id:'progress', width:750, duration:1000, opacity:'0'});
 
 				})
 			},
+			
 			/*getWeb(){
 				return ajax({
 					url : 'ba/learn/course/outline',
@@ -148,15 +158,17 @@ const dom = weex.requireModule('dom');
 
 						try{
 							linkapi.getUserInfo(arrLearnBy,(res)=> {
-								// buiweex.alert(res);
+
 								let tempArr = [];
 								res.forEach(item=>{
 									let obj = {
 										picture : item.picture || '',
 										name : item.userName || ''
 									}
+
 									tempArr.push(obj);
 								})
+
 								this.userList = tempArr;
 								resolve(this.userList);
 								

@@ -39,7 +39,7 @@ export default {
   },
   methods : {
     start(){
-      extend(this, {id:'progress', width:350, duration:1000})
+      extend(this, {id:'progress', width:700, duration:1000})
     },
   },
   computed : {
@@ -53,7 +53,7 @@ export default {
     wrapStyle () {
       return {
         'flex': 1,
-        'position': 'absolute',
+        'position': 'fixed',
         'width': '750px',
         'top': this.marginTop
       }

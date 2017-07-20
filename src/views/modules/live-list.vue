@@ -150,7 +150,7 @@ export default {
       switch(live.liveStatus){
         case 0: return '预约人数: ' + (live.appointmentCount||0) + '人';
         case 1: return '在线人数: ' + (live.liveCount||0) + '人';
-        case 2: return '学习人数: ' + (live.recordingCount||0) + '人';
+        case 2: return '学习人数: ' + (live.learnCount||0) + '人';
       }
     },
     getStartTime (live) {

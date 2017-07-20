@@ -112,38 +112,54 @@ import linkapi from '../../js/linkapi.js';
 						page : this.page
 					}
 				}).then((res) =>{
-					let arrTemp = res.r;
+					let arrTemp = res.r || [];
+
 					let arrCommentBy = [];
 					res.r.forEach(item=> {
 						arrCommentBy.push(item.commentBy || '');
 					})
-	
+					
 					try{
 						linkapi.getUserInfo(arrCommentBy,(resp)=> {
-							arrTemp.forEach(item=>{
-								resp.forEach(inner => {
+							resp = resp || [];
+							for (let i = 0,arrTempLen = arrTemp.length; i < arrTempLen; i++) {
+								let item = arrTemp[i];
+								item.picture = '';
+								item.userName = '跨公司用户';
+								item.orgName = '';
+								for (let j = 0; j < resp.length; j++) {
+									let inner = resp[j];
 									if(item.commentBy === inner.userId){
 										item.picture = inner.picture || '';
 										item.userName = inner.userName || '';
 										item.orgName = inner.orgName || '';
-									}else{
-										item.picture = '';
-										item.userName = '跨公司用户';
-										item.orgName = '';
+										break;
 									}
-									if (!item.content) {
-										item.content ='未作出评论';
+								}
+
+							}
+
+							/*arrTemp.forEach(item=>{
+
+								resp.forEach(inner => {
+
+									if(item.commentBy === inner.userId){
+										item.picture = inner.picture || '';
+										item.userName = inner.userName || '';
+										item.orgName = inner.orgName || '';
 									}
+		
 								});
+
 								
-							});
+							});*/
 							// 当arrTemp为空的时候
-							arrTemp.forEach(item=>{
-								item.picture = item.picture ? item.picture : '';
-								item.userName = item.userName ? item.userName : '跨公司用户';
-								item.orgName = item.orgName ? item.orgName : '';
+							// arrTemp.forEach(item=>{
+							// 	item.picture = item.picture ? item.picture : '';
+							// 	item.userName = item.userName ? item.userName : '跨公司用户';
+							// 	item.orgName = item.orgName ? item.orgName : '';
 								
-							});
+							// });
 							this.commentList = arrTemp;
 							
 							if (res.r.length === 0) {
@@ -200,7 +216,7 @@ import linkapi from '../../js/linkapi.js';
 				}).then((res) =>{
 					this.showLoading = false;
 					this.isShowPrompt = false;
-					let arrTemp = res.r;
+					let arrTemp = res.r || [];
 					let arrCommentBy = [];
 					res.r.forEach(item=> {
 						arrCommentBy.push(item.commentBy || '');
@@ -208,24 +224,23 @@ import linkapi from '../../js/linkapi.js';
 					
 					try{
 						linkapi.getUserInfo(arrCommentBy,(resp)=> {
-							
-							arrTemp.forEach(item=>{
-								resp.forEach(inner => {
-
+							resp = resp || [];
+							for (let i = 0,arrTempLen = arrTemp.length; i < arrTempLen; i++) {
+								let item = arrTemp[i];
+								item.picture = '';
+								item.userName = '跨公司用户';
+								item.orgName = '';
+								for (let j = 0; j < resp.length; j++) {
+									let inner = resp[j];
 									if(item.commentBy === inner.userId){
 										item.picture = inner.picture || '';
 										item.userName = inner.userName || '';
 										item.orgName = inner.orgName || '';
-									}else{
-										item.picture = '';
-										item.userName = '跨公司用户';
-										item.orgName = '';
+										break;
 									}
-									item.content = item.content ? item.content : '未作出评论';
-									item.score = item.score || 0;
-								});
-								
-							});
+								}
+
+							}
 							if(res.r.length === 0 && this.commentList.length === 0){
 								this.loadingText = '没有更多数据了';
 								this.isShowPrompt = true;
