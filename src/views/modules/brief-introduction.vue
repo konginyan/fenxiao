@@ -95,29 +95,9 @@ const storage = weex.requireModule('storage');
 					this.userList = arr[0];
 					let detail = arr[1].r[0];
 					this.detail = detail;
-					// buiweex.alert(arr[0]);
-					// detail.outline = detail.outline.replace(/<.*?>/g,'');
 
-					let compareObj = (current,cache)=>{
-                        let currentStr = JSON.stringify(current),
-                            currentStrLen = currentStr.length,
-                            cacheStr = JSON.stringify(cache),
-                            cacheStrLen = cacheStr.length;
-                        if (currentStr !== cacheStr && currentStrLen !== cacheStrLen) {
-                        	// 以下两句应该是一样的效果，但是目前原因不明
-                            cache = current;
-                            // this.detail = current;
-                            // buiweex.alert(this.detail);
-                            // buiweex.alert('update!');
-                        }else{
-                            // buiweex.alert('no update!');	
-                        }   
-                        
-                    }    
-                    // compareObj(detail,this.detail);
 
 					this.setCache(arr);
-					// this.detail = detail;
 					/*buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});*/
 					this.isLoading = false;
 					extend(this.$refs.progress,{id:'progress', width:750, duration:2000, opacity:'0'});
@@ -233,7 +213,7 @@ const storage = weex.requireModule('storage');
 					courseId : this.courseId 
 				});
 			},
-			finish () {
+			/*finish () {
 				const el = this.$refs.inner;
        			dom.scrollToElement(el, {
        				animated : false
@@ -243,7 +223,7 @@ const storage = weex.requireModule('storage');
 			},
 			error () {
 				buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
-			}
+			}*/
 		},
 		created (){
 			this.courseId = buiweex.getPageParams().courseId;

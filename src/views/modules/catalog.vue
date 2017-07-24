@@ -30,6 +30,9 @@ var globalEvent = weex.requireModule('globalEvent');
 		props : {
 			currentIndex : {
 				type : String
+			},
+			catalogData : {
+				type : Object
 			}
 		},
 		data () {
@@ -43,8 +46,7 @@ var globalEvent = weex.requireModule('globalEvent');
 			}
 		},
 		mounted(){
-			this.courseId = buiweex.getPageParams().courseId;
-			this.getCatalog();	 
+			this.courseId = buiweex.getPageParams().courseId; 
 			this.getRecord();
 			this.selectIndex = this.currentIndex;
 
@@ -73,12 +75,14 @@ var globalEvent = weex.requireModule('globalEvent');
 				
 			},
 			saveRecord (inner) {
-				storage.setItem(this.courseId,JSON.stringify(inner));
+				let courseRecord = this.courseId + 'record';
+				storage.setItem(courseRecord,JSON.stringify(inner));
 			},
 			getRecord () {
-				let courseId = this.courseId;
+
+				let courseRecord = this.courseId + 'record';
 				try{
-					storage.getItem(courseId,e=>{
+					storage.getItem(courseRecord,e=>{
 						// buiweex.alert(e.data !== 'undefined');
 						if (e.data != 'undefined') {
 
@@ -95,39 +99,40 @@ var globalEvent = weex.requireModule('globalEvent');
 				}
 				
 			},
-			getCatalog() {
-				ajax({
-					url : 'ba/api/course/catalogweex',
-					data : {
-						id : this.courseId,
-					}
-				}).then((res) =>{
-					if (typeof res.r === 'undefined' ||  res.r.length === 0) {
-						this.isShowPrompt = true;
+			catalogHandle(res){
+				if (typeof res.r === 'undefined' ||  res.r.length === 0) {
+					this.isShowPrompt = true;
 
-					}else{
-						this.isShowPrompt = false;
+				}else{
+					this.isShowPrompt = false;
 
-					}
-					res.r && res.r.forEach(item=>{
-						item && item.detailList && item.detailList.forEach(inner=>{
-							this.total += 1;
-							let cataIndex = this.total < 10 ? '0' + this.total : this.total;
-							inner.cataIndex = cataIndex;
-						})
+				}
+				res.r && res.r.forEach(item=>{
+					item && item.detailList && item.detailList.forEach(inner=>{
+						this.total += 1;
+						let cataIndex = this.total < 10 ? '0' + this.total : this.total;
+						inner.cataIndex = cataIndex;
 					})
-
-					this.catalogList = res.r || [];
-					// console.log(this.catalogList);
-					
-					
-				},(errorT,status) =>{
-					
 				})
+
+				this.catalogList = res.r || [];
 			},
+			setCache(value){
+				storage.setItem(this.courseId + 'catalog',JSON.stringify(value));
+			},
+			getCache(){
+                storage.getItem(this.courseId + 'catalog',(res)=>{
+                    if (res.data != 'undefined') {
+                        let arr = JSON.parse(res.data);
+                        buiweex.alert('get')
+                        this.catalogHandle(arr);
+                    }
+                });
+            },
 
 		},
 		created (){
+			this.getCache();
 	        globalEvent.addEventListener("androidback", function (e){
 	              buiweex.pop();
 	        });
@@ -137,8 +142,11 @@ var globalEvent = weex.requireModule('globalEvent');
 	    },
 	    watch : {
 			currentIndex (val) {
-				console.log(val);
 				this.selectIndex = val;
+			},
+			catalogData (val){
+				this.catalogHandle(val);
+				this.setCache(val);
 			}
 		}
 	}

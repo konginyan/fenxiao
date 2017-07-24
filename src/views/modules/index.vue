@@ -308,7 +308,7 @@
                     let recommendList = res[0].r,
                         lastact = res[1].r,
                         hottestList = res[2].r;
-                    let compareObj = (current,cache)=>{
+                    /*let compareObj = (current,cache)=>{
                         let currentStr = JSON.stringify(current),
                             currentStrLen = currentStr.length,
                             cacheStr = JSON.stringify(cache),
@@ -320,11 +320,13 @@
                             // buiweex.alert('no update!');
                         }   
                         
-                    }    
-                    compareObj(recommendList,this.recommendList);
-                    compareObj(lastact,this.lastact);
-                    compareObj(hottestList,this.hottestList);
-
+                    }    */
+                    // compareObj(recommendList,this.recommendList);
+                    // compareObj(lastact,this.lastact);
+                    // compareObj(hottestList,this.hottestList);
+                    this.recommendList = recommendList;
+                    this.lastact = lastact;
+                    this.hottestList = hottestList;
                     this.setCache(recommendList,lastact,hottestList);
                     
 
@@ -367,7 +369,18 @@
             rate
         },
         mounted () {
-            this.init();
+            let timer = setInterval(()=>{
+                storage.getItem('token',(res)=>{
+                    if (res.data != 'undefined') {
+                        clearInterval(timer);
+                        this.init();
+                    }
+                });
+            },50);
+            
+            
+           
+            
         }
     }
 
