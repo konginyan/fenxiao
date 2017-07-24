@@ -39,7 +39,7 @@ export default {
   },
   methods : {
     start(){
-      extend(this, {id:'progress', width:700, duration:1000})
+      extend(this, {id:'progress', width:730, duration:2000})
     },
   },
   computed : {

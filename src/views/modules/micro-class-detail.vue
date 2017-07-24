@@ -5,7 +5,7 @@
 						v-if="src"
                         :src="src"
                         :playstatus="videoState"
-                        autoplay="false"
+                        autoplay="true"
                        
                         @start="onstart($event)"
 	                    @pause="onpause($event)"
@@ -370,8 +370,6 @@ import {fixedPic} from '../../js/tool.js';
 										flag = false;
 										this.firstVideoSrc = inner.url;
 										this.inner = inner;
-										
-										
 
 									}
 								}else if (type === 'html'){

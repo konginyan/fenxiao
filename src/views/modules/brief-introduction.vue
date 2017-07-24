@@ -1,8 +1,7 @@
 <template>
 	
-		<div class="brief-introduction-wrap" ref="brief-introduction-wrap" style="opacity:0;flex : 1;width:750px;">
+		<div class="brief-introduction-wrap" ref="brief-introduction-wrap" style="flex : 1;width:750px;">
 		<scroller style="flex : 1;width:750px;">
-			<!-- <loading-view v-if="isLoading" src="/image/gray.png"></loading-view> -->
 			<div class="brief-inner" ref="inner">
 				<div class="course-teacher">
 					<text class="course-teacher-title">{{detail.name}}</text>
@@ -32,7 +31,7 @@
 				<div class="course-desc">
 					<text class="course-desc-title">课程简介</text>
 					<div class="course-desc-list">
-						<text class="course-desc-item">{{outline}}</text>
+						<text class="course-desc-item">{{detail.outlineText}}</text>
 						
 					</div>
 						
@@ -58,7 +57,7 @@ var globalEvent = weex.requireModule('globalEvent');
 import linkapi from '../../js/linkapi.js';
 import {extend} from "../../js/tool.js";
 const dom = weex.requireModule('dom');
-// import loadingView from '../components/loading-view.vue';
+const storage = weex.requireModule('storage');
 	export default {
 		props : {
 			increase : {
@@ -71,7 +70,6 @@ const dom = weex.requireModule('dom');
 				detail : {},
 				attendList : [],
 				courseId : '',
-				outline : '',
 				userList : [],
 				defaultAvatar : '/image/icon-avatar.png',
 				isLoading : true,
@@ -79,7 +77,6 @@ const dom = weex.requireModule('dom');
 			}
 		},
 		mounted(){
-			this.courseId = buiweex.getPageParams().courseId;
 			this.init();
 			// this.getWeb();
 
@@ -94,17 +91,41 @@ const dom = weex.requireModule('dom');
 		methods:{
 
 			init () {
-				Promise.all([this.getAttendList(),this.getDetail()]).then(()=>{
-					
-					buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
+				Promise.all([this.getAttendList(),this.getDetail()]).then((arr)=>{
+					this.userList = arr[0];
+					let detail = arr[1].r[0];
+					this.detail = detail;
+					// buiweex.alert(arr[0]);
+					// detail.outline = detail.outline.replace(/<.*?>/g,'');
+
+					let compareObj = (current,cache)=>{
+                        let currentStr = JSON.stringify(current),
+                            currentStrLen = currentStr.length,
+                            cacheStr = JSON.stringify(cache),
+                            cacheStrLen = cacheStr.length;
+                        if (currentStr !== cacheStr && currentStrLen !== cacheStrLen) {
+                        	// 以下两句应该是一样的效果，但是目前原因不明
+                            cache = current;
+                            // this.detail = current;
+                            // buiweex.alert(this.detail);
+                            // buiweex.alert('update!');
+                        }else{
+                            // buiweex.alert('no update!');	
+                        }   
+                        
+                    }    
+                    // compareObj(detail,this.detail);
+
+					this.setCache(arr);
+					// this.detail = detail;
+					/*buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});*/
 					this.isLoading = false;
-					extend(this.$refs.progress,{id:'progress', width:750, duration:1000, opacity:'0'});
-				},()=>{
-
-					buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
-					extend(this.$refs.progress,{id:'progress', width:750, duration:1000, opacity:'0'});
-
-				})
+					extend(this.$refs.progress,{id:'progress', width:750, duration:2000, opacity:'0'});
+					
+				}).catch(reason => { 
+                    /*buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});*/
+					extend(this.$refs.progress,{id:'progress', width:750, duration:2000, opacity:'0'});
+                })
 			},
 			
 			/*getWeb(){
@@ -125,15 +146,7 @@ const dom = weex.requireModule('dom');
 					url : 'ba/api/course/show',
 					data : {
 						id : this.courseId,
-
-
 					}
-				}).then((res) =>{
-					this.detail = res.r[0];
-					this.outline = this.detail.outline.replace(/<.*?>/g,'');
-					
-				},(errorT,status) =>{
-					// buiweex.alert('getDetail fail');
 				})
 			},
 			getAttendList () {
@@ -169,18 +182,18 @@ const dom = weex.requireModule('dom');
 									tempArr.push(obj);
 								})
 
-								this.userList = tempArr;
-								resolve(this.userList);
+								// this.userList = tempArr;
+								resolve(tempArr);
 								
 								
 							},(err)=>{
-								this.userList = [];
-								reject(this.userList);
+								// this.userList = [];
+								reject([]);
 								
 							})
 						}catch(e){
-							this.userList = [];
-							reject(this.userList);
+							// this.userList = [];
+							reject([]);
 							this.isLoading = false;
 
 						}
@@ -192,6 +205,20 @@ const dom = weex.requireModule('dom');
 					// buiweex.alert('getAttendList fail');
 				})
 			},
+			setCache(value){
+				storage.setItem(this.courseId,JSON.stringify(value));
+			},
+			getCache(){
+                storage.getItem(this.courseId,(res)=>{
+                    if (res.data != 'undefined') {
+                        let arr = JSON.parse(res.data);
+                        this.userList = arr[0];
+                        let detail = arr[1] && arr[1].r && arr[1].r[0];
+                        // detail.outline = detail.outline.replace(/<.*?>/g,'');
+                        this.detail = detail;
+                    }
+                });
+            },
 			back(){
 				buiweex.pop();
 			},
@@ -219,13 +246,15 @@ const dom = weex.requireModule('dom');
 			}
 		},
 		created (){
+			this.courseId = buiweex.getPageParams().courseId;
+			this.getCache();
 	        globalEvent.addEventListener("androidback", function (e){
 	              buiweex.pop();
 	        });
 	    },
 	    components : {
 	    	rate,
-	    	// loadingView
+
 	    },
 	    watch : {
 	    	increase :function (val) {

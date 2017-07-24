@@ -111,7 +111,7 @@ export default {
         if(res.r.length === 0){
           this.loadingText = '没有更多数据了';
           this.loading = false;
-          extend(this.$refs.progress,{id:'progress', width:750, duration:1000, opacity:'0'});
+          extend(this.$refs.progress,{id:'progress', width:750, duration:2000, opacity:'0'});
           setTimeout(()=>{
             this.showLoading = false;
           },500)
@@ -127,7 +127,7 @@ export default {
         this.refreshIcon = "icon-checkbox-on";
         this.refreshText = "刷新成功";
         this.loading = false;
-        extend(this.$refs.progress,{id:'progress', width:750, duration:1000, opacity:'0'});
+        extend(this.$refs.progress,{id:'progress', width:750, duration:2000, opacity:'0'});
         setTimeout(()=>{
           this.refreshing = false;
         },1000)
@@ -136,7 +136,7 @@ export default {
         this.refreshIcon = "icon-todown";
         this.refreshText = "刷新失败";
         this.loading = false;
-        extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
+        extend(this.$refs.progress, {id:'progress', width:750, duration:2000, opacity:'0'});
       })
     },
     getPicture (src) {

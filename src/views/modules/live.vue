@@ -173,10 +173,10 @@ var websocket = weex.requireModule('webSocket')
 				Promise.all([this.getLiveDetail(),this.getReplays()])
 					.then(()=>{
 						this.loading = false;
-						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
+						extend(this.$refs.progress, {id:'progress', width:750, duration:2000, opacity:'0'});
 					},()=>{
 						this.loading = false;
-						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
+						extend(this.$refs.progress, {id:'progress', width:750, duration:2000, opacity:'0'});
 					})
 				setInterval(()=>{
 					Promise.all([this.getLiveDetail(),this.getReplays()])
@@ -285,7 +285,7 @@ var websocket = weex.requireModule('webSocket')
 				}).then((res) =>{
 					this.replays = res.r;
 				},(errorT,status) =>{
-						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
+						extend(this.$refs.progress, {id:'progress', width:750, duration:2000, opacity:'0'});
 				})
 			},
 			playReplay(index,url) {

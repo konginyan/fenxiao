@@ -1,6 +1,5 @@
 <template>
     <div @viewappear="onappear">
-        <!--<loading-view v-if="isLoading" src="/image/gray.png"></loading-view> -->
         <list class="span1" @scroll="onScroll">
             <refresh class="index-refresh" @refresh="onRefresh" @pullingdown="onPullingdown($event)"
                      :display="refreshing ? 'show' : 'hide'">
@@ -9,15 +8,15 @@
             </refresh>
 
             <cell>
-            	<bui-image ref="temp1" v-if="recommendList.length === 0"  src="/image/banner.png"  style="width: 750px;height: 375px;"></bui-image>
-                <slider ref="recommend"  v-if="recommendList.length !== 0"  style="width: 750px;height: 375px;" class="bui-slider banner" interval="1500" auto-play="true" offset-x-accuracy="0.1"
+            	<bui-image  v-if="recommendList.length === 0"  src="/image/banner.png"  width="750px" height="375px"></bui-image>
+                <slider ref="recommend"  v-if="recommendList.length !== 0"  style="width: 750px;height: 375px;" class="bui-slider banner" interval="5000" auto-play="true" offset-x-accuracy="0.1"
                         @scroll="scrollHandler"
                         @change="changeHandler" infinite="false">
                     <div :key="item" class="bui-slider-pages" v-for="item in recommendList">
                         <div class="slider-wrap">
-                            <bui-image class="default-slider" src="/image/no-pic.png"
+                            <bui-image class="default-slider" src="/image/no-pic.png" width="750px" height="375px"
                                        @click="linkBanner(item)"></bui-image>
-                            <bui-image @click="linkBanner(item)" class="img slider-item-img"
+                            <bui-image @click="linkBanner(item)" class="img slider-item-img" width="750px" height="375px"
                                        :src="fixedPicture(item.picture)"></bui-image>
                         </div>
                     </div>
@@ -26,7 +25,7 @@
             </cell>
 
             <cell>
-                <div class="course-menu" ref="course-menu" style="width:750px;height:200px;opacity:1;">
+                <div class="course-menu" ref="course-menu" style="width:750px;height:200px;">
                     <div class="course-item" @click="microClass">
                         <bui-image @click="microClass" width="90px" height="90px"
                                    src="/image/icon-micro.png"></bui-image>
@@ -44,13 +43,13 @@
                 </div>
             </cell>
 
-            <cell ref="temp2" class="trailer-wrap" v-if="lastact.length == 0">
+            <cell  class="trailer-wrap" v-if="lastact.length == 0">
                <bui-image src="/image/trailer.png" width="702px" height="236px"></bui-image>
            </cell>
 
             <cell>
 
-                <div ref="lastact" v-if="lastact.length !== 0" style=" height: 284px;">
+                <div  v-if="lastact.length !== 0" style=" height: 284px;">
                     <div :key="item" class="trailer-wrap" v-for="item in lastact" @click="linkBanner(item)">
                         <bui-image src="/image/trailer1.png" width="702px" height="236px" @click="linkBanner(item)"></bui-image>
                         <div class="trailer-inner">
@@ -68,7 +67,7 @@
             </cell>
 
             <cell>
-                <div ref="select-wrap" class="select-wrap" style="width:750px;height:100px;">
+                <div class="select-wrap" style="width:750px;height:100px;">
                     <div class="h-line"></div>
                     <div class="select-content">
                         <text class="select-title">精选课程</text>
@@ -77,7 +76,7 @@
                     <div class="h-line"></div>
                 </div>
             </cell>
-			<cell  ref="temp3" v-for="item in 2" v-if="hottestList.length === 0">
+			<cell   v-for="item in 2" v-if="hottestList.length === 0">
 				<bui-image  width="702px" height="164px" src="/image/default-item.png" style="margin-left:24px;margin-right:24px;margin-bottom:24px;"></bui-image>
 			</cell>
             <cell >
@@ -119,13 +118,13 @@
 
 <script>
     import buiweex from "../../js/buiweex.js";
-    import rate from '../components/rate.vue';
+    const storage = weex.requireModule('storage');
     var globalEvent = weex.requireModule('globalEvent');
     var config = weex.config;
     import ajax from '../../js/ajax.js';
     import {fixedPic, formatDate, departUrl} from '../../js/tool.js';
     import linkapi from '../../js/linkapi.js';
-
+    import rate from '../components/rate.vue';
     export default {
         data () {
             return {
@@ -142,7 +141,6 @@
                 refreshIcon: "icon-todown",
                 refreshText: "下拉刷新...",
                 dropdownValue: '请选择',
-                isLoading: true,
                 currentIndex: 0
             }
         },
@@ -219,12 +217,16 @@
                 this.refreshText = "正在刷新";
                 this.showNav = false;
                 Promise.all([this.getHottestList(), this.getLastact()])
-                    .then(() => {
+                    .then((res) => {
+                        this.hottestList = res[0].r;
+                        this.lastact = res[1].r;
                         this.refreshIcon = "icon-checkbox-on";
                         this.refreshText = "刷新成功";
- 
+                        setTimeout(()=>{
                             this.refreshing = false;
                             this.showNav = true;
+                        },500)
+                            
     
                     })
             },
@@ -270,11 +272,6 @@
             getHottestList () {
                 return ajax({
                     url: 'ba/api/course/gethottestlist'
-                }).then((res) => {
-
-                    this.hottestList = res.r;
-                }, (errorT, status) => {
-                	
                 })
             },
             hottestLink (couseId) {
@@ -293,22 +290,11 @@
             getRecommend () {
                 return ajax({
                     url: 'ba/api/homepage/recommend',
-                }).then((res) => {
-  					
-                    this.recommendList = res.r;
-                }, (errorT, status) => {
-                	 
                 })
             },
             getLastact () {
                 return ajax({
                     url: 'ba/api/homepage/lastact',
-                }).then((res) => {
-                    
-                    this.lastact = res.r;
-
-                }, (errorT, status) => {
-
                 })
             },
             fixedPicture (source) {
@@ -318,22 +304,61 @@
                 return formatDate(time, 'MM-dd hh:mm:ss')
             },
             init () {
-            	
-            	Promise.all([this.getRecommend(),this.getLastact(),this.getHottestList()]).then(()=>{
-            	},()=>{
-            		
-            	});
-                /*this.getRecommend();
-                this.getLastact();
-                this.getHottestList();*/
+            	Promise.all([this.getRecommend(),this.getLastact(),this.getHottestList()]).then((res)=>{
+                    let recommendList = res[0].r,
+                        lastact = res[1].r,
+                        hottestList = res[2].r;
+                    let compareObj = (current,cache)=>{
+                        let currentStr = JSON.stringify(current),
+                            currentStrLen = currentStr.length,
+                            cacheStr = JSON.stringify(cache),
+                            cacheStrLen = cacheStr.length;
+                        if (currentStr !== cacheStr && currentStrLen !== cacheStrLen) {
+                            cache = current;
+                            // buiweex.alert('update!');
+                        }else{
+                            // buiweex.alert('no update!');
+                        }   
+                        
+                    }    
+                    compareObj(recommendList,this.recommendList);
+                    compareObj(lastact,this.lastact);
+                    compareObj(hottestList,this.hottestList);
+
+                    this.setCache(recommendList,lastact,hottestList);
+                    
+
+                    
+
+
+            	}).catch(reason => { 
+                    console.log(reason)
+                });
+
                
                 
+            },
+            setCache(recommendList,lastact,hottestList){
+                storage.setItem('recommendList',JSON.stringify(recommendList));
+                storage.setItem('lastact',JSON.stringify(lastact));
+                storage.setItem('hottestList',JSON.stringify(hottestList));
+            },
+            getCache(){
+                let cacheArr = ['recommendList','lastact','hottestList'];
+                cacheArr.forEach(item=>{
+                    storage.getItem(item,(res)=>{
+                        if (res.data != 'undefined') {
+                            this[item] = JSON.parse(res.data);
+                        }
+                    });
+                })
             },
             onappear () {
 
             }
         },
         created (){
+            this.getCache();
             globalEvent.addEventListener("androidback", function (e) {
                 buiweex.pop();
             });
