@@ -55,7 +55,7 @@
 					<text class="summary">{{liveDetail.name}}</text>
 					<text v-if="liveDetail.liveStatus===0" class="book-count">{{liveDetail.appointmentCount||0}}人预约</text>
 					<text v-if="liveDetail.liveStatus===1" class="book-count">{{liveDetail.liveCount||0}}人在线</text>
-					<text v-if="liveDetail.liveStatus===2" class="book-count">{{liveDetail.recordingCount||0}}人已学</text>
+					<text v-if="liveDetail.liveStatus===2" class="book-count">{{liveDetail.learnCount||0}}人已学</text>
 				</div>
 				<div>
 					<list class="bobr-bottom">
@@ -168,17 +168,15 @@ var websocket = weex.requireModule('webSocket')
 			back(){
 				buiweex.pop();
 			},
-			clearDOM (html) {
-				return html?html.replace(/<.*?>/g, ''):'';
-			},
+			
 			refresh () {
 				Promise.all([this.getLiveDetail(),this.getReplays()])
 					.then(()=>{
 						this.loading = false;
-						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
+						extend(this.$refs.progress, {id:'progress', width:750, duration:2000, opacity:'0'});
 					},()=>{
 						this.loading = false;
-						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
+						extend(this.$refs.progress, {id:'progress', width:750, duration:2000, opacity:'0'});
 					})
 				setInterval(()=>{
 					Promise.all([this.getLiveDetail(),this.getReplays()])
@@ -238,7 +236,7 @@ var websocket = weex.requireModule('webSocket')
 					}
 					else{
 						this.liveDetail = res.r;
-						this.liveDetail.outline = this.clearDOM(this.liveDetail.outline);
+						this.liveDetail.outline = this.liveDetail.outlineStr;
 						if(this.firstin&&this.liveDetail.liveStatus===1){
 							this.playLive();
 							this.firstin = false;
@@ -287,7 +285,7 @@ var websocket = weex.requireModule('webSocket')
 				}).then((res) =>{
 					this.replays = res.r;
 				},(errorT,status) =>{
-						extend(this.$refs.progress, {id:'progress', width:750, duration:1000, opacity:'0'});
+						extend(this.$refs.progress, {id:'progress', width:750, duration:2000, opacity:'0'});
 				})
 			},
 			playReplay(index,url) {

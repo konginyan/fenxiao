@@ -1,19 +1,7 @@
 <template>
     <div>
-       
-       <!--  <div class="tabcontent" style="flex:1">
-            <tab-item tabId="tab1" :currentTab="currentTab">
-                    <index style="flex:1"></index>
-            </tab-item>
-            <tab-item tabId="tab2" :currentTab="currentTab">
-               <course style="flex:1;"></course>
-           </tab-item>
-             <tab-item tabId="tab3" :currentTab="currentTab">
-                <learning-record style="flex:1;"></learning-record>
-            </tab-item>
-        </div>    -->
-
        <div style="flex:1">
+           
             <tab-item index="0" :currentTabIndex="currentTabIndex">
                  <index style="flex:1;width:750px;"></index>
             </tab-item>
@@ -35,7 +23,7 @@
 <script>
     var buiweex = require("../../js/buiweex.js");
     var globalEvent = weex.requireModule('globalEvent');
-    const storage = weex.requireModule('storage')
+    const storage = weex.requireModule('storage');
 import {username,password} from '../../js/config.js';    
 import sso from '../../js/sso.js';
 import linkapi from '../../js/linkapi.js';
@@ -78,10 +66,11 @@ import course from '../modules/course.vue';
             tabItem,
             index,
             course,
-            learningRecord
+            learningRecord,
+
         },
         created: function () {
-   
+            this.login();
 
         },
         methods: {
@@ -106,10 +95,20 @@ import course from '../modules/course.vue';
 
             login () {
                 try{
-                    linkapi.getToken((e)=>{
-                        storage.setItem('token', e.accessToken);
-                    });
+
+                        linkapi.refreshToken(function(obj){
+                            var newToken=obj.accessToken;
+                            storage.setItem('token', newToken);
+                            
+                        },function(e){
+                            buiweex.alert(e)
+                        }); 
+
+                    // linkapi.getToken((e)=>{
+                    //     storage.setItem('token', e.accessToken);
+                    // });
                 }catch(e){
+
                     sso.login(username,password,function(res) {
                         var token = res['ex.oauth_access_token'];
                         storage.setItem('token', token);
@@ -124,7 +123,7 @@ import course from '../modules/course.vue';
             
         },
         mounted () {
-            this.login();
+            
         },
         
     }

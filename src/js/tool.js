@@ -1,5 +1,5 @@
-// const url = 'http://ba.depts.bingosoft.net:8088/';
-// const url = 'https://ba1.bingocc.com/';
+const storage = weex.requireModule('storage');
+import buiweex from './buiweex.js';
 import {url} from './config.js';
 export function unicode(str){
 
@@ -136,4 +136,45 @@ export function extend(obj, params, callback){
     }, function () {
         callback && callback();
     });
+}
+
+export function createArr (arrName='') {
+    storage.getItem(arrName,(res)=>{
+        if (res.data === 'undefined') {
+           storage.setItem(arrName,JSON.stringify([]));
+        }
+    })
+    
+}
+
+export function manageArr(arrName='',obj = {},maxLength = 3) {
+    let id = obj.id;
+        // arr = obj.data;
+   storage.getItem(arrName,(res)=>{
+        if (res.data != 'undefined') {
+           let arr = JSON.parse(res.data);
+           let isExit = false;
+           if (arr.length === 0) {
+                arr.push(obj);
+           }else{
+               for (let i = 0,len=arr.length; i < len; i++) {
+                    if(arr[i].id === id){
+                       arr[i] = obj;
+                       isExit = true;
+                       break;
+                   }
+               }
+
+                if (!isExit) {
+                    arr.push(obj);
+                }
+             
+               while(arr.length > maxLength){
+                   arr.shift();
+               }
+           }
+           storage.setItem(arrName,JSON.stringify(arr));
+        }
+    })
+    
 }

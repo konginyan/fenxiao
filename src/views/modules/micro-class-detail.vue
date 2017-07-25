@@ -5,7 +5,7 @@
 						v-if="src"
                         :src="src"
                         :playstatus="videoState"
-                        autoplay="false"
+                        autoplay="true"
                        
                         @start="onstart($event)"
 	                    @pause="onpause($event)"
@@ -13,7 +13,7 @@
 	                    @fail="onfail($event)">
                         	
              </bui-video>
-			 <bui-image v-if="isShowPoster" :src="poster" class="poster" width="750px" height="418px" @click="posterHandler" placeholder="/image/no-pic.png"></bui-image>
+			 <bui-image v-if="isShowPoster" :src="detail.picture" class="poster" width="750px" height="418px" @click="posterHandler" placeholder="/image/no-pic.png"></bui-image>
 	        <bui-image v-if="isShow" @click="back" class="icon-back" src="/image/icon-back.png"></bui-image>
 	        <bui-image v-if="isShow"  @click="share($event)" class="icon-friendship" src="/image/icon-friendship.png"></bui-image>           
 		</div>
@@ -31,25 +31,23 @@
         </tab>
 		<div style="flex:1">
             <tab-item index="0" :currentTabIndex="currentTabIndex">
-                 <scroller style="flex : 1;">
-	        		<brief-instroduction :increase="increase"></brief-instroduction>
-	        	</scroller>
+                 <!-- <scroller style="flex : 1;"> -->
+	        		<brief-instroduction :increase="increase" :goTop="goTop"></brief-instroduction>
+	        	<!-- </scroller> -->
             </tab-item>
 
             <tab-item index="1" :currentTabIndex="currentTabIndex">
                 <scroller style="flex : 1;width:750px;">
-   	        		<catalog :currentIndex="currentIndex"  @videoSrc="videoSrc" @webSrc="webSrc"></catalog>
+   	        		<catalog :currentIndex="currentIndex" :catalogData="catalogData"  @videoSrc="videoSrc" @webSrc="webSrc"></catalog>
    	        	</scroller>
             </tab-item>
             <tab-item index="2" :currentTabIndex="currentTabIndex">
                  <comment style="flex:1;"></comment>
             </tab-item>
         </div>
-
-		
-		<div class="course-footer" ref="course-footer" style="opacity:0;">
-			<button  v-if="!isAttend "  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
-			<div class="operation" v-if="isAttend ">
+		<div class="course-footer" v-if="detail.score !== null || detail.score !== undefined">
+			<button  v-if="!detail.isAttend "  value="参加课程" type="primary" size="large" radius="0" @click="attend" class="attend-btn"></button>
+			<div class="operation" v-if="detail.isAttend ">
 				<div class="operation-item" @click="evaluate">
 					<icon @click="evaluate" name="icon-comment" size="40px" class="operation-icon"></icon>
 					<text class="operation-item-title">评论</text>
@@ -94,7 +92,7 @@ var globalEvent = weex.requireModule('globalEvent');
 import linkapi from '../../js/linkapi.js';
 import buiVideo from '../../components/bui-video.vue';
 const storage = weex.requireModule('storage');
-import {fixedPic} from '../../js/tool.js';
+import {fixedPic,createArr,manageArr} from '../../js/tool.js';
 	export default {
 		data () {
 			return {
@@ -120,11 +118,11 @@ import {fixedPic} from '../../js/tool.js';
 				leftItem: {
                     icons: 'icon-back',
                 },
-                detail : {},
-                isAttend : false,
+                detail : {
+                	picture : ''
+                },
                 isShow : true,
                 isShowDropdown : false,
-                poster : '',
                 isShowPoster : true,
                 shareList : [
                 	{
@@ -142,7 +140,9 @@ import {fixedPic} from '../../js/tool.js';
                 inner : {},
                 timer : null,
                 isStart : false,
-                increase : false
+                increase : false,
+                courseId : '',
+                catalogData : {}
 
 			}
 		},
@@ -152,13 +152,12 @@ import {fixedPic} from '../../js/tool.js';
 			},
 
 			action (item) {
-				let courseId = buiweex.getPageParams().courseId;
 				item = item.title;
 				if (item === '分享给同事') {
 					try{
 						linkapi.shareToMessage({
 							title : this.detail.name,
-							content : '[OpenApp]\nappCode=com.ba.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+courseId,
+							content : '[OpenApp]\nappCode=com.ba.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+this.courseId,
 							type : 'action',
 						});
 					}catch(e){
@@ -171,7 +170,7 @@ import {fixedPic} from '../../js/tool.js';
 					try{
 						linkapi.shareToBlog({
 							title : this.detail.name,
-							content : '[OpenApp]\nappCode=com.ba.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+courseId,
+							content : '[OpenApp]\nappCode=com.ba.weex\nappUrl='+'micro-class-detail.weex.js?courseId='+this.courseId,
 							type : 'action',
 						});
 					}catch(e){
@@ -191,30 +190,16 @@ import {fixedPic} from '../../js/tool.js';
                 this.currentTabIndex = index;
             },
 			getDetail () {
-				let courseId = buiweex.getPageParams().courseId;
 				return ajax({
 					url : 'ba/api/course/show',
 					data : {
-						id : courseId,
-
-
+						id : this.courseId,
 					}
-				}).then((res) =>{
-					// this.detail = res.returnval;
-					this.detail = res.r[0];
-
-					this.poster = fixedPic(this.detail.picture);
-					this.isAttend = !!this.detail.isAttend;
-					
-				},(errorT,status) =>{
-					
 				})
 			},
 			"onstart": function () {
 				this.isStart = true;
                 this.isShow = false;
-                
-                // buiweex.alert(this.isShow);
             },
             "onpause": function (event) {
                 this.isShow = true;
@@ -228,26 +213,13 @@ import {fixedPic} from '../../js/tool.js';
 
             evaluate () {
             	buiweex.push(buiweex.getContextPath() + "/evaluate.weex.js",{
-            		courseId : buiweex.getPageParams().courseId
+            		courseId : this.courseId
             	});
             },
             videoSrc (url) {
             	this.src = url;
             	this.isShowPoster = false;
             	this.videoState = 'play';
-            	/*clearInterval(this.timer);
-            	this.timer = setInterval(()=>{
-            		if (this.isStart) {
-            			clearInterval(this.timer);
-            		}else{
-            			this.videoState = 'play';
-            		}
-            	},500)*/
-            	/*this.$nextTick(()=>{
-            		this.videoState = 'play';
-            	})*/
-            	
-            	
             },
             webSrc (url){
 
@@ -257,10 +229,10 @@ import {fixedPic} from '../../js/tool.js';
             		url : 'ba/api/course/attend',
             		method : 'POST',
             		data : {
-            			id : buiweex.getPageParams().courseId,
+            			id : this.courseId,
             		}
             	}).then((res) =>{
-            		this.isAttend = true;
+            		this.detail.isAttend = true;
             		buiweex.toast('报名成功');
             		this.increase = true;
             	},(errorT,status) =>{
@@ -280,38 +252,32 @@ import {fixedPic} from '../../js/tool.js';
             	this.openDropdown(event);
             },
             learnContinue () {
-            	let courseId = buiweex.getPageParams().courseId;
+            	let courseRecord = this.courseId +'record';
             	this.currentTab = 'tab2';
             	this.currentTabIndex = 1;
-            	// storage.removeItem(courseId);
-            	// try{
-            		storage.getItem(courseId,e=>{
-            			let data = {};
-            			if (e.data != 'undefined') {
-	            			data = JSON.parse(e.data);
-	            			
-            			}else{
-            				data = this.inner;
-
-            				
-            			}
-            			let type = data.type;
-            			this.currentIndex = data.cataIndex;
-            			if (type === 'Video') {
-            				this.src = data.url;
-            				this.isShowPoster = false;
-            				this.videoState = 'start';
-            			}else if (type === 'html'){
-            				buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
-            					url : data.url,
-            					name : data.name || ''
-            				});
-            			}
+        		storage.getItem(courseRecord,e=>{
+        			let data = {};
+        			if (e.data != 'undefined') {
+            			data = JSON.parse(e.data);
             			
-            		})
-            	/*}catch(e){
+        			}else{
+        				data = this.inner;
+        			}
+        			let type = data.type;
+        			this.currentIndex = data.cataIndex;
+        			if (type === 'Video') {
+        				this.src = data.url;
+        				this.isShowPoster = false;
+        				this.videoState = 'start';
+        			}else if (type === 'html'){
+        				buiweex.push(buiweex.getContextPath() + "/web.weex.js",{
+        					url : data.url,
+        					name : data.name || ''
+        				});
+        			}
+        			
+        		})
 
-            	}*/
 				
             },
             posterHandler () {
@@ -329,7 +295,6 @@ import {fixedPic} from '../../js/tool.js';
             	
             	this.currentTab = 'tab2';
             	this.currentTabIndex = 1;
-            	// this.learnContinue();
             },
             runTest () {
             	try{
@@ -337,14 +302,14 @@ import {fixedPic} from '../../js/tool.js';
             			appCode : 'BingoAbility',
             			appUrl : 'modules/test/index.html',
             			data : {
-            				id : buiweex.getPageParams().courseId,
+            				id : this.courseId,
             				type : 'course',
             				toType : 'test'
             			}
             		},()=>{
 
             		},(err)=>{
-            			buiweex.alert(err);
+            			
             		});
             	}catch(e){
 
@@ -354,57 +319,80 @@ import {fixedPic} from '../../js/tool.js';
 				return ajax({
 					url : 'ba/api/course/catalogweex',
 					data : {
-						id : buiweex.getPageParams().courseId,
+						id : this.courseId,
 					}
-				}).then((res) =>{
-					let flag = true;
-					res.r && res.r.forEach(item=>{
-						if (item.detailList.forEach) {
-							item.detailList.forEach(inner=>{
-								let type = inner.type;
-								
-								if (type === 'Video') {
-									if (flag) {
-										
-										flag = false;
-										this.firstVideoSrc = inner.url;
-										this.inner = inner;
-										
-										
+				})
+			},
+			catalogHandle(res){
+				let flag = true;
+				res.r && res.r.forEach(item=>{
+					if (item.detailList.forEach) {
+						item.detailList.forEach(inner=>{
+							let type = inner.type;
+							
+							if (type === 'Video') {
+								if (flag) {
+									
+									flag = false;
+									this.firstVideoSrc = inner.url;
+									this.inner = inner;
 
-									}
-								}else if (type === 'html'){
-									if (flag) {
-										flag = false;
-										this.firstWebSrc = inner.url;
-										this.inner = inner;
-										
-									}
 								}
-							})
-						}
-						
-					})
-
-					
-				},(errorT,status) =>{
+							}else if (type === 'html'){
+								if (flag) {
+									flag = false;
+									this.firstWebSrc = inner.url;
+									this.inner = inner;
+									
+								}
+							}
+						})
+					}
 					
 				})
 			},
 			init(){
-				Promise.all([this.getDetail(),this.getCatalog()]).then(()=>{
-					buiweex.show(this, {id: 'course-footer', duration: '300'});
+				Promise.all([this.getDetail(),this.getCatalog()]).then((arr)=>{
+					this.initData(arr);
+					this.setCache(arr);
+					/*let courseMicro = this.courseId + 'Micro';
+					let arrObj = {
+						id : courseMicro,
+						data : arr
+					};
+					createArr('Micro');
+					manageArr('Micro',arrObj,20);*/
 
+
+					
 				},()=>{
-					buiweex.show(this, {id: 'course-footer', duration: '300'});
+
 				});
-				/*this.getDetail();
-	    		this.getCatalog();*/
-			}
+
+			},
+			setCache(value){
+				storage.setItem(this.courseId + 'micro',JSON.stringify(value));
+			},
+			getCache(){
+                storage.getItem(this.courseId + 'micro',(res)=>{
+                    if (res.data != 'undefined') {
+                        let arr = JSON.parse(res.data);
+                        this.initData(arr);
+                    }
+                });
+            },
+            initData (arr) {
+                let detail = arr[0].r[0];
+				detail.picture = fixedPic(detail.picture);
+				detail.isAttend = !!detail.isAttend;
+				this.detail = detail;
+				this.catalogHandle(arr[1]);
+				this.catalogData = arr[1];
+            }
 		},
 		created (){
-			
-			
+			this.courseId = buiweex.getPageParams().courseId;
+			this.getCache();
 	        globalEvent.addEventListener("androidback", function (e){
 	              buiweex.pop();
 	        });
@@ -424,7 +412,6 @@ import {fixedPic} from '../../js/tool.js';
 	    	}
 	    },
 	    components : {
-	    	// 'tabbar-scroll': require('../../components/tabbar-scroll.vue'),
 	    	briefInstroduction,
 	    	catalog,
 	    	comment,

@@ -28,6 +28,11 @@ var linkapi = {
 
         link.getToken([], success, error);
     },
+    refreshToken: function(success, error){
+
+        link.refreshToken([], success, error);
+    },
+
     //---------contact--------------------------------------------------------------------------------------
     /*
         该接口用于调用Link选人页面(单选) 

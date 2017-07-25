@@ -1,9 +1,11 @@
 const stream = weex.requireModule('stream');
 const storage = weex.requireModule('storage');
+const link = weex.requireModule('LinkModule');
 import {url} from './config.js';
 // const url = 'http://ba.depts.bingosoft.net:8088/';
 // const url = 'https://ba1.bingocc.com/';
-// import buiweex from '../js/buiweex.js'
+import buiweex from '../js/buiweex.js'
+
 export default function ajax(option,success,error) {
 	return new Promise(function(resolve,reject) {
 		storage.getItem('token',function(e) {
@@ -17,7 +19,7 @@ export default function ajax(option,success,error) {
 				body = option.data;
 			}
 
-			stream.fetch({
+			var reqParams={
 		       method: option.method,
 		       type: option.type || 'json',
 		       headers: {
@@ -25,8 +27,9 @@ export default function ajax(option,success,error) {
 		       },
 		       url: url + option.url + option.data,
 		       body: body
-		    }, function(res){
-		   		
+		    };
+
+			stream.fetch(reqParams, function(res){
 		   		if(res.ok){
 		   			resolve(res.data);
 		   			success && success(res.data)
@@ -34,12 +37,11 @@ export default function ajax(option,success,error) {
 		   			reject(res.statusText,res.status,res);
 		   			error && error(res.statusText,res.status,res);
 		   		}
-
-			   
 			});
 		});
 	});	
 }
+
 
 function obj2QueryStr(obj) {
     var queryStr = "?";
