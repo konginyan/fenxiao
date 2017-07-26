@@ -1,7 +1,7 @@
 <template>
 	<div class="live-wrap">
 		<bui-content v-if="!loading && !returnMsg" class="span1">
-			<div class="video-wrap" style="height:0px">
+			<div class="video-wrap" style="position:absolute;height:1px;width:1px;opacity:0">
 				<bui-video class="test-video"
 					v-if="testVideo"
 					:src="testVideo"
@@ -183,24 +183,34 @@ var websocket = weex.requireModule('webSocket')
 						.then(()=>{
 							
 						})
-				},26000)
+				},weex.config.env.platform === 'iOS'?26000:6000)
 			},
 			action (item) {
 				item = item.title;
 				if (item === '分享给同事') {
-					linkapi.shareToMessage({
-						title : '视频',
-						content : 'content',
-						url : 'http://www.baidu.com',
-						type : 'WEBSITE',
-					});
+					try{
+						linkapi.shareToMessage({
+							title : this.liveDetail.name,
+							content : '[OpenApp]\nappCode=com.ba.weex\nappUrl='+'live.weex.js?liveId='+this.liveDetail.infoId,
+							type : 'action',
+						});
+					}catch(e){
+
+					}
+					
+
+
 				}else if(item === '分享到社区'){
-					linkapi.shareToBlog({
-						title : '视频',
-						content : 'content',
-						url : 'http://www.baidu.com',
-						type : 'WEBSITE',
-					});
+					try{
+						linkapi.shareToBlog({
+							title : this.liveDetail.name,
+							content : '[OpenApp]\nappCode=com.ba.weex\nappUrl='+'live.weex.js?liveId='+this.liveDetail.infoId,
+							type : 'action',
+						});
+					}catch(e){
+						
+					}
+					
 				}
 				this.closeDropdown();
 			},
@@ -209,6 +219,8 @@ var websocket = weex.requireModule('webSocket')
 			},
 			"onpause": function (event) {
 					this.isShow = true;
+					this.liveFail = true;
+					this.clearLive();
 			},
 			"onfinish": function (event) {
 					this.isShow = true;
@@ -259,7 +271,7 @@ var websocket = weex.requireModule('webSocket')
 						if(!this.liveFail){
 							this.playLive();
 						}
-					},25000)
+					},weex.config.env.platform === 'iOS'?25000:3000)
 				}		
 			},
 			clearLive(){
@@ -322,7 +334,7 @@ var websocket = weex.requireModule('webSocket')
 			},
 			connect: function(){
 				websocket.WebSocket('ws://echo.websocket.org','');
-				buiweex.alert('socket');
+				// buiweex.alert('socket');
 				websocket.onopen = function(e){
           buiweex.alert('网络已链接');
         }

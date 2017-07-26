@@ -1,6 +1,6 @@
 <template>
 	<div class="students-wrap">
-		<bui-header title="报名的人" :leftItem="leftItem" @leftClick="back">
+		<bui-header title="学习的人" :leftItem="leftItem" @leftClick="back">
 		</bui-header>
 		<bui-content class="span1">
 			<list class="bui-list p-r">
@@ -12,7 +12,7 @@
 				<cell  v-for="item in list">
 					<div class="bui-cell-large" @click="startUserCard(item.userId)">
 						<div class="bui-list-left">
-							<bui-image width="54px" height="54px" @click="startUserCard(item.userId)" class="bui-list-thumb" :src="item.url" radius="50px" :placeholder="defaultAvatar"></bui-image>
+							<bui-image width="54px" height="54px" @click="startUserCard(item.userId)" class="bui-list-thumb" :src="item.picture" radius="50px" :placeholder="defaultAvatar"></bui-image>
 						</div>
 						<div class="bui-list-main">
 							<text class="bui-list-title">{{item.name}}</text>
@@ -40,6 +40,7 @@ import {fixedPic} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 import ajax from '../../js/ajax.js';
 import linkapi from '../../js/linkapi.js';
+const storage = weex.requireModule('storage');
 export default {
 	data() {
 		return {
@@ -54,12 +55,14 @@ export default {
             refreshText: "下拉刷新...",
             loadingText: "正在加载更多数据...",
             page : 1,
-            rows : 10,
-            defaultAvatar : '/image/icon-avatar.png'
+            rows : 15,
+            defaultAvatar : '/image/icon-avatar.png',
+            courseId : ''
 		}
 	},
 	mounted() {
-		this.getList();
+		// this.getList();
+		this.getCache();
 	},
 	methods: {
 		back() {
@@ -109,7 +112,7 @@ export default {
 						let tempArr = [];
 						res.forEach(item => {
 							let obj = {
-								url : item.picture || '',
+								picture : item.picture || '',
 								name : item.userName || '',
 								userId : item.userId || '',
 								orgName  : item.orgName || ''
@@ -149,7 +152,7 @@ export default {
 				data: {
 					page: this.page,
 					rows: this.rows,
-					id: buiweex.getPageParams().courseId
+					id: this.courseId
 				}
 			}).then((res) => {
 				let arrLearnBy = [];
@@ -162,11 +165,13 @@ export default {
 						let tempArr = [];
 						this.showLoading = false;
 						// buiweex.alert(arrLearnBy)
+
 						res.forEach(item => {
 							let obj = {
-								url : item.picture || '',
+								picture : item.picture || '',
 								name : item.userName || '',
-								userId : item.userId || ''
+								userId : item.userId || '',
+								orgName  : item.orgName || ''
 							}
 							tempArr.push(obj);
 						})
@@ -195,6 +200,23 @@ export default {
 				this.showLoading = false;
 			})
 		},
+		getCache(){
+			this.refreshing = true;
+            this.page = 1;
+            storage.getItem(this.courseId,(res)=>{
+                if (res.data != 'undefined') {
+                    let arr = JSON.parse(res.data);
+                    this.list = arr[0];
+             		this.refreshIcon = "icon-checkbox-on";
+	        		this.refreshText = "刷新成功";
+	        		this.refreshing = false;
+                	
+                }else{
+                	// 如果缓存没有重新获取
+                	this.getList();
+                }
+            });
+        },
 
 		startUserCard (userId) {
 			linkapi.startUserCard(userId);
@@ -205,6 +227,8 @@ export default {
 		},
 	},
 	created() {
+		this.courseId = buiweex.getPageParams().courseId;
+		
 		globalEvent.addEventListener("androidback", function (e) {
 			buiweex.pop();
 		});

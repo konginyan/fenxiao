@@ -1,6 +1,6 @@
 <template>
 	
-		<div class="brief-introduction-wrap" ref="brief-introduction-wrap" style="flex : 1;width:750px;">
+		<div class="brief-introduction-wrap" ref="brief-introduction-wrap" style="flex : 1;width:750px;" >
 		<scroller style="flex : 1;width:750px;">
 			<div class="brief-inner" ref="inner">
 				<div class="course-teacher">
@@ -11,7 +11,7 @@
 					<text class="teacher-name">{{detail.teacher}}</text>
 					<rate class="teacher-rate" :disabled="true" :value="detail.score || 0"></rate>
 				</div>
-				<div class="learn-people-wrap">
+				<div class="learn-people-wrap" >
 					<text class="learn-title">TA们学习了这门课程</text>
 					<div class="learn-people" @click="students">
 						<scroller style="height:100px;" scroll-direction="horizontal" show-scrollbar=false class="learn-people-list" >
@@ -19,7 +19,7 @@
 								<div class="avatar">
 									<!-- <text class="avatar-name">张</text> -->
 									
-									<bui-image width="54px" height="54px"  @click="students" class="avatar-pic" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
+									<bui-image width="54px" height="54px" radius="27px"  @click="students" class="avatar-pic" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
 								</div>
 								<text class="learn-name">{{item.name}}</text>
 							</div>
@@ -96,7 +96,6 @@ const storage = weex.requireModule('storage');
 					let detail = arr[1].r[0];
 					this.detail = detail;
 
-
 					this.setCache(arr);
 					/*buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});*/
 					this.isLoading = false;
@@ -107,7 +106,6 @@ const storage = weex.requireModule('storage');
 					extend(this.$refs.progress,{id:'progress', width:750, duration:2000, opacity:'0'});
                 })
 			},
-			
 			/*getWeb(){
 				return ajax({
 					url : 'ba/learn/course/outline',
@@ -136,7 +134,7 @@ const storage = weex.requireModule('storage');
 						url : 'ba/api/course/attend/list',
 						data : {
 							id : this.courseId,
-							rows : 10,
+							rows : 15,
 							page : 1
 
 
@@ -145,7 +143,7 @@ const storage = weex.requireModule('storage');
 
 						let arrLearnBy = [];
 						res.r.forEach((item) => {
-							arrLearnBy.push(item.learnBy);
+							arrLearnBy.push(item.learnBy || '');
 
 						});
 
@@ -156,7 +154,9 @@ const storage = weex.requireModule('storage');
 								res.forEach(item=>{
 									let obj = {
 										picture : item.picture || '',
-										name : item.userName || ''
+										name : item.userName || '',
+										userId : item.userId || '',
+										orgName  : item.orgName || ''
 									}
 
 									tempArr.push(obj);
@@ -212,18 +212,7 @@ const storage = weex.requireModule('storage');
 				buiweex.push(buiweex.getContextPath() + "/students.weex.js",{
 					courseId : this.courseId 
 				});
-			},
-			/*finish () {
-				const el = this.$refs.inner;
-       			dom.scrollToElement(el, {
-       				animated : false
-       			})
-   				buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
-
-			},
-			error () {
-				buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
-			}*/
+			}
 		},
 		created (){
 			this.courseId = buiweex.getPageParams().courseId;

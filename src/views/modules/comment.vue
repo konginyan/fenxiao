@@ -19,7 +19,7 @@
 				<cell class="comment-list" v-for="item in commentList">
 					<div class="comment-item" >
 						<div class="comment-inner">
-							<bui-image class="avatar" width="74" height="74" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
+							<bui-image class="avatar" radius="37px" width="74" height="74" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
 							<div class="reader-wrap">
 								<text class="readers">{{item.userName}}</text>
 								<div class="date-wrap">
@@ -113,21 +113,22 @@ import linkapi from '../../js/linkapi.js';
 					}
 				}).then((res) =>{
 					let arrTemp = res.r || [];
-
 					let arrCommentBy = [];
-					res.r.forEach(item=> {
+					arrTemp.forEach(item=> {
 						arrCommentBy.push(item.commentBy || '');
+						item.picture = item.userPicture || '';
+						item.userName = item.userName || '跨企业用户';
+						item.orgName = item.orgName || '';
 					})
-					
 					try{
 						linkapi.getUserInfo(arrCommentBy,(resp)=> {
 							resp = resp || [];
 							for (let i = 0,arrTempLen = arrTemp.length; i < arrTempLen; i++) {
 								let item = arrTemp[i];
-								item.picture = '';
-								item.userName = '跨公司用户';
-								item.orgName = '';
-								for (let j = 0; j < resp.length; j++) {
+								// item.picture = '';
+								// item.userName = '跨公司用户';
+								// item.orgName = '';
+								for (let j = 0,respLen = resp.length; j < respLen; j++) {
 									let inner = resp[j];
 									if(item.commentBy === inner.userId){
 										item.picture = inner.picture || '';
@@ -139,27 +140,6 @@ import linkapi from '../../js/linkapi.js';
 
 							}
 
-							/*arrTemp.forEach(item=>{
-
-								resp.forEach(inner => {
-
-									if(item.commentBy === inner.userId){
-										item.picture = inner.picture || '';
-										item.userName = inner.userName || '';
-										item.orgName = inner.orgName || '';
-									}
-		
-								});
-
-								
-							});*/
-							// 当arrTemp为空的时候
-							// arrTemp.forEach(item=>{
-							// 	item.picture = item.picture ? item.picture : '';
-							// 	item.userName = item.userName ? item.userName : '跨公司用户';
-							// 	item.orgName = item.orgName ? item.orgName : '';
-								
-							// });
 							this.commentList = arrTemp;
 							
 							if (res.r.length === 0) {
@@ -218,8 +198,11 @@ import linkapi from '../../js/linkapi.js';
 					this.isShowPrompt = false;
 					let arrTemp = res.r || [];
 					let arrCommentBy = [];
-					res.r.forEach(item=> {
+					arrTemp.forEach(item=> {
 						arrCommentBy.push(item.commentBy || '');
+						item.picture = item.userPicture || '';
+						item.userName = item.userName || '跨企业用户';
+						item.orgName = item.orgName || '';
 					})
 					
 					try{
@@ -227,9 +210,9 @@ import linkapi from '../../js/linkapi.js';
 							resp = resp || [];
 							for (let i = 0,arrTempLen = arrTemp.length; i < arrTempLen; i++) {
 								let item = arrTemp[i];
-								item.picture = '';
+								/*item.picture = '';
 								item.userName = '跨公司用户';
-								item.orgName = '';
+								item.orgName = '';*/
 								for (let j = 0; j < resp.length; j++) {
 									let inner = resp[j];
 									if(item.commentBy === inner.userId){

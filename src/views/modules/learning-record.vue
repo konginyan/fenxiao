@@ -81,6 +81,7 @@ import {fixedPic, departUrl, secondToTime, formatDate} from "../../js/tool.js";
 var globalEvent = weex.requireModule('globalEvent');
 const dom = weex.requireModule('dom');
 const animation = weex.requireModule('animation');
+const storage = weex.requireModule('storage');
 	export default {
 		data () {
 			return {
@@ -109,14 +110,22 @@ const animation = weex.requireModule('animation');
 			}
 		},
 		mounted(){
-			this.getRecords();
-			try{
-				this.getProfileInLink();
-			}
-			catch(e){
-				this.getRecordStat();
-				this.getProfile();
-			}
+			let timer = setInterval(()=>{
+			    storage.getItem('token',(res)=>{
+			        if (res.data != 'undefined') {
+			            clearInterval(timer);
+			            this.getRecords();
+			            try{
+			            	this.getProfileInLink();
+			            }
+			            catch(e){
+			            	this.getRecordStat();
+			            	this.getProfile();
+			            }
+			        }
+			    });
+			},50);
+			
 		},
 		computed: {
 			bgStyle () {
