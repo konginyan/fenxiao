@@ -29,7 +29,8 @@
                 <text class="live-author-name">{{live.teacher}}</text>
               </div>
               <div style="flex-direction:row; align-items:center;">
-                <gif v-if="btnStyle(live)===1" class="onlive" :frames="images" width="80px" height="80px"></gif>
+                <gif v-if="btnStyle(live)===1&&!isIOS()" class="onlive" :frames="images" width="80px" height="80px"></gif>
+                <bui-image v-if="btnStyle(live)===1&&isIOS()" class="onlive" width="70px" height="70px" src="/image/onlive.gif"></bui-image>
                 <text v-if="!(btnStyle(live)===1)" class="live-time">{{getStartTime(live)}}</text>
                 <div class="live-btn" @click="liveTrigger(live)" :class="[btnStyle(live)===0?'live-book-btn':'',
                                                btnStyle(live)===1?'live-enter-btn':'',
@@ -93,9 +94,13 @@ export default {
     back(){
       buiweex.pop();
     },
+    isIOS() {
+      if(weex.config.env.platform==='iOS') return true;
+      else return false;
+    },
     getTop (){
       if(weex.config.env.platform==='iOS') return '117px';
-      else return '100px'
+      else return '100px';
     },
     getLives(){
       this.refreshIcon = "icon-loadding";
