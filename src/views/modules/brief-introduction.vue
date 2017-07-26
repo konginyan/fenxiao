@@ -19,7 +19,7 @@
 								<div class="avatar">
 									<!-- <text class="avatar-name">张</text> -->
 									
-									<bui-image width="54px" height="54px"  @click="students" class="avatar-pic" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
+									<bui-image width="54px" height="54px" radius="27px"  @click="students" class="avatar-pic" :src="item.picture" :placeholder="defaultAvatar"></bui-image>
 								</div>
 								<text class="learn-name">{{item.name}}</text>
 							</div>
@@ -213,17 +213,6 @@ const storage = weex.requireModule('storage');
 					courseId : this.courseId 
 				});
 			},
-			/*finish () {
-				const el = this.$refs.inner;
-       			dom.scrollToElement(el, {
-       				animated : false
-       			})
-   				buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
-
-			},
-			error () {
-				buiweex.show(this, {id: 'brief-introduction-wrap', duration: '300'});
-			}*/
 		},
 		created (){
 			this.courseId = buiweex.getPageParams().courseId;

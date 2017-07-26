@@ -162,11 +162,13 @@ export default {
 						let tempArr = [];
 						this.showLoading = false;
 						// buiweex.alert(arrLearnBy)
+
 						res.forEach(item => {
 							let obj = {
 								url : item.picture || '',
 								name : item.userName || '',
-								userId : item.userId || ''
+								userId : item.userId || '',
+								orgName  : item.orgName || ''
 							}
 							tempArr.push(obj);
 						})

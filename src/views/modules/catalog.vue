@@ -107,6 +107,7 @@ var globalEvent = weex.requireModule('globalEvent');
 					this.isShowPrompt = false;
 
 				}
+				this.total = 0;
 				res.r && res.r.forEach(item=>{
 					item && item.detailList && item.detailList.forEach(inner=>{
 						this.total += 1;
@@ -145,8 +146,11 @@ var globalEvent = weex.requireModule('globalEvent');
 				this.selectIndex = val;
 			},
 			catalogData (val){
-				this.catalogHandle(val);
-				this.setCache(val);
+				if (val.r) {
+					this.catalogHandle(val);
+					this.setCache(val);
+				}
+				
 			}
 		}
 	}
