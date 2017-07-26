@@ -178,3 +178,11 @@ export function manageArr(arrName='',obj = {},maxLength = 3) {
     })
     
 }
+
+export let one = (fn)=>{
+    if(one.flag){
+        one.flag = false;
+        fn && fn();
+    }
+}
+one.flag = true;
